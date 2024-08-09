@@ -1,4 +1,4 @@
-from sqlalchemy import LargeBinary, DATETIME
+from sqlalchemy import LargeBinary, TIMESTAMP
 from flask_login import UserMixin
 # extensions
 from .extensions import db
@@ -28,7 +28,7 @@ class Services(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     owner_id = db.Column(db.ForeignKey('users.id'), nullable=False, unique=False)
     vehicle_id = db.Column(db.ForeignKey("vehicles.id"), nullable=False, unique=False)
-    date = db.Column(DATETIME, nullable=False, unique=False)
+    date = db.Column(TIMESTAMP, nullable=False, unique=False)
     mileage = db.Column(db.Integer, nullable=True, unique=False)
     service = db.Column(db.String, nullable=False, unique=False)
     story = db.Column(db.String, nullable=False, unique=False)
