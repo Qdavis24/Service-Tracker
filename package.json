@@ -1,0 +1,9 @@
+{
+  "name": "Automotive Service Tracker",
+  "scripts": {
+    "tw-build": "npx tailwindcss -i ./app/static/css/src/input.css -o ./app/static/css/dist/output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.3"
+  }
+}

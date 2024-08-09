@@ -1,0 +1,391 @@
+{% extends "base.html" %}
+{% block title %}Garage{% endblock %}
+{% block bodystyle %}class="bg-fixed bg-center bg-cover bg-no-repeat" style="background-image:
+    url('../static/garage.jpg');"{% endblock %}
+{% block style %}
+    <style>
+        .scroll-fade {
+            transition: opacity .05s ease-in-out;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <a href="{{ url_for('main.logout') }}"
+       class="fixed top-5 right-5 border-3 rounded-sm p-2 bg-gray-300 bg-opacity-70 hover:bg-opacity-100 duration-500">Logout</a>
+    <div class="w-screen h-screen">
+        <div class="flex flex-col justify-center items-center mx-auto space-y-60 min-h-screen">
+            {% for vehicle in vehicles %}
+
+
+                <div class="{% if loop.first %}mt-96 {% endif %} relative scroll-fade lg:w-1/4 sm:w-3/4 bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="flex flex-row">
+                        <div class="p-4 bg-slate-100 border-3 shadow-2xl">
+                            <button onclick="populateData({{ vehicle.id }});" id="populate-data"
+                                    class="mb-5 p-2 bg-gray-300 hover:bg-gray-400 duration-500 rounded-sm text-md">
+                                Edit
+                            </button>
+                            <a class="p-2 bg-gray-300 hover:bg-gray-400 duration-500 rounded-sm text-md"
+                               href="{{ url_for("main.service_viewer", vehicle=vehicle.model, vehicle_id=vehicle.id) }}">
+                                +Service
+
+                            </a>
+                        </div>
+                        <div>
+                            <a onclick="return confirm('Are you sure you want to delete {{ vehicle.name }}?')"
+                               href="{{ url_for('main.delete_vehicle', vehicle_id=vehicle.id) }}"
+                               class="absolute p-2 top-3 right-3 bg-red-500 hover:bg-red-300 duration-500 rounded-full text-2xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25"
+                                     viewBox="0 0 50 50">
+                                    <path d="M 21 0 C 19.355469 0 18 1.355469 18 3 L 18 5 L 10.1875 5 C 10.0625 4.976563 9.9375 4.976563 9.8125 5 L 8 5 C 7.96875 5 7.9375 5 7.90625 5 C 7.355469 5.027344 6.925781 5.496094 6.953125 6.046875 C 6.980469 6.597656 7.449219 7.027344 8 7 L 9.09375 7 L 12.6875 47.5 C 12.8125 48.898438 14.003906 50 15.40625 50 L 34.59375 50 C 35.996094 50 37.1875 48.898438 37.3125 47.5 L 40.90625 7 L 42 7 C 42.359375 7.003906 42.695313 6.816406 42.878906 6.503906 C 43.058594 6.191406 43.058594 5.808594 42.878906 5.496094 C 42.695313 5.183594 42.359375 4.996094 42 5 L 32 5 L 32 3 C 32 1.355469 30.644531 0 29 0 Z M 21 2 L 29 2 C 29.5625 2 30 2.4375 30 3 L 30 5 L 20 5 L 20 3 C 20 2.4375 20.4375 2 21 2 Z M 11.09375 7 L 38.90625 7 L 35.3125 47.34375 C 35.28125 47.691406 34.910156 48 34.59375 48 L 15.40625 48 C 15.089844 48 14.71875 47.691406 14.6875 47.34375 Z M 18.90625 9.96875 C 18.863281 9.976563 18.820313 9.988281 18.78125 10 C 18.316406 10.105469 17.988281 10.523438 18 11 L 18 44 C 17.996094 44.359375 18.183594 44.695313 18.496094 44.878906 C 18.808594 45.058594 19.191406 45.058594 19.503906 44.878906 C 19.816406 44.695313 20.003906 44.359375 20 44 L 20 11 C 20.011719 10.710938 19.894531 10.433594 19.6875 10.238281 C 19.476563 10.039063 19.191406 9.941406 18.90625 9.96875 Z M 24.90625 9.96875 C 24.863281 9.976563 24.820313 9.988281 24.78125 10 C 24.316406 10.105469 23.988281 10.523438 24 11 L 24 44 C 23.996094 44.359375 24.183594 44.695313 24.496094 44.878906 C 24.808594 45.058594 25.191406 45.058594 25.503906 44.878906 C 25.816406 44.695313 26.003906 44.359375 26 44 L 26 11 C 26.011719 10.710938 25.894531 10.433594 25.6875 10.238281 C 25.476563 10.039063 25.191406 9.941406 24.90625 9.96875 Z M 30.90625 9.96875 C 30.863281 9.976563 30.820313 9.988281 30.78125 10 C 30.316406 10.105469 29.988281 10.523438 30 11 L 30 44 C 29.996094 44.359375 30.183594 44.695313 30.496094 44.878906 C 30.808594 45.058594 31.191406 45.058594 31.503906 44.878906 C 31.816406 44.695313 32.003906 44.359375 32 44 L 32 11 C 32.011719 10.710938 31.894531 10.433594 31.6875 10.238281 C 31.476563 10.039063 31.191406 9.941406 30.90625 9.96875 Z"></path>
+                                </svg>
+                            </a>
+                            <img class="w-full h-3/4 object-cover object-center"
+                                 src="{{ url_for('main.get_image', picture_id=vehicle.picture) }}"
+                                 alt="Vehicle Image">
+                            <div class="p-4">
+                                <h2 class="text-xl font-semibold text-gray-800">{{ vehicle.make }} {{ vehicle.model }}</h2>
+                                <p class="mb-3 text-gray-600 mt-2">Mileage: {{ vehicle.mileage }} miles</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
+            {% endfor %}
+
+            <button onclick="toggleModal(1)"
+                    class="p-3 border-2 rounded-3xl bg-gray-300 bg-opacity-70 hover:shadow-2xl hover:bg-opacity-100  duration-500">
+                <svg class="" enable-background="new 0 0 50 50" height="25px" id="Layer_1" version="1.1"
+                     viewBox="0 0 50 50"
+                     width="25px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"><rect fill="none" height="50" width="50"/>
+                    <line fill="none" stroke="#000000" stroke-miterlimit="10" stroke-width="4" x1="9" x2="41" y1="25"
+                          y2="25"/>
+                    <line fill="none" stroke="#000000" stroke-miterlimit="10" stroke-width="4" x1="25" x2="25" y1="9"
+                          y2="41"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="fixed flex items-center inset-0 overflow-y-auto h-full w-full bg-opacity-50 bg-gray-600"
+         id="add-vehicle-modal"
+         style="display:none;">
+
+        <div class="relative mx-auto p-5 border h-3/4 lg:w-96 sm:w-screen shadow-lg rounded-md bg-white">
+            <button onclick="toggleModal(0)"
+                    class="absolute top-3 right-3 text-red bg-transparent hover:bg-gray-200 hover:text-red rounded-full text-2xl w-10 h-10 flex items-center justify-center">
+                &times;
+            </button>
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                         width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+
+<defs>
+</defs>
+                        <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
+                           transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
+	<path d="M 70.711 30.158 c 8.2 14.201 3.333 32.359 -10.867 40.556 c -14.201 8.2 -32.359 3.333 -40.556 -10.867 s -3.333 -32.359 10.867 -40.556 C 44.355 11.091 62.514 15.957 70.711 30.158 z"
+          style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(81,126,217); fill-rule: nonzero; opacity: 1;"
+          transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
+                            <path d="M 32.538 7.061 c 0 2.685 -1.545 5.093 -3.929 6.327 c -0.476 0.245 -0.948 0.504 -1.416 0.774 c -0.468 0.27 -0.928 0.55 -1.378 0.84 c -2.26 1.448 -5.117 1.582 -7.443 0.239 c -3.378 -1.951 -7.696 -0.792 -9.645 2.584 l -5.4 9.352 c -1.951 3.378 -0.792 7.696 2.584 9.645 l 0.003 0.002 c 2.291 1.322 3.641 3.815 3.512 6.456 c -0.056 1.149 -0.057 2.301 0 3.455 c 0.128 2.638 -1.226 5.124 -3.513 6.444 L 5.911 53.18 c -3.378 1.951 -4.535 6.269 -2.584 9.645 l 5.4 9.352 c 1.951 3.378 6.269 4.535 9.645 2.584 l 0.002 -0.002 c 2.286 -1.321 5.117 -1.25 7.336 0.18 c 0.972 0.625 1.97 1.201 2.993 1.726 c 2.353 1.209 3.836 3.625 3.836 6.269 v 0.003 c 0 3.9 3.162 7.061 7.061 7.061 h 10.801 c 3.9 0 7.061 -3.162 7.061 -7.061 l 0 0 c 0 -2.685 1.545 -5.093 3.929 -6.327 c 0.475 -0.245 0.948 -0.504 1.416 -0.774 c 0.468 -0.27 0.928 -0.55 1.378 -0.84 c 2.26 -1.448 5.117 -1.582 7.443 -0.239 c 3.378 1.951 7.696 0.792 9.645 -2.584 l 5.4 -9.352 c 1.951 -3.378 0.792 -7.696 -2.584 -9.645 l -0.003 -0.002 c -2.291 -1.322 -3.641 -3.815 -3.512 -6.456 c 0.056 -1.149 0.057 -2.301 0 -3.455 c -0.128 -2.638 1.226 -5.124 3.513 -6.444 l 0.002 -0.002 c 3.378 -1.951 4.535 -6.268 2.584 -9.645 l -5.4 -9.352 c -1.949 -3.378 -6.268 -4.535 -9.645 -2.584 l -0.002 0.002 c -2.286 1.321 -5.117 1.25 -7.336 -0.18 c -0.972 -0.625 -1.97 -1.201 -2.993 -1.726 c -2.353 -1.209 -3.836 -3.625 -3.836 -6.269 V 7.061 c 0 -3.9 -3.162 -7.061 -7.061 -7.061 L 39.599 0 C 35.699 0 32.538 3.162 32.538 7.061 z M 67.038 32.279 c 7.028 12.172 2.857 27.736 -9.315 34.763 c -12.172 7.028 -27.736 2.857 -34.763 -9.315 s -2.857 -27.736 9.315 -34.763 C 44.447 15.935 60.012 20.107 67.038 32.279 z"
+                                  style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(77,137,234); fill-rule: nonzero; opacity: 1;"
+                                  transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
+                            <path d="M 62.572 44.642 c 0 -4.887 -1.995 -9.307 -5.215 -12.492 c -0.957 -0.946 -2.586 -0.251 -2.586 1.095 v 8.994 c 0 2.894 -2.346 5.24 -5.24 5.24 h -9.062 c -2.894 0 -5.24 -2.346 -5.24 -5.24 v -8.993 c 0 -1.347 -1.63 -2.041 -2.587 -1.094 c -3.409 3.372 -5.445 8.129 -5.193 13.358 c 0.334 6.942 4.793 12.864 10.932 15.393 l 0 28.974 C 38.779 89.947 39.183 90 39.6 90 h 10.801 c 0.417 0 0.821 -0.053 1.218 -0.123 V 60.922 C 58.043 58.308 62.572 52.005 62.572 44.642 z"
+                                  style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(240,240,240); fill-rule: nonzero; opacity: 1;"
+                                  transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
+</g>
+</svg>
+                </div>
+            </div>
+            <form enctype="multipart/form-data" class="mt-2 p-5" method="post" action="{{ url_for('main.garage') }}">
+                {{ add_vehicle_form.hidden_tag() }}
+                <div class="mt-5">
+                    {{ add_vehicle_form.year }}
+                    {% if add_vehicle_form.year.errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in add_vehicle_form.year.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="">
+                    {{ add_vehicle_form.make }}
+                    {% if add_vehicle_form.make.errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in add_vehicle_form.make.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="">
+                    {{ add_vehicle_form.model }}
+                    {% if add_vehicle_form.model.errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in add_vehicle_form.model.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <br/>
+                <div class="text-center">
+                    <sm>↓ Optional ↓</sm>
+                </div>
+                <br/>
+
+                <div class="">
+                    {{ add_vehicle_form.mileage }}
+                    {% if add_vehicle_form.mileage.errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in add_vehicle_form.mileage.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="text-center mt-4">
+                    <sm>Upload Picture</sm>
+                </div>
+
+                <div class="">
+                    {{ add_vehicle_form.picture }}
+                    {% if add_vehicle_form.picture.errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in add_vehicle_form.picture.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="">
+                    {{ add_vehicle_form.submit() }}
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <div class="fixed flex items-center inset-0 overflow-y-auto h-full w-full bg-opacity-50 bg-gray-600"
+         id="edit-vehicle-modal"
+         style="display:none;">
+
+        <div class="relative mx-auto p-5 border lg:w-96 sm:w-screen shadow-lg rounded-md bg-white">
+            <button onclick="toggleModal(0)"
+                    class="absolute top-3 right-3 text-red bg-transparent hover:bg-gray-200 hover:text-red rounded-full text-2xl w-10 h-10 flex items-center justify-center">
+                &times;
+            </button>
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                         width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+
+<defs>
+</defs>
+                        <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
+                           transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
+	<path d="M 70.711 30.158 c 8.2 14.201 3.333 32.359 -10.867 40.556 c -14.201 8.2 -32.359 3.333 -40.556 -10.867 s -3.333 -32.359 10.867 -40.556 C 44.355 11.091 62.514 15.957 70.711 30.158 z"
+          style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(81,126,217); fill-rule: nonzero; opacity: 1;"
+          transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
+                            <path d="M 32.538 7.061 c 0 2.685 -1.545 5.093 -3.929 6.327 c -0.476 0.245 -0.948 0.504 -1.416 0.774 c -0.468 0.27 -0.928 0.55 -1.378 0.84 c -2.26 1.448 -5.117 1.582 -7.443 0.239 c -3.378 -1.951 -7.696 -0.792 -9.645 2.584 l -5.4 9.352 c -1.951 3.378 -0.792 7.696 2.584 9.645 l 0.003 0.002 c 2.291 1.322 3.641 3.815 3.512 6.456 c -0.056 1.149 -0.057 2.301 0 3.455 c 0.128 2.638 -1.226 5.124 -3.513 6.444 L 5.911 53.18 c -3.378 1.951 -4.535 6.269 -2.584 9.645 l 5.4 9.352 c 1.951 3.378 6.269 4.535 9.645 2.584 l 0.002 -0.002 c 2.286 -1.321 5.117 -1.25 7.336 0.18 c 0.972 0.625 1.97 1.201 2.993 1.726 c 2.353 1.209 3.836 3.625 3.836 6.269 v 0.003 c 0 3.9 3.162 7.061 7.061 7.061 h 10.801 c 3.9 0 7.061 -3.162 7.061 -7.061 l 0 0 c 0 -2.685 1.545 -5.093 3.929 -6.327 c 0.475 -0.245 0.948 -0.504 1.416 -0.774 c 0.468 -0.27 0.928 -0.55 1.378 -0.84 c 2.26 -1.448 5.117 -1.582 7.443 -0.239 c 3.378 1.951 7.696 0.792 9.645 -2.584 l 5.4 -9.352 c 1.951 -3.378 0.792 -7.696 -2.584 -9.645 l -0.003 -0.002 c -2.291 -1.322 -3.641 -3.815 -3.512 -6.456 c 0.056 -1.149 0.057 -2.301 0 -3.455 c -0.128 -2.638 1.226 -5.124 3.513 -6.444 l 0.002 -0.002 c 3.378 -1.951 4.535 -6.268 2.584 -9.645 l -5.4 -9.352 c -1.949 -3.378 -6.268 -4.535 -9.645 -2.584 l -0.002 0.002 c -2.286 1.321 -5.117 1.25 -7.336 -0.18 c -0.972 -0.625 -1.97 -1.201 -2.993 -1.726 c -2.353 -1.209 -3.836 -3.625 -3.836 -6.269 V 7.061 c 0 -3.9 -3.162 -7.061 -7.061 -7.061 L 39.599 0 C 35.699 0 32.538 3.162 32.538 7.061 z M 67.038 32.279 c 7.028 12.172 2.857 27.736 -9.315 34.763 c -12.172 7.028 -27.736 2.857 -34.763 -9.315 s -2.857 -27.736 9.315 -34.763 C 44.447 15.935 60.012 20.107 67.038 32.279 z"
+                                  style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(77,137,234); fill-rule: nonzero; opacity: 1;"
+                                  transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
+                            <path d="M 62.572 44.642 c 0 -4.887 -1.995 -9.307 -5.215 -12.492 c -0.957 -0.946 -2.586 -0.251 -2.586 1.095 v 8.994 c 0 2.894 -2.346 5.24 -5.24 5.24 h -9.062 c -2.894 0 -5.24 -2.346 -5.24 -5.24 v -8.993 c 0 -1.347 -1.63 -2.041 -2.587 -1.094 c -3.409 3.372 -5.445 8.129 -5.193 13.358 c 0.334 6.942 4.793 12.864 10.932 15.393 l 0 28.974 C 38.779 89.947 39.183 90 39.6 90 h 10.801 c 0.417 0 0.821 -0.053 1.218 -0.123 V 60.922 C 58.043 58.308 62.572 52.005 62.572 44.642 z"
+                                  style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(240,240,240); fill-rule: nonzero; opacity: 1;"
+                                  transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
+</g>
+</svg>
+                </div>
+            </div>
+            <form enctype="multipart/form-data" class="mt-2 p-5" method="post" action="{{ url_for('main.garage') }}">
+                {{ edit_vehicle_form.hidden_tag() }}
+                <input type="hidden" id="vehicle_id" name="vehicle_id">
+                <div class="mt-5">
+                    {{ edit_vehicle_form.year }}
+                    {% if edit_vehicle_form.year.errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in edit_vehicle_form.year.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="">
+                    {{ edit_vehicle_form.make }}
+                    {% if edit_vehicle_form.make.errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in edit_vehicle_form.make.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="">
+                    {{ edit_vehicle_form.model }}
+                    {% if edit_vehicle_form.model.errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in edit_vehicle_form.model.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <br/>
+                <div class="text-center">
+                    <sm>↓ Optional ↓</sm>
+                </div>
+                <br/>
+
+                <div class="">
+                    {{ edit_vehicle_form.mileage }}
+                    {% if edit_vehicle_form.mileage.errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in edit_vehicle_form.mileage.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="text-center mt-4">
+                    <sm>Change Picture</sm>
+                </div>
+
+                <div class="">
+                    {{ edit_vehicle_form.picture }}
+                    {% if edit_vehicle_form.picture.errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in edit_vehicle_form.picture.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="">
+                    {{ edit_vehicle_form.submit() }}
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <script>
+        function toggleModal(state) {
+            const addVehicleModal = document.getElementById("add-vehicle-modal")
+            const editVehicleModal = document.getElementById("edit-vehicle-modal")
+            if (state === 0) {
+                addVehicleModal.style.display = 'none';
+                editVehicleModal.style.display = 'none';
+            } else if (state === 1) {
+                addVehicleModal.style.display = 'flex';
+                editVehicleModal.style.display = 'none';
+            } else {
+                addVehicleModal.style.display = 'none';
+                editVehicleModal.style.display = 'flex';
+
+
+            }
+        }
+
+        function populateData(id) {
+            fetch('/get-vehicle-data/' + id)
+                .then(response => response.json())
+                .then(data => {
+
+                    document.getElementById("y").value = data["year"];
+                    document.getElementById("mke").value = data["make"];
+                    document.getElementById("mdl").value = data["model"];
+                    document.getElementById("mil").value = data["mileage"];
+                    document.getElementById("vehicle_id").value = data["id"];
+                    toggleModal(2);
+
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            {% if modal_state %}
+                toggleModal({{ modal_state }})
+            {% endif %}
+
+            function fadeOnScroll() {
+                const elements = document.querySelectorAll('.scroll-fade');
+                const midWindowHeight = window.innerHeight / 2;
+                elements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    let opacityScale = Math.abs((rect.top + rect.height / 2) - midWindowHeight);
+                    let opacity = 1 - (opacityScale * .002);
+                    el.style.opacity = opacity;
+
+
+                });
+
+            }
+
+            document.addEventListener('scroll', fadeOnScroll);
+        });
+
+
+    </script>
+
+{% endblock %}
