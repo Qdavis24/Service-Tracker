@@ -10,6 +10,7 @@ class Users(db.Model, UserMixin):
     username = db.Column(db.String, unique=False, nullable=False)
     password = db.Column(db.String, unique=False, nullable=False)
     vehicles = db.relationship("Vehicles", backref="owner", lazy=True)
+    services = db.relationship("Services", backref="owner", lazy=True)
 
 
 class Vehicles(db.Model):
@@ -25,6 +26,7 @@ class Vehicles(db.Model):
 
 class Services(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    owner_id = db.Column(db.ForeignKey('users.id'), nullable=False, unique=False)
     vehicle_id = db.Column(db.ForeignKey("vehicles.id"), nullable=False, unique=False)
     date = db.Column(DATETIME, nullable=False, unique=False)
     mileage = db.Column(db.Integer, nullable=True, unique=False)

@@ -1,7 +1,8 @@
 from flask import Flask
 from sqlalchemy.testing.pickleable import User
 from .models import Users
-from .extensions import db, login_manager, migrate, CKEditor
+from flask_ckeditor import CKEditor, CKEditorField
+from .extensions import db, login_manager, migrate
 from .config import Config
 # blueprints
 from .views import main_bp

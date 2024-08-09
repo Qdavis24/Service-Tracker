@@ -76,7 +76,8 @@ def garage():
 
                     if attr in request.form or attr in request.files:
                         if attr == 'picture':
-                            picture = db.session.execute(db.Select(Pictures).where(Pictures.id == vehicle.picture)).scalar()
+                            picture = db.session.execute(
+                                db.Select(Pictures).where(Pictures.id == vehicle.picture)).scalar()
                             setattr(picture, attr, request.files[attr].read())
 
                         else:
@@ -89,13 +90,25 @@ def garage():
     return render_template("garage.html", edit_vehicle_form=edit_vehicle_form, add_vehicle_form=add_vehicle_form,
                            vehicles=vehicles)
 
+
 @login_required
 @main_bp.route("/services/<vehicle>/<vehicle_id>", methods=["GET", "POST"])
 def service_viewer(vehicle, vehicle_id):
     vehicle = db.session.execute(db.Select(Vehicles).where(Vehicles.id == vehicle_id)).scalar()
     add_service_form = AddServiceForm()
-    if add_service_form.validate_on_submit():
-        pass
+    prior_services = db.session.execute(db.Select().where())
+    if request.method == "POST":
+        if 'add' in request.form:
+            if add_service_form.validate_on_submit():
+                picture = Pictures(picture=add_service_form.picture.data.read())
+                db.session.add(picture)
+                db.session.commit()
+                service = Services(vehicle_id=vehicle_id, date=add_service_form.date, mileage=add_service_form.mileage,
+                                   service=add_service_form.title, story=add_service_form.story,
+                                   picture=picture.id)
+                db.session.add(service)
+                db.session.commit()
+                return redirect(url_for("main.service_viewer"))
     return render_template("services.html", vehicle=vehicle, add_service_form=add_service_form)
 
 

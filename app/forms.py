@@ -4,7 +4,7 @@ from wtforms import StringField, SubmitField, HiddenField, ValidationError, File
 from wtforms.fields.datetime import DateField
 from wtforms.fields.simple import PasswordField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
-from extensions import CKEditorField
+from flask_ckeditor import CKEditor, CKEditorField
 
 # my modules
 from .extensions import db
