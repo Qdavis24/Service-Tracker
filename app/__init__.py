@@ -17,6 +17,8 @@ def create_app():
     app.config['CKEDITOR_PKG_TYPE'] = 'standard'
     app.config['CKEDITOR_VERSION'] = '4.24.0'
     migrate.init_app(app, db)
+    with app.app_context():
+        db.create_all()
     login_manager.init_app(app)
     ckeditor = CKEditor(app)
 
