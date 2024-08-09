@@ -17,7 +17,15 @@
     </div>
 
     <div class="lg:w-6/12 sm:w-screen h-screen absolute lg:right-5 flex flex-col justify-center items-center">
+        {% for service in services %}
+            <div>
+                {{ service.service }}
+                {{ service.story }}
+                {{ service.date }}
+                {{ service.mileage }}
 
+            </div>
+        {% endfor %}
         <div>
             <button onclick="toggleModal(1)"
                     class="p-3 border-2 rounded-3xl bg-gray-300 bg-opacity-70 hover:shadow-2xl hover:bg-opacity-100  duration-500">
@@ -69,9 +77,9 @@
 </svg>
                 </div>
             </div>
-            <form enctype="multipart/form-data" class="mt-2 p-5" method="post" action="{{ url_for('main.garage') }}">
+            <form enctype="multipart/form-data" class="mt-2 p-5" method="post" action="{{ url_for('main.service_viewer', vehicle_model=vehicle.model) }}">
                 {{ add_service_form.hidden_tag() }}
-                <input type="hidden" id="vehicle_id" name="vehicle_id">
+                <input type="hidden" id="vehicle_model" name="vehicle_model" value="{{ vehicle.model }}">
                 <div class="mt-5">
                     {{ add_service_form.title }}
                     {% if add_service_form.title.errors %}

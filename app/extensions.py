@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData, and_, or_
 
 convention = {
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",

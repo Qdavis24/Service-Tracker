@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, request, url_for, flash,
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from io import BytesIO
-from .extensions import db
+from .extensions import db, and_, or_
 from .models import Vehicles, Users, Services, Pictures
 from .forms import LoginForm, RegistrationForm, AddVehicleForm, EditVehicleForm, AddServiceForm
 
@@ -92,24 +92,36 @@ def garage():
 
 
 @login_required
-@main_bp.route("/services/<vehicle>/<vehicle_id>", methods=["GET", "POST"])
-def service_viewer(vehicle, vehicle_id):
-    vehicle = db.session.execute(db.Select(Vehicles).where(Vehicles.id == vehicle_id)).scalar()
+@main_bp.route("/services/<vehicle_model>", methods=["GET", "POST"])
+def service_viewer(vehicle_model):
+    vehicle = db.session.execute(db.Select(Vehicles).where(
+        and_(
+            Vehicles.owner_id == current_user.id,
+            Vehicles.model == vehicle_model)
+    )).scalar()
     add_service_form = AddServiceForm()
-    prior_services = db.session.execute(db.Select().where())
+    prior_services = db.session.execute(db.Select(Services).where(Services.owner_id == current_user.id)).scalars()
     if request.method == "POST":
+        print("y")
         if 'add' in request.form:
+            print("yy")
             if add_service_form.validate_on_submit():
+                print('yyyy')
                 picture = Pictures(picture=add_service_form.picture.data.read())
                 db.session.add(picture)
                 db.session.commit()
-                service = Services(vehicle_id=vehicle_id, date=add_service_form.date, mileage=add_service_form.mileage,
-                                   service=add_service_form.title, story=add_service_form.story,
+                service = Services(vehicle_id=vehicle.id, owner_id=current_user.id, date=add_service_form.date.data, mileage=add_service_form.mileage.data,
+                                   service=add_service_form.title.data, story=add_service_form.story.data,
                                    picture=picture.id)
                 db.session.add(service)
                 db.session.commit()
-                return redirect(url_for("main.service_viewer"))
-    return render_template("services.html", vehicle=vehicle, add_service_form=add_service_form)
+
+                return redirect(url_for("main.service_viewer", vehicle_model=vehicle.model))
+            else:
+                for error in add_service_form.errors.values():
+                    flash(error)
+                return redirect(url_for("main.service_viewer", vehicle_model=vehicle.model))
+    return render_template("services.html", vehicle=vehicle, services=prior_services, add_service_form=add_service_form)
 
 
 @main_bp.route("/get-image/<int:picture_id>")
