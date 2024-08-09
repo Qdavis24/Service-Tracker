@@ -116,11 +116,11 @@ def service_viewer(vehicle_model):
                 db.session.add(service)
                 db.session.commit()
 
-                return redirect(url_for("main.service_viewer", vehicle_model=vehicle.model))
+                return redirect(url_for("main.service_viewer", vehicle_model=vehicle.model, vehicle=vehicle))
             else:
                 for error in add_service_form.errors.values():
                     flash(error)
-                return redirect(url_for("main.service_viewer", vehicle_model=vehicle.model))
+                return redirect(url_for("main.service_viewer", vehicle_model=vehicle.model, vehicle=vehicle))
     return render_template("services.html", vehicle=vehicle, services=prior_services, add_service_form=add_service_form)
 
 
@@ -150,7 +150,13 @@ def delete_vehicle(vehicle_id):
     db.session.delete(vehicle)
     db.session.commit()
     return redirect(url_for("main.garage"))
-
+@main_bp.route("/delete-service/<int:service_id>")
+def delete_service(service_id):
+    service = Services.query.filter(Services.id == service_id).first()
+    print(request.args.get("vehicle_model"))
+    db.session.delete(service)
+    db.session.commit()
+    return redirect(url_for("main.service_viewer", vehicle_model=request.args.get("vehicle_model")))
 
 @login_required
 @main_bp.route("/logout")
