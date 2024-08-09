@@ -13,6 +13,9 @@ def create_app():
     app.config.from_object(Config)
     app.register_blueprint(main_bp)
     db.init_app(app)
+    app.config['CKEDITOR_SERVE_LOCAL'] = True
+    app.config['CKEDITOR_PKG_TYPE'] = 'standard'
+    app.config['CKEDITOR_VERSION'] = '4.24.0'
     migrate.init_app(app, db)
     login_manager.init_app(app)
     ckeditor = CKEditor(app)

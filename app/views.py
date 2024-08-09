@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, request, url_for, flash,
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from io import BytesIO
-from .extensions import db, and_, or_
+from .extensions import db, and_, or_, sanitize_html
 from .models import Vehicles, Users, Services, Pictures
 from .forms import LoginForm, RegistrationForm, AddVehicleForm, EditVehicleForm, AddServiceForm
 
@@ -102,17 +102,17 @@ def service_viewer(vehicle_model):
     add_service_form = AddServiceForm()
     prior_services = db.session.execute(db.Select(Services).where(Services.owner_id == current_user.id)).scalars()
     if request.method == "POST":
-        print("y")
         if 'add' in request.form:
-            print("yy")
             if add_service_form.validate_on_submit():
-                print('yyyy')
-                picture = Pictures(picture=add_service_form.picture.data.read())
-                db.session.add(picture)
-                db.session.commit()
+                if add_service_form.picture:
+                    picture = Pictures(picture=add_service_form.picture.data.read())
+                    db.session.add(picture)
+                    db.session.commit()
+                story = sanitize_html(add_service_form.story.data)
                 service = Services(vehicle_id=vehicle.id, owner_id=current_user.id, date=add_service_form.date.data, mileage=add_service_form.mileage.data,
-                                   service=add_service_form.title.data, story=add_service_form.story.data,
-                                   picture=picture.id)
+                                   service=add_service_form.title.data, story=story)
+                if picture:
+                    service.picture = picture.id
                 db.session.add(service)
                 db.session.commit()
 
