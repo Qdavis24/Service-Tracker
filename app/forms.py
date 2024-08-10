@@ -88,7 +88,7 @@ class LoginForm(FlaskForm):
                          )
 
     def validate_email_username(self, field):
-        if not Users.query.filter((Users.email == field.data) | (Users.username == field.data)).first():
+        if not Users.query.filter((Users.email.upper() == field.data.upper()) | (Users.username.upper() == field.data.upper())).first():
             raise ValidationError('Email or Username does not exist')
 
 
