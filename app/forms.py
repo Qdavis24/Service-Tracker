@@ -7,7 +7,7 @@ from wtforms.validators import DataRequired, Email, Length, EqualTo
 from flask_ckeditor import CKEditor, CKEditorField
 
 # my modules
-from .extensions import db
+from .extensions import db, func
 from .models import Users
 
 
@@ -88,7 +88,10 @@ class LoginForm(FlaskForm):
                          )
 
     def validate_email_username(self, field):
-        if not Users.query.filter((Users.email.upper() == field.data.upper()) | (Users.username.upper() == field.data.upper())).first():
+        if not Users.query.filter(
+                (func.lower(Users.email) == func.lower(field.data)) | (
+                        func.lower(Users.username) == func.lower(field.data))
+        ).first():
             raise ValidationError('Email or Username does not exist')
 
 
@@ -176,9 +179,11 @@ class EditVehicleForm(FlaskForm):
 
 class AddServiceForm(FlaskForm):
     add = HiddenField()
-    date = DateField('Date of Service', render_kw={"class": "mt-2 p-3 border rounded w-full", "placeholder": "Date of Service"})
+    date = DateField('Date of Service',
+                     render_kw={"class": "mt-2 p-3 border rounded w-full", "placeholder": "Date of Service"})
     mileage = StringField('Mileage', render_kw={"class": "mt-2 p-3 border rounded w-full", "placeholder": "Mileage"})
-    title = StringField('Service Preformed', render_kw={"class": "mt-2 p-3 border rounded w-full", "placeholder": "Service"})
+    title = StringField('Service Preformed',
+                        render_kw={"class": "mt-2 p-3 border rounded w-full", "placeholder": "Service"})
     story = CKEditorField('Service Description', render_kw={"placeholder": "Service Description"})
     picture = FileField('Vehicle Picture',
                         render_kw={

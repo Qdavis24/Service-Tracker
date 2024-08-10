@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
-from sqlalchemy import MetaData, and_, or_
+from sqlalchemy import MetaData, and_, or_, func
 import bleach
 
 convention = {
