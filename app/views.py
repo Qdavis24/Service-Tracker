@@ -131,6 +131,10 @@ def service_viewer(vehicle_model):
 
 @main_bp.route("/get-image/<int:picture_id>")
 def get_image(picture_id):
+    # get picture id from url, retrieve picture object
+    # extract picture col (Binary Data)
+    # use bytes_io tool to construct BytesIO object
+    # send file
     blob = Pictures.query.filter(Pictures.id == picture_id).first_or_404()
     blob = blob.picture
     bytes_io = BytesIO(blob)
@@ -138,19 +142,39 @@ def get_image(picture_id):
     return send_file(bytes_io, mimetype="image/jpg")
 
 
+"""
+These two views below could probably be refactored into one
+"""
+
+
 @main_bp.route("/get-vehicle-data/<int:vehicle_id>")
 def get_vehicle_data(vehicle_id):
-    print(vehicle_id)
+    # retrieve vehicle object, set required data, create dict with packaged data, send package
     vehicle = Vehicles.query.filter(Vehicles.id == vehicle_id).first_or_404()
     needed_data = ["year", "make", "model", "mileage", "id"]
     vehicle_data = {col.name: str(getattr(vehicle, col.name)) for col in vehicle.__table__.columns if col.name in
                     needed_data}
-    print(vehicle_data)
     return jsonify(vehicle_data)
+
+
+@main_bp.route("/get-service-data/<int:service_id>")
+def get_service_data(service_id):
+    # retrieve service object, set required data, create dict with packaged data, send package
+    service = Services.query.filter(Services.id == service_id).first_or_404()
+    needed_data = ["date", "mileage", "service", "story", "picture"]
+    service_data = {col.name: str(getattr(service, col.name)) for col in service.__table__.columns if
+                    col.name in needed_data}
+    return jsonify(service_data)
+
+
+"""
+These two views below could also be refactored into one view
+"""
 
 
 @main_bp.route("/delete-vehicle/<int:vehicle_id>")
 def delete_vehicle(vehicle_id):
+    # retrieve vehicle object, use db object to delete from database, commit changes
     vehicle = Vehicles.query.filter(Vehicles.id == vehicle_id).first()
     db.session.delete(vehicle)
     db.session.commit()
@@ -159,8 +183,9 @@ def delete_vehicle(vehicle_id):
 
 @main_bp.route("/delete-service/<int:service_id>")
 def delete_service(service_id):
+    # retrieve service, use db object to delete, then commit.
+    # retrieve vehicle modal from params, then send back out.
     service = Services.query.filter(Services.id == service_id).first()
-    print(request.args.get("vehicle_model"))
     db.session.delete(service)
     db.session.commit()
     return redirect(url_for("main.service_viewer", vehicle_model=request.args.get("vehicle_model")))
