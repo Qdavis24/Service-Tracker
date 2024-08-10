@@ -99,8 +99,12 @@ def service_viewer(vehicle_model):
             Vehicles.owner_id == current_user.id,
             Vehicles.model == vehicle_model)
     )).scalar()
+
+    prior_services = db.session.execute(db.Select(Services).where(
+        and_(Services.owner_id == current_user.id,
+             Services.vehicle_id == vehicle.id)
+    )).scalars()
     add_service_form = AddServiceForm()
-    prior_services = db.session.execute(db.Select(Services).where(Services.owner_id == current_user.id)).scalars()
     if request.method == "POST":
         if 'add' in request.form:
             if add_service_form.validate_on_submit():
@@ -109,7 +113,8 @@ def service_viewer(vehicle_model):
                     db.session.add(picture)
                     db.session.commit()
                 story = sanitize_html(add_service_form.story.data)
-                service = Services(vehicle_id=vehicle.id, owner_id=current_user.id, date=add_service_form.date.data, mileage=add_service_form.mileage.data,
+                service = Services(vehicle_id=vehicle.id, owner_id=current_user.id, date=add_service_form.date.data,
+                                   mileage=add_service_form.mileage.data,
                                    service=add_service_form.title.data, story=story)
                 if picture:
                     service.picture = picture.id
@@ -150,6 +155,8 @@ def delete_vehicle(vehicle_id):
     db.session.delete(vehicle)
     db.session.commit()
     return redirect(url_for("main.garage"))
+
+
 @main_bp.route("/delete-service/<int:service_id>")
 def delete_service(service_id):
     service = Services.query.filter(Services.id == service_id).first()
@@ -157,6 +164,7 @@ def delete_service(service_id):
     db.session.delete(service)
     db.session.commit()
     return redirect(url_for("main.service_viewer", vehicle_model=request.args.get("vehicle_model")))
+
 
 @login_required
 @main_bp.route("/logout")
