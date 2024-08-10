@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, request, url_for, flash,
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from io import BytesIO
-from .extensions import db, and_, or_, sanitize_html
+from .extensions import db, and_, or_, sanitize_html, func
 from .models import Vehicles, Users, Services, Pictures
 from .forms import LoginForm, RegistrationForm, AddVehicleForm, EditVehicleForm, AddServiceForm
 
@@ -18,8 +18,10 @@ def index():
     if request.method == "POST":
         if 'login' in request.form:
             if login_form.validate_on_submit():
-                user = Users.query.filter((Users.username == login_form.email_username.data) |
-                                          (Users.email == login_form.email_username.data)).first()
+                user = Users.query.filter(
+                    (func.lower(Users.username) == func.lower(login_form.email_username.data)) |
+                    (func.lower(Users.email) == func.lower(login_form.email_username.data))
+                ).first()
                 if user and check_password_hash(user.password, login_form.password.data):
                     login_user(user)
                     return redirect(url_for("main.garage"))
