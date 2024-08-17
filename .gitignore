@@ -1,6 +1,5 @@
 .env
 instance/
-migrations/
 node_modules/
 .idea
 app/config.py
