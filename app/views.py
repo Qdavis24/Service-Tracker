@@ -8,7 +8,23 @@ from .forms import LoginForm, RegistrationForm, AddVehicleForm, EditVehicleForm,
 
 main_bp = Blueprint("main", __name__, template_folder="../templates")
 
+""" TODOS
 
+Immediate future 
+
+1) make the date automatically input todays date when adding service if none is added
+2) add label for date in add service form
+3) allow users to input mileage in any form, IE with , or adding miles/ hours at end?
+4) fix margin hack to get services and vehicles to display correctly and look nicely on mobile
+
+Further future
+1) add tag system to services to label as oil change , regular maintenance ect.. and also add pictures for each tag
+2) search through vehicles and services feature
+3) api for manufactures specified services to display service recommendations
+4) add next recommended oil change date at top of services and on vehicle card
+5) email user periodically recommending services for their vehicles
+
+"""
 @main_bp.route("/", methods=["GET", "POST"])
 def index():
     if current_user.is_authenticated:
