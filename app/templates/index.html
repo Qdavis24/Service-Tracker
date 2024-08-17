@@ -29,13 +29,15 @@
             <h1 class="text-left text-white text-7xl font-serif">Service Tracker</h1>
             <p class="text-left text-gray-400 text-4xl mb-5">Log all services performed on your vehicles</p>
             {% if current_user.is_authenticated == False %}
-            <button onclick="toggleModal(1)"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl sm:w-80 sm:h-40 lg:w-auto lg:h-auto">Login
-            </button>
+                <button onclick="toggleModal(1)"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl sm:w-80 sm:h-40 lg:w-auto lg:h-auto">
+                    Login
+                </button>
 
-            <button onclick="toggleModal(2)"
-                    class="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl sm:w-80 sm:h-40 lg:w-auto lg:h-auto">Register
-            </button>
+                <button onclick="toggleModal(2)"
+                        class="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl sm:w-80 sm:h-40 lg:w-auto lg:h-auto">
+                    Register
+                </button>
             {% endif %}
         </div>
         <div class="fixed lg:bottom-56 sm:bottom-1/3 text-center scroll-down fade-in">
@@ -103,7 +105,7 @@
          style="display: none;">
 
         <!-- Modal Content -->
-        <div class="relative top-20 mx-auto p-5 border sm:w-screen lg:w-1/4 shadow-lg rounded-md bg-white">
+        <div class="relative top-20 mx-auto p-5 border sm:w-screen sm:h-1/2 lg:w-1/4 shadow-lg rounded-md bg-white sm:text-7xl lg:text-2xl">
             <button onclick="toggleModal(0)"
                     class="absolute top-3 right-3 text-red bg-transparent hover:bg-gray-200 hover:text-red rounded-full text-2xl w-10 h-10 flex items-center justify-center">
                 &times;
@@ -129,7 +131,7 @@
 </g>
 </svg>
                 </div>
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Login to Your Account</h3>
+                <h3 class="lg:text-lg sm:text-3xl leading-6 font-medium text-gray-900">Login to Your Account</h3>
                 <!-- Login Form -->
                 <form class="mt-2 p-5" method="post" action="{{ url_for('main.index') }}">
                     {{ login_form.hidden_tag() }}
@@ -137,15 +139,15 @@
                         {{ login_form.email_username }}
                         {% if login_form.email_username.errors %}
                             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                                     role="alert">
-                            <strong class="font-bold">Oops!</strong>
-                            {% for error in login_form.email_username.errors %}
+                                 role="alert">
+                                <strong class="font-bold">Oops!</strong>
+                                {% for error in login_form.email_username.errors %}
 
 
                                     <span class="block sm:inline">{{ error }}</span>
 
 
-                            {% endfor %}
+                                {% endfor %}
                             </div>
                         {% endif %}
                     </div>
@@ -153,14 +155,14 @@
                         {{ login_form.password }}
                         {% if login_form.password.errors %}
                             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                                     role="alert">
-                            <strong class="font-bold">Oops!</strong>
-                            {% for error in login_form.password.errors %}
+                                 role="alert">
+                                <strong class="font-bold">Oops!</strong>
+                                {% for error in login_form.password.errors %}
 
 
                                     <span class="block sm:inline">{{ error }}</span>
 
-                            {% endfor %}
+                                {% endfor %}
                             </div>
                         {% endif %}
                     </div>
@@ -171,11 +173,11 @@
 
                 </form>
                 <button onclick="toggleModal(2)"
-                        class="underline mt-2 p-5 mx-auto flex items-center justify-center text-xl w-15 h-8 bg-transparent hover:bg-blue-200 ">
+                        class="underline mt-2 p-5 mx-auto flex items-center justify-center lg:text-xl sm:text-7xl w-15 h-8 bg-transparent hover:bg-blue-200 ">
                     Register
                 </button>
 
-                <p class="mt-2 text-sm text-gray-500">We will never share your information with anyone.</p>
+                <p class="lg:mt-2 sm:mt-10 lg:text-sm sm:text-2xl text-gray-500">We will never share your information with anyone.</p>
 
             </div>
 
@@ -188,7 +190,7 @@
          style="display: none;">
 
         <!-- Modal Content -->
-        <div class="relative top-20 mx-auto p-5 border sm:w-screen lg:w-1/4 shadow-lg rounded-md bg-white">
+        <div class="relative top-20 mx-auto p-5 border sm:w-screen lg:w-1/4 shadow-lg rounded-md bg-white sm:text-7xl lg:text-2xl">
             <button onclick="toggleModal(0)"
                     class="absolute top-3 right-3 text-red bg-transparent hover:bg-gray-200 hover:text-red rounded-full text-2xl w-10 h-10 flex items-center justify-center">
                 &times;
@@ -214,7 +216,7 @@
 </g>
 </svg>
                 </div>
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Register an Account</h3>
+                <h3 class="lg:text-lg sm:text-3xl leading-6 font-medium text-gray-900">Register an Account</h3>
                 <!-- Login Form -->
                 <form class="mt-2 p-5 transparent" method="post" action="{{ url_for('main.index') }}">
                     {{ registration_form.hidden_tag() }}
@@ -222,7 +224,7 @@
                         {{ registration_form.email }}
                         {% if registration_form.email.errors %}
                             {% for error in registration_form.email.errors %}
-                                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
                                      role="alert">
                                     <strong class="font-bold">Oops!</strong>
                                     <span class="block sm:inline">{{ error }}</span>
@@ -234,14 +236,14 @@
                         {{ registration_form.username }}
                         {% if registration_form.username.errors %}
                             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                                     role="alert">
-                            <strong class="font-bold">Oops!</strong>
-                            {% for error in registration_form.username.errors %}
+                                 role="alert">
+                                <strong class="font-bold">Oops!</strong>
+                                {% for error in registration_form.username.errors %}
 
 
                                     <span class="block sm:inline">{{ error }}</span>
 
-                            {% endfor %}
+                                {% endfor %}
                             </div>
                         {% endif %}
                     </div>
@@ -249,14 +251,14 @@
                         {{ registration_form.password }}
                         {% if registration_form.password.errors %}
                             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                                     role="alert">
-                            <strong class="font-bold">Oops!</strong>
-                            {% for error in registration_form.password.errors %}
+                                 role="alert">
+                                <strong class="font-bold">Oops!</strong>
+                                {% for error in registration_form.password.errors %}
 
 
                                     <span class="block sm:inline">{{ error }}</span>
 
-                            {% endfor %}
+                                {% endfor %}
                             </div>
                         {% endif %}
                     </div>
@@ -269,11 +271,11 @@
 
                 </form>
                 <button onclick="toggleModal(1)"
-                        class="underline mt-2 p-5 mx-auto flex items-center justify-center text-xl w-15 h-8 bg-transparent hover:bg-blue-200 ">
+                        class="underline mt-2 p-5 mx-auto flex items-center justify-center lg:text-xl sm:text-6xl w-15 h-8 bg-transparent hover:bg-blue-200 ">
                     Log In
                 </button>
 
-                <p class="mt-2 text-sm text-gray-500">We will never share your information with anyone.</p>
+                <p class="lg:mt-2 sm:mt-10 lg:text-sm sm:text-2xl text-gray-500">We will never share your information with anyone.</p>
 
             </div>
 
