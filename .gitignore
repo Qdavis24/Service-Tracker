@@ -2,4 +2,4 @@
 instance/
 node_modules/
 .idea
-app/config.py
+config.py

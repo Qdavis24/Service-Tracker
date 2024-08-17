@@ -1261,6 +1261,11 @@ video {
   .sm\:w-80 {
     width: 20rem;
   }
+
+  .sm\:text-7xl {
+    font-size: 4.5rem;
+    line-height: 1;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -1308,7 +1313,16 @@ video {
     width: auto;
   }
 
+  .lg\:text-balance {
+    text-wrap: balance;
+  }
+
   .lg\:rounded-full {
     border-radius: 9999px;
+  }
+
+  .lg\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
   }
 }
