@@ -2,4 +2,5 @@
 instance/
 node_modules/
 .idea
-app/config.py
+./app/config.py
+./app/__pycache__
