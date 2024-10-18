@@ -67,8 +67,7 @@ class RegistrationForm(FlaskForm):
 class LoginForm(FlaskForm):
     login = HiddenField()
     email_username = StringField('Email/Username',
-                                 validators=[DataRequired(),
-                                             Email("Invalid email address")],
+                                 validators=[DataRequired()],
                                  render_kw={
                                      'class': "mt-2 p-3 border rounded w-full",
                                      'placeholder': 'Email/Username'
