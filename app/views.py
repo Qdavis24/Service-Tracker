@@ -25,6 +25,8 @@ Further future
 5) email user periodically recommending services for their vehicles
 
 """
+
+
 @main_bp.route("/", methods=["GET", "POST"])
 def index():
     if current_user.is_authenticated:
@@ -153,11 +155,15 @@ def get_image(picture_id):
     # extract picture col (Binary Data)
     # use bytes_io tool to construct BytesIO object
     # send file
-    blob = Pictures.query.filter(Pictures.id == picture_id).first_or_404()
-    blob = blob.picture
-    bytes_io = BytesIO(blob)
-    bytes_io.seek(0)
-    return send_file(bytes_io, mimetype="image/jpg")
+    blob = Pictures.query.filter(Pictures.id == picture_id).scalar()
+    if blob.picture:
+        print("y")
+        bytes_io = BytesIO(blob.picture)
+        bytes_io.seek(0)
+        return send_file(bytes_io, mimetype="image/jpg")
+    else:
+        return send_file("./static/placeholder_vehicle_image.png")
+
 
 
 """

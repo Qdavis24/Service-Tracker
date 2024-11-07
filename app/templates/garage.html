@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Garage{% endblock %}
-{% block bodystyle %}class="bg-fixed bg-center bg-cover bg-no-repeat" style="background-image:
-    url('../static/garage.jpg');"{% endblock %}
+{% block bodystyle %}class="bg-charcoal"{% endblock %}
 {% block style %}
     <style>
         .scroll-fade {
@@ -12,68 +11,62 @@
 {% block content %}
     <a href="{{ url_for('main.logout') }}"
        class="fixed top-5 right-5 border-3 rounded-lg lg:p-2 sm:p-10 bg-gray-300 bg-opacity-70 hover:bg-opacity-100 duration-500 sm:text-7xl lg:text-xl">Logout</a>
-    <div class="w-screen h-screen">
-        <div class="flex flex-col justify-center items-center space-y-60 h-screen">
 
+    <div class="min-w-full min-h-[25vh] bg-gradient-to-b from-darkerCharcoal to-charcoal border-2 border-steel shadow-2xl">
+
+    </div>
+    <div class="max-h-[75vh] overflow-y-scroll " style="-ms-overflow-style: none; scrollbar-width: none;">
+        <div class="grid sm:grid-col-1 lg:grid-cols-4 mx-auto">
             {% for vehicle in vehicles %}
+                <div class="flex flex-col sm:w-[35vh] lg:w-[30vh] h-[50vh] bg-steel mx-auto my-10 border-2 border-lightSteel rounded-lg shadow-2xl">
 
-
-                <div class="flex flex-row scroll-fade w-auto h-auto bg-white shadow-md">
-
-                    <div class="w-auto h-auto p-4 bg-slate-100 border-3 shadow-2xl">
-                        <button onclick="populateData({{ vehicle.id }});" id="populate-data"
-                                class="lg:mb-5 sm:mb-20 p-2 bg-gray-300 hover:bg-gray-400 duration-500 rounded-sm lg:text-lg sm:text-5xl">
-                            Edit
-                        </button>
-                        <a class="p-2 bg-gray-300 hover:bg-gray-400 duration-500 rounded-sm lg:text-lg sm:text-5xl"
-                           href="{{ url_for("main.service_viewer", vehicle_model=vehicle.model) }}">
-                            +Service
-
-                        </a>
+                    <div class="h-[10vh] w-full flex items-center justify-center">
+                        <h1 class="font-bold font-montserrat font text-electricBlue text-4xl">{{ vehicle.model }}</h1>
                     </div>
-                    <div class="relative flex flex-col">
-                        <a onclick="return confirm('Are you sure you want to delete {{ vehicle.name }}?')"
-                           href="{{ url_for('main.delete_vehicle', vehicle_id=vehicle.id) }}"
-                           class="absolute top-3 right-3">
-                            <svg id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                                 xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px"
-                                 viewBox="0 0 485 485" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"
-                            class="fill-red-600"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier"> <g> <g> <rect x="67.224" width="350.535"
-                                                                           height="71.81"></rect>
-                                    <path d="M417.776,92.829H67.237V485h350.537V92.829H417.776z M165.402,431.447h-28.362V146.383h28.362V431.447z M256.689,431.447 h-28.363V146.383h28.363V431.447z M347.97,431.447h-28.361V146.383h28.361V431.447z"></path> </g> </g> </g></svg>
-                        </a>
-                        <img class="w-full h-3/4 object-cover object-center"
-                             src="{{ url_for('main.get_image', picture_id=vehicle.picture) }}"
-                             alt="Vehicle Image">
-                        <div class="p-4">
-                            <h2 class="text-xl font-semibold text-gray-800">{{ vehicle.make }} {{ vehicle.model }}</h2>
-                            <p class="mb-3 text-gray-600 mt-2">Mileage: {{ vehicle.mileage }} miles</p>
+
+                    <div class="h-[15vh] w-full overflow-hidden">
+                        <img class="object-contain w-full mx-auto"
+                             src="{{ url_for("main.get_image", picture_id=vehicle.picture) }}" alt="vehicle image"/>
+                    </div>
+
+                    <div class="h-[25vh] w-full text-slateWhite p-4">
+                        <p class="text-base font-medium font-roboto"> Make: {{ vehicle.make }} |
+                            Year: {{ vehicle.year }}</p>
+                        <p class="text-sm font-normal font-roboto text-lightSteel"> mileage: {{ vehicle.mileage }}</p>
+                        <hr class="mt-2">
+                        <div class="flex flex-row my-5 space-x-4">
+                            <div class="flex flex-col space-y-5 text-center text-charcoal">
+                                <button class="w-20 bg-goldenYellow rounded-2xl hover:bg-yellow-600 duration-200 p-2"
+                                        onclick=populateData(2)>Edit
+                                </button>
+                                <a href="{{ url_for('main.service_viewer', vehicle_model=vehicle.model) }}"
+                                   class="w-20 bg-goldenYellow rounded-2xl hover:bg-yellow-600 duration-200 p-2">
+                                    Services</a>
+
+                            </div>
+                            <div>
+                                <h1 class="font-medium font-roboto text-base">Last recorder service:</h1>
+                                <hr class="bg-lightSteel">
+                                {% if vehicle.services %}
+                                    <p class="text-sm font-normal font-roboto text-lightSteel"> {{ vehicle.services[-1].service }} </p>
+                                {% else %}
+                                    <p class="text-sm font-normal font-roboto text-lightSteel"> No recorded
+                                        services </p>
+                                {% endif %}
+                            </div>
+
                         </div>
                     </div>
 
 
                 </div>
-
-
-
             {% endfor %}
 
-            <button onclick="toggleModal(1)"
-                    class="p-3 border-2 rounded-3xl bg-gray-300 bg-opacity-70 hover:shadow-2xl hover:bg-opacity-100 duration-500 mb-96">
-                <svg class="sm:w-20 sm:h-20 lg:w-10 lg:h-10"
-                     viewBox="0 0 50 50"
-                     xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
-                     xmlns:xlink="http://www.w3.org/1999/xlink"><rect fill="none"/>
-                    <line fill="none" stroke="#000000" stroke-miterlimit="10" stroke-width="4" x1="9" x2="41" y1="25"
-                          y2="25"/>
-                    <line fill="none" stroke="#000000" stroke-miterlimit="10" stroke-width="4" x1="25" x2="25" y1="9"
-                          y2="41"/></svg>
-            </button>
-            <div></div>
         </div>
     </div>
+
+
+
     <!-- ADD VEHICLE FORM MODAL --!>
     <div class="fixed flex items-center inset-0 overflow-y-auto h-full w-full bg-opacity-50 bg-gray-600"
          id="add-vehicle-modal"
@@ -106,7 +99,8 @@
 </svg>
                 </div>
             </div>
-            <form enctype="multipart/form-data" class="mt-2 p-5" method="post" action="{{ url_for('main.garage') }}">
+            <form enctype="multipart/form-data" class="mt-2 p-5" method="post"
+                  action="{{ url_for('main.garage') }}">
                 {{ add_vehicle_form.hidden_tag() }}
                 <div class="mt-5">
                     {{ add_vehicle_form.year }}
@@ -234,7 +228,8 @@
 </svg>
                 </div>
             </div>
-            <form enctype="multipart/form-data" class="mt-2 p-5" method="post" action="{{ url_for('main.garage') }}">
+            <form enctype="multipart/form-data" class="mt-2 p-5" method="post"
+                  action="{{ url_for('main.garage') }}">
                 {{ edit_vehicle_form.hidden_tag() }}
                 <input type="hidden" id="vehicle_id" name="vehicle_id">
                 <div class="mt-5">
