@@ -68,7 +68,8 @@
         <div class="grid sm:grid-col-1 lg:grid-cols-4 mx-auto">
             {% for vehicle in vehicles %}
                 <div class="relative flex flex-col sm:w-[35vh] lg:w-[30vh] h-[50vh] bg-steel mx-auto my-10 border-2 border-lightSteel rounded-lg shadow-2xl">
-                    <a onclick="return confirm('Are you sure you want to delete {{ vehicle.model }}?')" href="{{ url_for('main.delete', delete_id=vehicle.id, type="vehicle") }}"
+                    <a onclick="return confirm('Are you sure you want to delete {{ vehicle.model }}?')"
+                       href="{{ url_for('main.delete', delete_id=vehicle.id, type="vehicle") }}"
                        class="absolute top-3 right-3 w-[4vh] h-[4vh] p-2 bg-red-500 hover:bg-red-300 duration-500 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" class=""
                              viewBox="0 0 50 50">
@@ -76,7 +77,7 @@
                         </svg>
                     </a>
                     <div class="h-[10vh] w-full flex items-center justify-center">
-                        <h1 class="font-bold font-montserrat font text-electricBlue text-4xl">{{ vehicle.model }}</h1>
+                        <h1 class="font-bold font-montserrat font text-electricBlue sm:text-6xl lg:text-4xl">{{ vehicle.model }}</h1>
                     </div>
 
                     <div class="h-[15vh] w-full overflow-hidden">
@@ -85,27 +86,31 @@
                     </div>
 
                     <div class="h-[25vh] w-full text-slateWhite p-4">
-                        <p class="text-base font-medium font-roboto"> Make: {{ vehicle.make }} |
+                        <p class="text-base font-medium font-roboto sm:text-4xl lg:text-xl"> Make: {{ vehicle.make }} |
                             Year: {{ vehicle.year }}</p>
-                        <p class="text-sm font-normal font-roboto text-lightSteel"> mileage: {{ vehicle.mileage }}</p>
+                        <p class="text-sm font-normal font-roboto text-lightSteel sm:text-2xl lg:text-xl">
+                            mileage: {{ vehicle.mileage }}</p>
                         <hr class="mt-2">
                         <div class="flex flex-row my-5 space-x-4">
                             <div class="flex flex-col space-y-5 text-center text-charcoal">
-                                <button class="w-20 bg-goldenYellow rounded-2xl hover:bg-yellow-600 duration-200 p-2"
-                                        onclick=populateData({{ vehicle.id }})>Edit
+                                <button class="flex justify-center items-center w-[10vh] sm:h-[4vh] lg:h-[3vh] sm:text-3xl lg:text-xl bg-goldenYellow rounded-2xl hover:bg-yellow-600 duration-200 p-2"
+                                        onclick=populateData({{ vehicle.id }})><p>Edit</p>
                                 </button>
                                 <a href="{{ url_for('main.service_viewer', vehicle_model=vehicle.model) }}"
-                                   class="w-20 bg-goldenYellow rounded-2xl hover:bg-yellow-600 duration-200 p-2">
-                                    Services</a>
+                                   class="flex justify-center items-center w-[10vh] sm:h-[4vh] lg:h-[3vh]  sm:text-3xl lg:text-xl bg-goldenYellow rounded-2xl hover:bg-yellow-600 duration-200 p-2">
+                                    <p>Services</p>
+                                </a>
 
                             </div>
                             <div>
-                                <h1 class="font-medium font-roboto text-base">Last recorder service:</h1>
+                                <h1 class="font-medium font-roboto text-base sm:text-3xl lg:text-sm">Last recorder
+                                    service:</h1>
                                 <hr class="bg-lightSteel">
                                 {% if vehicle.services %}
-                                    <p class="text-sm font-normal font-roboto text-lightSteel"> {{ vehicle.services[-1].service }} </p>
+                                    <p class="text-sm font-normal font-roboto text-lightSteel sm:text-3xl lg:text-sm"> {{ vehicle.services[-1].service }} </p>
                                 {% else %}
-                                    <p class="text-sm font-normal font-roboto text-lightSteel"> No recorded
+                                    <p class="text-sm font-normal font-roboto text-lightSteel sm:text-3xl lg:text-sm">
+                                        No recorded
                                         services </p>
                                 {% endif %}
                             </div>

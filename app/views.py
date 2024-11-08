@@ -155,12 +155,14 @@ def service_viewer(vehicle_model):
     return render_template("services.html", vehicle=vehicle, services=prior_services, add_service_form=add_service_form)
 
 
-@main_bp.route("/get-image/<int:picture_id>")
-def get_image(picture_id):
+@main_bp.route("/get-image/")
+def get_image():
+    """Fetches picture from database associated with id | Returns picture or placeholder picture if non existent"""
     # get picture id from url, retrieve picture object
     # extract picture col (Binary Data)
     # use bytes_io tool to construct BytesIO object
     # send file
+    picture_id = request.args.get("picture_id")
     blob = Pictures.query.filter(Pictures.id == picture_id).scalar()
     if blob.picture:
         bytes_io = BytesIO(blob.picture)
@@ -172,6 +174,7 @@ def get_image(picture_id):
 
 @main_bp.route("/get-data")
 def get_data():
+    """Retrieves data corresponding to a database table and column"""
     # retrieve vehicle object, set required data, create dict with packaged data, send package
     data_id = request.args.get("id")
     type = request.args.get("type")
@@ -187,6 +190,7 @@ def get_data():
 @login_required
 @main_bp.route("/delete")
 def delete():
+    """Deletes col from associated database table"""
     # validate and retrieve delete object, use db object to delete from database, commit changes
     delete_id = request.args.get("delete_id")
     type = request.args.get("type")
