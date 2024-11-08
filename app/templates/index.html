@@ -1,10 +1,17 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
 
-{% block title %}
-    Home
-{% endblock %}
-{% block style %}
+    <link href="{{ url_for('static', filename='css/dist/output.css') }}" rel="stylesheet">
+
     <style>
+        flash_message {
+            opacity: 0;
+            transition: opacity 5s ease-in-out;
+        }
+
         .scroll-fade {
             transition: opacity .05s ease-in-out;
         }
@@ -19,103 +26,113 @@
             transition: opacity 1s ease-in-out;
 
         }
+
     </style>
-{% endblock %}
-{% block bodystyle %}class="bg-fixed bg-center bg-cover bg-no-repeat" style="background-image:
-    url('../static/wrenches.jpg');"{% endblock %}
-{% block content %}
-    <div class="container h-screen flex justify-center items-center mx-auto ">
-        <div class="scroll-fade">
-            <h1 class="text-left text-white text-7xl font-serif">Service Tracker</h1>
-            <p class="text-left text-gray-400 text-4xl mb-5">Log all services performed on your vehicles</p>
-            {% if current_user.is_authenticated == False %}
-                <button onclick="toggleModal(1)"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl sm:w-80 sm:h-40 lg:w-auto lg:h-auto">
-                    Login
-                </button>
 
-                <button onclick="toggleModal(2)"
-                        class="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl sm:w-80 sm:h-40 lg:w-auto lg:h-auto">
-                    Register
-                </button>
-            {% endif %}
-        </div>
-        <div class="fixed lg:bottom-56 sm:bottom-1/3 text-center scroll-down fade-in">
-            <p class="text-white text-2xl">scroll to see more</p>
-            <br/>
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
-                 class="bi bi-chevron-down mx-auto animate-bounce"
-                 viewBox="0 0 16 16">
-                <path fill-rule="evenodd"
-                      d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-            </svg>
-        </div>
-        <div class="fixed lg:top-56 sm:top-1/3 text-center scroll-up fade">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
-                 class="bi bi-chevron-up mx-auto animate-bounce"
-                 viewBox="0 0 16 16">
-                <path fill-rule="evenodd"
-                      d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"/>
-            </svg>
-            <br/>
-
-
-        </div>
-    </div>
-
-    <div class="flex flex-col justify-center items-center mx-auto space-y-36">
-
-        <div class="scroll-fade w-3/6">
-            <h1 class="text-left text-white text-7xl font-serif">First add a vehicle.</h1>
-            <p class="text-left text-gray-400 text-4xl">Add a vehicle to your garage, specify the year, make, and
-                model. Optionally add a picture of the vehicle!</p>
-
-        </div>
-        <div class="scroll-fade w-3/6">
-            <h1 class="text-left text-white text-7xl font-serif">Next add your completed service.</h1>
-            <p class="text-left text-gray-400 text-4xl">Go to your garage and select the vehicle you have completed
-                service on. Next click the add service button.</p>
-        </div>
-        <div class="scroll-fade w-3/6">
-            <h1 class="text-left text-white text-7xl font-serif">Finally, complete the service form.</h1>
-            <p class="text-left text-gray-400 text-4xl">Add the date, the name of the service completed, a description
-                or story of the service, and optionally a picture of the service being completed. NOTE, if the date
-                is left blank it will automatically store today's date.</p>
-        </div>
-        <div class="scroll-fade w-3/6 last-scroll">
-            <h1 class="text-left text-white text-7xl font-serif">What are you waiting for? Sign up today!</h1>
-            <p class="text-left text-gray-400 text-4xl font-sans">Sign up so that we can keep track of your vehicle
-                service history for you! Access your service history from anywhere with Service Tracker.</p>
-        </div>
-        <div class="w-3/6 opacity-0">
-            <h1 class="text-left text-white text-7xl font-serif">What are you waiting for? Sign up today!</h1>
-            <p class="text-left text-gray-400 text-4xl font-sans">Sign up so that we can keep track of your vehicle
-                service history for you! Access your service history from anywhere with Service Tracker.</p>
-        </div>
-        <div class="w-3/6 opacity-0">
-            <h1 class="text-left text-white text-7xl font-serif">What are you waiting for? Sign up today!</h1>
-            <p class="text-left text-gray-400 text-4xl font-sans">Sign up so that we can keep track of your vehicle
-                service history for you! Access your service history from anywhere with Service Tracker.</p>
-        </div>
-
-
-    </div>
-
-    <!-- LOGIN FORM MODAL !-->
-    <div class="fixed flex items-center inset-0 overflow-y-auto h-full w-full backdrop-blur-md"
-         id="login-modal"
-         style="display: none;">
-
-        <!-- Modal Content -->
-        <div class="relative top-20 mx-auto p-5 border sm:w-screen lg:w-auto h-auto shadow-lg rounded-md bg-white sm:text-5xl lg:text-2xl">
-            <button onclick="toggleModal(0)"
-                    class="absolute top-3 right-3 text-red bg-transparent hover:bg-gray-200 hover:text-red rounded-full sm:text-5xl flex items-center justify-center">
-                &times;
+</head>
+<body class="bg-fixed bg-center bg-cover bg-no-repeat" style="background-image:
+    url('../static/wrenches.jpg');">
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="z-50 fixed flash-message bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+<div class="container h-screen flex justify-center items-center mx-auto ">
+    <div class="scroll-fade">
+        <h1 class="text-left text-white text-7xl font-serif">Service Tracker</h1>
+        <p class="text-left text-gray-400 text-4xl mb-5">Log all services performed on your vehicles</p>
+        {% if current_user.is_authenticated == False %}
+            <button onclick="toggleModal(1)"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl sm:w-80 sm:h-40 lg:w-auto lg:h-auto">
+                Login
             </button>
-            <div class="mt-3 text-center">
-                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
-                         width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+
+            <button onclick="toggleModal(2)"
+                    class="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl sm:w-80 sm:h-40 lg:w-auto lg:h-auto">
+                Register
+            </button>
+        {% endif %}
+    </div>
+    <div class="fixed lg:bottom-56 sm:bottom-1/3 text-center scroll-down fade-in">
+        <p class="text-white text-2xl">scroll to see more</p>
+        <br/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
+             class="bi bi-chevron-down mx-auto animate-bounce"
+             viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+        </svg>
+    </div>
+    <div class="fixed lg:top-56 sm:top-1/3 text-center scroll-up fade">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
+             class="bi bi-chevron-up mx-auto animate-bounce"
+             viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                  d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"/>
+        </svg>
+        <br/>
+
+
+    </div>
+</div>
+
+<div class="flex flex-col justify-center items-center mx-auto space-y-36">
+
+    <div class="scroll-fade w-3/6">
+        <h1 class="text-left text-white text-7xl font-serif">First add a vehicle.</h1>
+        <p class="text-left text-gray-400 text-4xl">Add a vehicle to your garage, specify the year, make, and
+            model. Optionally add a picture of the vehicle!</p>
+
+    </div>
+    <div class="scroll-fade w-3/6">
+        <h1 class="text-left text-white text-7xl font-serif">Next add your completed service.</h1>
+        <p class="text-left text-gray-400 text-4xl">Go to your garage and select the vehicle you have completed
+            service on. Next click the add service button.</p>
+    </div>
+    <div class="scroll-fade w-3/6">
+        <h1 class="text-left text-white text-7xl font-serif">Finally, complete the service form.</h1>
+        <p class="text-left text-gray-400 text-4xl">Add the date, the name of the service completed, a description
+            or story of the service, and optionally a picture of the service being completed. NOTE, if the date
+            is left blank it will automatically store today's date.</p>
+    </div>
+    <div class="scroll-fade w-3/6 last-scroll">
+        <h1 class="text-left text-white text-7xl font-serif">What are you waiting for? Sign up today!</h1>
+        <p class="text-left text-gray-400 text-4xl font-sans">Sign up so that we can keep track of your vehicle
+            service history for you! Access your service history from anywhere with Service Tracker.</p>
+    </div>
+    <div class="w-3/6 opacity-0">
+        <h1 class="text-left text-white text-7xl font-serif">What are you waiting for? Sign up today!</h1>
+        <p class="text-left text-gray-400 text-4xl font-sans">Sign up so that we can keep track of your vehicle
+            service history for you! Access your service history from anywhere with Service Tracker.</p>
+    </div>
+    <div class="w-3/6 opacity-0">
+        <h1 class="text-left text-white text-7xl font-serif">What are you waiting for? Sign up today!</h1>
+        <p class="text-left text-gray-400 text-4xl font-sans">Sign up so that we can keep track of your vehicle
+            service history for you! Access your service history from anywhere with Service Tracker.</p>
+    </div>
+
+
+</div>
+
+<!-- LOGIN FORM MODAL !-->
+<div class="fixed flex items-center inset-0 overflow-y-auto h-full w-full backdrop-blur-md"
+     id="login-modal"
+     style="display: none;">
+
+    <!-- Modal Content -->
+    <div class="relative top-20 mx-auto p-5 border sm:w-screen lg:w-auto h-auto shadow-lg rounded-md bg-white sm:text-5xl lg:text-2xl">
+        <button onclick="toggleModal(0)"
+                class="absolute top-3 right-3 text-red bg-transparent hover:bg-gray-200 hover:text-red rounded-full sm:text-5xl flex items-center justify-center">
+            &times;
+        </button>
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                     width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
 
 
                         <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
@@ -131,222 +148,222 @@
                                   transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
                         </g>
                     </svg>
-                </div>
-                <h3 class="lg:text-lg sm:text-3xl leading-6 font-medium text-gray-900">Login to Your Account</h3>
-                <!-- Login Form -->
-                <form class="mt-2 p-5 lg:space-y-0.5 sm:space-y-10" method="post" action="{{ url_for('main.index') }}">
-                    {{ login_form.hidden_tag() }}
-                    <div class="mt-5">
-                        {{ login_form.email_username }}
-                        {% if login_form.email_username.errors %}
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                                 role="alert">
-                                <strong class="font-bold">Oops!</strong>
-                                {% for error in login_form.email_username.errors %}
-
-
-                                    <span class="block sm:inline">{{ error }}</span>
-
-
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    <div>
-                        {{ login_form.password }}
-                        {% if login_form.password.errors %}
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                                 role="alert">
-                                <strong class="font-bold">Oops!</strong>
-                                {% for error in login_form.password.errors %}
-
-
-                                    <span class="block sm:inline">{{ error }}</span>
-
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="">
-                        {{ login_form.submit() }}
-                    </div>
-
-                </form>
-                <button onclick="toggleModal(2)"
-                        class="underline mt-2 p-5 mx-auto flex items-center justify-center w-15 h-8 bg-transparent hover:bg-blue-200 ">
-                    Register
-                </button>
-
-                <p class="lg:mt-2 sm:mt-10 lg:text-sm sm:text-2xl text-gray-500">We will never share your information
-                    with anyone.</p>
-
             </div>
+            <h3 class="lg:text-lg sm:text-3xl leading-6 font-medium text-gray-900">Login to Your Account</h3>
+            <!-- Login Form -->
+            <form class="mt-2 p-5 lg:space-y-0.5 sm:space-y-10" method="post" action="{{ url_for('main.index') }}">
+                {{ login_form.hidden_tag() }}
+                <div class="mt-5">
+                    {{ login_form.email_username }}
+                    {% if login_form.email_username.errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in login_form.email_username.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    {{ login_form.password }}
+                    {% if login_form.password.errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in login_form.password.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="">
+                    {{ login_form.submit() }}
+                </div>
+
+            </form>
+            <button onclick="toggleModal(2)"
+                    class="underline mt-2 p-5 mx-auto flex items-center justify-center w-15 h-8 bg-transparent hover:bg-blue-200 ">
+                Register
+            </button>
+
+            <p class="lg:mt-2 sm:mt-10 lg:text-sm sm:text-2xl text-gray-500">We will never share your information
+                with anyone.</p>
 
         </div>
 
-
     </div>
 
-    <!-- REGISTER FORM MODAL !-->
-    <div class="fixed flex items-center inset-0 overflow-y-auto h-full w-full backdrop-blur-md"
-         id="register-modal"
-         style="display: none;">
 
-        <!-- Modal Content -->
-        <div class="relative top-20 mx-auto p-5 border sm:w-screen lg:w-auto h-auto shadow-lg rounded-md bg-white sm:text-5xl lg:text-2xl">
-            <button onclick="toggleModal(0)"
-                    class="absolute top-3 right-3 text-red bg-transparent hover:bg-gray-200 hover:text-red rounded-full lg:text-2xl w-fit h-fit flex items-center justify-center">
-                &times;
-            </button>
-            <div class="mt-3 text-center">
-                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                         width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+</div>
+
+<!-- REGISTER FORM MODAL !-->
+<div class="fixed flex items-center inset-0 overflow-y-auto h-full w-full backdrop-blur-md"
+     id="register-modal"
+     style="display: none;">
+
+    <!-- Modal Content -->
+    <div class="relative top-20 mx-auto p-5 border sm:w-screen lg:w-auto h-auto shadow-lg rounded-md bg-white sm:text-5xl lg:text-2xl">
+        <button onclick="toggleModal(0)"
+                class="absolute top-3 right-3 text-red bg-transparent hover:bg-gray-200 hover:text-red rounded-full lg:text-2xl w-fit h-fit flex items-center justify-center">
+            &times;
+        </button>
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                     width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
 
 <defs>
 </defs>
-                        <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
-                           transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
+                    <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
+                       transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
 	<path d="M 70.711 30.158 c 8.2 14.201 3.333 32.359 -10.867 40.556 c -14.201 8.2 -32.359 3.333 -40.556 -10.867 s -3.333 -32.359 10.867 -40.556 C 44.355 11.091 62.514 15.957 70.711 30.158 z"
           style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(81,126,217); fill-rule: nonzero; opacity: 1;"
           transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
-                            <path d="M 32.538 7.061 c 0 2.685 -1.545 5.093 -3.929 6.327 c -0.476 0.245 -0.948 0.504 -1.416 0.774 c -0.468 0.27 -0.928 0.55 -1.378 0.84 c -2.26 1.448 -5.117 1.582 -7.443 0.239 c -3.378 -1.951 -7.696 -0.792 -9.645 2.584 l -5.4 9.352 c -1.951 3.378 -0.792 7.696 2.584 9.645 l 0.003 0.002 c 2.291 1.322 3.641 3.815 3.512 6.456 c -0.056 1.149 -0.057 2.301 0 3.455 c 0.128 2.638 -1.226 5.124 -3.513 6.444 L 5.911 53.18 c -3.378 1.951 -4.535 6.269 -2.584 9.645 l 5.4 9.352 c 1.951 3.378 6.269 4.535 9.645 2.584 l 0.002 -0.002 c 2.286 -1.321 5.117 -1.25 7.336 0.18 c 0.972 0.625 1.97 1.201 2.993 1.726 c 2.353 1.209 3.836 3.625 3.836 6.269 v 0.003 c 0 3.9 3.162 7.061 7.061 7.061 h 10.801 c 3.9 0 7.061 -3.162 7.061 -7.061 l 0 0 c 0 -2.685 1.545 -5.093 3.929 -6.327 c 0.475 -0.245 0.948 -0.504 1.416 -0.774 c 0.468 -0.27 0.928 -0.55 1.378 -0.84 c 2.26 -1.448 5.117 -1.582 7.443 -0.239 c 3.378 1.951 7.696 0.792 9.645 -2.584 l 5.4 -9.352 c 1.951 -3.378 0.792 -7.696 -2.584 -9.645 l -0.003 -0.002 c -2.291 -1.322 -3.641 -3.815 -3.512 -6.456 c 0.056 -1.149 0.057 -2.301 0 -3.455 c -0.128 -2.638 1.226 -5.124 3.513 -6.444 l 0.002 -0.002 c 3.378 -1.951 4.535 -6.268 2.584 -9.645 l -5.4 -9.352 c -1.949 -3.378 -6.268 -4.535 -9.645 -2.584 l -0.002 0.002 c -2.286 1.321 -5.117 1.25 -7.336 -0.18 c -0.972 -0.625 -1.97 -1.201 -2.993 -1.726 c -2.353 -1.209 -3.836 -3.625 -3.836 -6.269 V 7.061 c 0 -3.9 -3.162 -7.061 -7.061 -7.061 L 39.599 0 C 35.699 0 32.538 3.162 32.538 7.061 z M 67.038 32.279 c 7.028 12.172 2.857 27.736 -9.315 34.763 c -12.172 7.028 -27.736 2.857 -34.763 -9.315 s -2.857 -27.736 9.315 -34.763 C 44.447 15.935 60.012 20.107 67.038 32.279 z"
-                                  style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(77,137,234); fill-rule: nonzero; opacity: 1;"
-                                  transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
-                            <path d="M 62.572 44.642 c 0 -4.887 -1.995 -9.307 -5.215 -12.492 c -0.957 -0.946 -2.586 -0.251 -2.586 1.095 v 8.994 c 0 2.894 -2.346 5.24 -5.24 5.24 h -9.062 c -2.894 0 -5.24 -2.346 -5.24 -5.24 v -8.993 c 0 -1.347 -1.63 -2.041 -2.587 -1.094 c -3.409 3.372 -5.445 8.129 -5.193 13.358 c 0.334 6.942 4.793 12.864 10.932 15.393 l 0 28.974 C 38.779 89.947 39.183 90 39.6 90 h 10.801 c 0.417 0 0.821 -0.053 1.218 -0.123 V 60.922 C 58.043 58.308 62.572 52.005 62.572 44.642 z"
-                                  style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(240,240,240); fill-rule: nonzero; opacity: 1;"
-                                  transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
+                        <path d="M 32.538 7.061 c 0 2.685 -1.545 5.093 -3.929 6.327 c -0.476 0.245 -0.948 0.504 -1.416 0.774 c -0.468 0.27 -0.928 0.55 -1.378 0.84 c -2.26 1.448 -5.117 1.582 -7.443 0.239 c -3.378 -1.951 -7.696 -0.792 -9.645 2.584 l -5.4 9.352 c -1.951 3.378 -0.792 7.696 2.584 9.645 l 0.003 0.002 c 2.291 1.322 3.641 3.815 3.512 6.456 c -0.056 1.149 -0.057 2.301 0 3.455 c 0.128 2.638 -1.226 5.124 -3.513 6.444 L 5.911 53.18 c -3.378 1.951 -4.535 6.269 -2.584 9.645 l 5.4 9.352 c 1.951 3.378 6.269 4.535 9.645 2.584 l 0.002 -0.002 c 2.286 -1.321 5.117 -1.25 7.336 0.18 c 0.972 0.625 1.97 1.201 2.993 1.726 c 2.353 1.209 3.836 3.625 3.836 6.269 v 0.003 c 0 3.9 3.162 7.061 7.061 7.061 h 10.801 c 3.9 0 7.061 -3.162 7.061 -7.061 l 0 0 c 0 -2.685 1.545 -5.093 3.929 -6.327 c 0.475 -0.245 0.948 -0.504 1.416 -0.774 c 0.468 -0.27 0.928 -0.55 1.378 -0.84 c 2.26 -1.448 5.117 -1.582 7.443 -0.239 c 3.378 1.951 7.696 0.792 9.645 -2.584 l 5.4 -9.352 c 1.951 -3.378 0.792 -7.696 -2.584 -9.645 l -0.003 -0.002 c -2.291 -1.322 -3.641 -3.815 -3.512 -6.456 c 0.056 -1.149 0.057 -2.301 0 -3.455 c -0.128 -2.638 1.226 -5.124 3.513 -6.444 l 0.002 -0.002 c 3.378 -1.951 4.535 -6.268 2.584 -9.645 l -5.4 -9.352 c -1.949 -3.378 -6.268 -4.535 -9.645 -2.584 l -0.002 0.002 c -2.286 1.321 -5.117 1.25 -7.336 -0.18 c -0.972 -0.625 -1.97 -1.201 -2.993 -1.726 c -2.353 -1.209 -3.836 -3.625 -3.836 -6.269 V 7.061 c 0 -3.9 -3.162 -7.061 -7.061 -7.061 L 39.599 0 C 35.699 0 32.538 3.162 32.538 7.061 z M 67.038 32.279 c 7.028 12.172 2.857 27.736 -9.315 34.763 c -12.172 7.028 -27.736 2.857 -34.763 -9.315 s -2.857 -27.736 9.315 -34.763 C 44.447 15.935 60.012 20.107 67.038 32.279 z"
+                              style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(77,137,234); fill-rule: nonzero; opacity: 1;"
+                              transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
+                        <path d="M 62.572 44.642 c 0 -4.887 -1.995 -9.307 -5.215 -12.492 c -0.957 -0.946 -2.586 -0.251 -2.586 1.095 v 8.994 c 0 2.894 -2.346 5.24 -5.24 5.24 h -9.062 c -2.894 0 -5.24 -2.346 -5.24 -5.24 v -8.993 c 0 -1.347 -1.63 -2.041 -2.587 -1.094 c -3.409 3.372 -5.445 8.129 -5.193 13.358 c 0.334 6.942 4.793 12.864 10.932 15.393 l 0 28.974 C 38.779 89.947 39.183 90 39.6 90 h 10.801 c 0.417 0 0.821 -0.053 1.218 -0.123 V 60.922 C 58.043 58.308 62.572 52.005 62.572 44.642 z"
+                              style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(240,240,240); fill-rule: nonzero; opacity: 1;"
+                              transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
 </g>
 </svg>
-                </div>
-                <h3 class="lg:text-lg sm:text-3xl leading-6 font-medium text-gray-900">Register an Account</h3>
-                <!-- Login Form -->
-                <form class="mt-2 p-5 lg:space-y-0.5 sm:space-y-10" method="post" action="{{ url_for('main.index') }}">
-                    {{ registration_form.hidden_tag() }}
-                    <div class="mt-5">
-                        {{ registration_form.email }}
-                        {% if registration_form.email.errors %}
-                            {% for error in registration_form.email.errors %}
-                                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                                     role="alert">
-                                    <strong class="font-bold">Oops!</strong>
-                                    <span class="block sm:inline">{{ error }}</span>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="">
-                        {{ registration_form.username }}
-                        {% if registration_form.username.errors %}
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                                 role="alert">
-                                <strong class="font-bold">Oops!</strong>
-                                {% for error in registration_form.username.errors %}
-
-
-                                    <span class="block sm:inline">{{ error }}</span>
-
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    <div class="">
-                        {{ registration_form.password }}
-                        {% if registration_form.password.errors %}
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                                 role="alert">
-                                <strong class="font-bold">Oops!</strong>
-                                {% for error in registration_form.password.errors %}
-
-
-                                    <span class="block sm:inline">{{ error }}</span>
-
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    <div class="">
-                        {{ registration_form.confirm_password }}
-                    </div>
-                    <div class="">
-                        {{ registration_form.submit() }}
-                    </div>
-
-                </form>
-                <button onclick="toggleModal(1)"
-                        class="underline mt-2 p-5 mx-auto flex items-center justify-center w-15 h-8 bg-transparent hover:bg-blue-200 ">
-                    Log In
-                </button>
-
-                <p class="lg:mt-2 sm:mt-10 lg:text-sm sm:text-2xl text-gray-500">We will never share your information
-                    with anyone.</p>
-
             </div>
+            <h3 class="lg:text-lg sm:text-3xl leading-6 font-medium text-gray-900">Register an Account</h3>
+            <!-- Login Form -->
+            <form class="mt-2 p-5 lg:space-y-0.5 sm:space-y-10" method="post" action="{{ url_for('main.index') }}">
+                {{ registration_form.hidden_tag() }}
+                <div class="mt-5">
+                    {{ registration_form.email }}
+                    {% if registration_form.email.errors %}
+                        {% for error in registration_form.email.errors %}
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                                 role="alert">
+                                <strong class="font-bold">Oops!</strong>
+                                <span class="block sm:inline">{{ error }}</span>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="">
+                    {{ registration_form.username }}
+                    {% if registration_form.username.errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in registration_form.username.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="">
+                    {{ registration_form.password }}
+                    {% if registration_form.password.errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in registration_form.password.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="">
+                    {{ registration_form.confirm_password }}
+                </div>
+                <div class="">
+                    {{ registration_form.submit() }}
+                </div>
+
+            </form>
+            <button onclick="toggleModal(1)"
+                    class="underline mt-2 p-5 mx-auto flex items-center justify-center w-15 h-8 bg-transparent hover:bg-blue-200 ">
+                Log In
+            </button>
+
+            <p class="lg:mt-2 sm:mt-10 lg:text-sm sm:text-2xl text-gray-500">We will never share your information
+                with anyone.</p>
 
         </div>
 
-
     </div>
 
-    <script>
-        function toggleModal(state) {
-            const loginModal = document.getElementById('login-modal');
-            const registerModal = document.getElementById('register-modal');
-            if (state === 0) {
-                loginModal.style.display = 'none';
-                registerModal.style.display = 'none';
-            } else if (state === 1) {
-                registerModal.style.display = 'none';
-                loginModal.style.display = 'flex';
-            } else if (state === 2) {
-                loginModal.style.display = 'none';
-                registerModal.style.display = 'flex';
+
+</div>
+
+<script>
+    function toggleModal(state) {
+        const loginModal = document.getElementById('login-modal');
+        const registerModal = document.getElementById('register-modal');
+        if (state === 0) {
+            loginModal.style.display = 'none';
+            registerModal.style.display = 'none';
+        } else if (state === 1) {
+            registerModal.style.display = 'none';
+            loginModal.style.display = 'flex';
+        } else if (state === 2) {
+            loginModal.style.display = 'none';
+            registerModal.style.display = 'flex';
+
+        }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        {% if modal_state %}
+            toggleModal({{ modal_state }})
+        {% endif %}
+
+        function fadeOnScroll() {
+            const elements = document.querySelectorAll('.scroll-fade');
+            const midWindowHeight = window.innerHeight / 2;
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                let opacityScale = Math.abs((rect.top + rect.height / 2) - midWindowHeight);
+                let opacity = 1 - (opacityScale * .005);
+                el.style.opacity = opacity;
+
+
+            });
+            const lastScroll = document.querySelector('.last-scroll');
+            const lastScrollRect = lastScroll.getBoundingClientRect();
+            let scrollDown = document.querySelector('.scroll-down');
+            let scrollUp = document.querySelector('.scroll-up')
+            if (lastScrollRect.top <= midWindowHeight) {
+                scrollUp.classList.replace('fade', 'fade-in');
+                scrollDown.classList.replace('fade-in', 'fade');
+
+
+            } else {
+                scrollUp.classList.replace('fade-in', 'fade');
+                scrollDown.classList.replace('fade', 'fade-in');
 
             }
         }
 
-
-        document.addEventListener('DOMContentLoaded', function () {
-            {% if modal_state %}
-                toggleModal({{ modal_state }})
-            {% endif %}
-
-            function fadeOnScroll() {
-                const elements = document.querySelectorAll('.scroll-fade');
-                const midWindowHeight = window.innerHeight / 2;
-                elements.forEach(el => {
-                    const rect = el.getBoundingClientRect();
-                    let opacityScale = Math.abs((rect.top + rect.height / 2) - midWindowHeight);
-                    let opacity = 1 - (opacityScale * .005);
-                    el.style.opacity = opacity;
+        document.addEventListener('scroll', fadeOnScroll);
 
 
-                });
-                const lastScroll = document.querySelector('.last-scroll');
-                const lastScrollRect = lastScroll.getBoundingClientRect();
-                let scrollDown = document.querySelector('.scroll-down');
-                let scrollUp = document.querySelector('.scroll-up')
-                if (lastScrollRect.top <= midWindowHeight) {
-                    scrollUp.classList.replace('fade', 'fade-in');
-                    scrollDown.classList.replace('fade-in', 'fade');
+    });
 
+</script>
+</body>
+<script>
 
-                } else {
-                    scrollUp.classList.replace('fade-in', 'fade');
-                    scrollDown.classList.replace('fade', 'fade-in');
-
-                }
-            }
-
-            document.addEventListener('scroll', fadeOnScroll);
-
-
-        });
-
-    </script>
-{% endblock %}
-{% block script %}
-
-
-{% endblock %}
+</script>
+</html>
