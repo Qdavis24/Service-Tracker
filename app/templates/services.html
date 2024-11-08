@@ -9,6 +9,10 @@
         }
     </style>
 {% endblock %}
+{% block nav_buttons %}
+    <a href="{{ url_for('main.garage') }}"
+       class="border-3 rounded-lg lg:p-2 sm:p-8 bg-gray-300 bg-opacity-70 hover:bg-opacity-100 duration-500 sm:text-5xl lg:text-xl">Garage</a>
+{% endblock %}
 {% block search_form %}
     <form action="{{ url_for('main.service_viewer', vehicle_model=vehicle.model ) }}" method="POST" class="sm:text-5xl">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -22,6 +26,27 @@
 {% block add_button_function %}toggleModal(1){% endblock %}
 {% block see_all_url %}{{ url_for("main.service_viewer", vehicle_model=vehicle.model) }}{% endblock %}
 {% block body_content %}
+    <div class="flex flex-col space-y-2 mt-5">
+        {% for service in services %}
+            <div class="flex flex-row w-full h-[5vh] {% if loop.index0 % 2 == 0 %}bg-steel{% else %}bg-lightSteel{% endif %} border border-3 border-darkerCharcoal p-2">
+                <div class="ml-2 w-[3vw] h-full">
+                    <img src="{{ url_for('main.get_image',  picture_id=service.picture) }}"/>
+                </div>
+                <div class="flex items-center justify-center w-[15vw] h-full font-semibold text-lg text-electricBlue">
+                    {{ service.service }}
+                </div>
+                <div class="flex items-center justify-center w-[13vw] h-full font-medium text-base text-slateWhite">
+                    {{ service.date.strftime('%Y-%m-%d') }}
+                </div>
+                <div class="flex items-center justify-center w-[13vw] h-full font-medium text-base text-slateWhite">
+                    {{ service.mileage }}
+                </div>
+                <div class="flex items-center justify-center w-[56vw] h-full font-medium text-base text-slateWhite">
+                    {{ service.story[0:25] | safe }}{% if service.story|length > 25 %}...{% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
 {% block modals %}
     <!-- ADD SERVICE FORM MODAL --!>

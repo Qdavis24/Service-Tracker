@@ -25,10 +25,10 @@
         </ul>
     {% endif %}
 {% endwith %}
-<div class="z-50 fixed flex flex-row space-x-3.5 top-5 lg:right-10 sm:right-5 sm:text-7xl lg:text-lg">
+<div class="fixed flex sm:flex-col-reverse lg:flex-row sm:space-x-0 lg:space-x-5 top-5 right-5 z-50  sm:text-7xl lg:text-lg">
     {% block nav_buttons %}{% endblock %}
     <a href="{{ url_for('main.logout') }}"
-       class="fixed top-5 right-5 border-3 rounded-lg lg:p-2 sm:p-8 bg-gray-300 bg-opacity-70 hover:bg-opacity-100 duration-500 sm:text-5xl lg:text-xl">Logout</a>
+       class="sm:mb-5 lg:mb-0 border-3 rounded-lg lg:p-2 sm:p-8 bg-gray-300 bg-opacity-70 hover:bg-opacity-100 duration-500 sm:text-5xl lg:text-xl">Logout</a>
 </div>
 <div id="header"
      class="min-w-full min-h-[25vh] bg-gradient-to-b from-darkerCharcoal to-charcoal border-2 border-steel shadow-2xl">
