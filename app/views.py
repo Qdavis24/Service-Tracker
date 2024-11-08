@@ -2,7 +2,8 @@ from flask import Blueprint, render_template, redirect, request, url_for, flash,
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from io import BytesIO
-from .extensions import db, and_, or_, sanitize_html, func
+from .extensions import db, and_, or_, func
+from .helpers import validate_delete, validate_data_request, sanitize_html
 from .models import Vehicles, Users, Services, Pictures
 from .forms import LoginForm, RegistrationForm, AddVehicleForm, EditVehicleForm, AddServiceForm
 
@@ -67,6 +68,13 @@ def index():
 @main_bp.route("/garage", methods=['GET', 'POST'])
 def garage():
     vehicles = current_user.vehicles
+    vehicle_model = request.form.get("vehicle_model")
+    if vehicle_model:
+        vehicles = [vehicle for vehicle in current_user.vehicles if vehicle.model == vehicle_model]
+        if len(vehicles) < 1:
+            flash(f"No vehicle found under {vehicle_model}")
+            vehicles = current_user.vehicles
+
     add_vehicle_form = AddVehicleForm()
     edit_vehicle_form = EditVehicleForm()
     if request.method == "POST":
@@ -106,7 +114,6 @@ def garage():
                 db.session.commit()
                 flash(f"Successfully updated {vehicle.make}")
                 return redirect(url_for("main.garage"))
-
     return render_template("garage.html", edit_vehicle_form=edit_vehicle_form, add_vehicle_form=add_vehicle_form,
                            vehicles=vehicles)
 
@@ -131,7 +138,6 @@ def service_viewer(vehicle_model):
                 if add_service_form.picture:
                     picture = Pictures(picture=add_service_form.picture.data.read())
                     db.session.add(picture)
-                    db.session.commit()
                 story = sanitize_html(add_service_form.story.data)
                 service = Services(vehicle_id=vehicle.id, owner_id=current_user.id, date=add_service_form.date.data,
                                    mileage=add_service_form.mileage.data,
@@ -157,7 +163,6 @@ def get_image(picture_id):
     # send file
     blob = Pictures.query.filter(Pictures.id == picture_id).scalar()
     if blob.picture:
-        print("y")
         bytes_io = BytesIO(blob.picture)
         bytes_io.seek(0)
         return send_file(bytes_io, mimetype="image/jpg")
@@ -165,54 +170,33 @@ def get_image(picture_id):
         return send_file("./static/placeholder_vehicle_image.png")
 
 
-
-"""
-These two views below could probably be refactored into one
-"""
-
-
-@main_bp.route("/get-vehicle-data/<int:vehicle_id>")
-def get_vehicle_data(vehicle_id):
+@main_bp.route("/get-data")
+def get_data():
     # retrieve vehicle object, set required data, create dict with packaged data, send package
-    vehicle = Vehicles.query.filter(Vehicles.id == vehicle_id).first_or_404()
-    needed_data = ["year", "make", "model", "mileage", "id"]
-    vehicle_data = {col.name: str(getattr(vehicle, col.name)) for col in vehicle.__table__.columns if col.name in
-                    needed_data}
-    return jsonify(vehicle_data)
+    data_id = request.args.get("id")
+    type = request.args.get("type")
+    data = validate_data_request(current_user.id, data_id, type)
+    if data:
+        needed_data = ["year", "make", "model", "mileage", "id"]
+        packaged_data = {}
+        for col in needed_data:
+            packaged_data[col] = getattr(data, col)
+    return jsonify(packaged_data)
 
 
-@main_bp.route("/get-service-data/<int:service_id>")
-def get_service_data(service_id):
-    # retrieve service object, set required data, create dict with packaged data, send package
-    service = Services.query.filter(Services.id == service_id).first_or_404()
-    needed_data = ["date", "mileage", "service", "story", "picture"]
-    service_data = {col.name: str(getattr(service, col.name)) for col in service.__table__.columns if
-                    col.name in needed_data}
-    return jsonify(service_data)
-
-
-"""
-These two views below could also be refactored into one view
-"""
-
-
-@main_bp.route("/delete-vehicle/<int:vehicle_id>")
-def delete_vehicle(vehicle_id):
-    # retrieve vehicle object, use db object to delete from database, commit changes
-    vehicle = Vehicles.query.filter(Vehicles.id == vehicle_id).first()
-    db.session.delete(vehicle)
-    db.session.commit()
+@login_required
+@main_bp.route("/delete")
+def delete():
+    # validate and retrieve delete object, use db object to delete from database, commit changes
+    delete_id = request.args.get("delete_id")
+    type = request.args.get("type")
+    to_delete = validate_delete(current_user.id, delete_id, type)
+    if to_delete:
+        db.session.delete(to_delete)
+        db.session.commit()
+    else:
+        flash("Naughty Naughty")
     return redirect(url_for("main.garage"))
-
-
-@main_bp.route("/delete-service/<int:service_id>")
-def delete_service(service_id):
-    # retrieve service, use db object to delete, then commit.
-    # retrieve vehicle modal from params, then send back out.
-    service = Services.query.filter(Services.id == service_id).first()
-    db.session.delete(service)
-    db.session.commit()
-    return redirect(url_for("main.service_viewer", vehicle_model=request.args.get("vehicle_model")))
 
 
 @login_required

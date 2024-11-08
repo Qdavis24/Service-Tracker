@@ -26,7 +26,7 @@
         {% for service in services %}
             <div class="{% if loop.first %}mt-96 {% endif %} flex flex-col relative scroll-fade w-3/4 bg-gray-900 rounded-lg shadow-md overflow-hidden m-10 p-10">
                 <a onclick="return confirm('Are you sure you want to delete {{ service.service }}?')"
-                   href="{{ url_for('main.delete_service', service_id=service.id, vehicle_model=vehicle.model) }}"
+                   href="{{ url_for('main.delete', delete_id=service.id, type="service") }}"
                    class="absolute p-2 top-3 right-3 bg-red-500 hover:bg-red-300 duration-500 rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" class="sm:w-20 sm:h-20 lg:w-10 lg:h-10"
                          viewBox="0 0 50 50">

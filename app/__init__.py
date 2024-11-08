@@ -1,6 +1,6 @@
 from flask import Flask
-from sqlalchemy.testing.pickleable import User
 from .models import Users
+from flask_wtf.csrf import CSRFProtect
 from flask_ckeditor import CKEditor, CKEditorField
 from .extensions import db, login_manager, migrate
 from .config import Config
@@ -21,6 +21,7 @@ def create_app():
         db.create_all()
     login_manager.init_app(app)
     ckeditor = CKEditor(app)
+    csrf = CSRFProtect(app)
 
     @login_manager.user_loader
     def load_user(user_id):
