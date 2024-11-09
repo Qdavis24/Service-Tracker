@@ -6,28 +6,6 @@
 
     <link href="{{ url_for('static', filename='css/dist/output.css') }}" rel="stylesheet">
 
-    <style>
-        flash_message {
-            opacity: 0;
-            transition: opacity 5s ease-in-out;
-        }
-
-        .scroll-fade {
-            transition: opacity .05s ease-in-out;
-        }
-
-        .fade {
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-
-        .fade-in {
-            opacity: 1;
-            transition: opacity 1s ease-in-out;
-
-        }
-
-    </style>
 
 </head>
 <body class="bg-fixed bg-center bg-cover bg-no-repeat" style="background-image:
@@ -36,38 +14,13 @@
     {% if messages %}
         <ul class="z-50 fixed flash-message bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4">
             {% for message in messages %}
-                <li>{{ message }}</li>
+                <li role="alert">{{ message }}</li>
             {% endfor %}
         </ul>
     {% endif %}
 {% endwith %}
-<div class="container h-screen flex justify-center items-center mx-auto ">
-    <div class="scroll-fade">
-        <h1 class="text-left text-white text-7xl font-serif">Service Tracker</h1>
-        <p class="text-left text-gray-400 text-4xl mb-5">Log all services performed on your vehicles</p>
-        {% if current_user.is_authenticated == False %}
-            <button onclick="toggleModal(1)"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl sm:w-80 sm:h-40 lg:w-auto lg:h-auto">
-                Login
-            </button>
-
-            <button onclick="toggleModal(2)"
-                    class="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl sm:w-80 sm:h-40 lg:w-auto lg:h-auto">
-                Register
-            </button>
-        {% endif %}
-    </div>
-    <div class="fixed lg:bottom-56 sm:bottom-1/3 text-center scroll-down fade-in">
-        <p class="text-white text-2xl">scroll to see more</p>
-        <br/>
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
-             class="bi bi-chevron-down mx-auto animate-bounce"
-             viewBox="0 0 16 16">
-            <path fill-rule="evenodd"
-                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-        </svg>
-    </div>
-    <div class="fixed lg:top-56 sm:top-1/3 text-center scroll-up fade">
+<div class="container h-screen flex justify-center items-center mx-auto">
+    <div class="fixed top-[20vh] text-center scroll-up" style="opacity:0;">
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
              class="bi bi-chevron-up mx-auto animate-bounce"
              viewBox="0 0 16 16">
@@ -78,56 +31,81 @@
 
 
     </div>
+    <div class="fixed bottom-[20vh] text-center scroll-down">
+        <p class="text-white text-2xl">scroll to see more</p>
+        <br/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
+             class="bi bi-chevron-down mx-auto animate-bounce"
+             viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+        </svg>
+    </div>
 </div>
 
-<div class="flex flex-col justify-center items-center mx-auto space-y-36">
+<div class="flex flex-col justify-center items-center space-y-96 mb-[50vh]">
+    <div class="scroll-fade">
+        <h1 class="text-left text-slateWhite text-7xl font-bold font-montserrat">Service Tracker</h1>
+        <p class="font-medium font-roboto text-left text-lightSteel text-4xl mb-5">Log all services performed on your
+            vehicles</p>
 
-    <div class="scroll-fade w-3/6">
-        <h1 class="text-left text-white text-7xl font-serif">First add a vehicle.</h1>
-        <p class="text-left text-gray-400 text-4xl">Add a vehicle to your garage, specify the year, make, and
+        <button onclick="toggleModal(1)"
+                class="bg-goldenYellow hover:bg-opacity-70 duration-700 text-charcoal font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl sm:w-80 sm:h-40 lg:w-auto lg:h-auto">
+            Login
+        </button>
+
+        <button onclick="toggleModal(2)"
+                class="mx-2 bg-goldenYellow hover:bg-opacity-70 duration-700 text-charcoal font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl sm:w-80 sm:h-40 lg:w-auto lg:h-auto">
+            Register
+        </button>
+
+    </div>
+    <div class="scroll-fade w-[50vw]">
+        <h1 class="text-left text-7xl text-slateWhite font-bold font-montserrat">First add a vehicle.</h1>
+
+        <p class="text-left text-lightSteel font-medium font-roboto text-4xl mt-2">Add a vehicle to your garage, specify
+            the year, make, and
             model. Optionally add a picture of the vehicle!</p>
 
     </div>
-    <div class="scroll-fade w-3/6">
-        <h1 class="text-left text-white text-7xl font-serif">Next add your completed service.</h1>
-        <p class="text-left text-gray-400 text-4xl">Go to your garage and select the vehicle you have completed
+    <div class="scroll-fade w-[50vw]">
+        <h1 class="text-left text-7xl text-slateWhite font-bold font-montserrat">Next add your completed service.</h1>
+        <p class="text-left text-lightSteel font-medium font-roboto text-4xl mt-2">Go to your garage and select the
+            vehicle you have completed
             service on. Next click the add service button.</p>
     </div>
-    <div class="scroll-fade w-3/6">
-        <h1 class="text-left text-white text-7xl font-serif">Finally, complete the service form.</h1>
-        <p class="text-left text-gray-400 text-4xl">Add the date, the name of the service completed, a description
+    <div class="scroll-fade w-[50vw] last-scroll">
+        <h1 class="text-left text-7xl text-slateWhite font-bold font-montserrat">Finally, complete the service
+            form.</h1>
+        <p class="text-left text-lightSteel font-medium font-roboto text-4xl mt-2">Add the date, the name of the service
+            completed, a description
             or story of the service, and optionally a picture of the service being completed. NOTE, if the date
             is left blank it will automatically store today's date.</p>
     </div>
-    <div class="scroll-fade w-3/6 last-scroll">
-        <h1 class="text-left text-white text-7xl font-serif">What are you waiting for? Sign up today!</h1>
-        <p class="text-left text-gray-400 text-4xl font-sans">Sign up so that we can keep track of your vehicle
+    <div class="scroll-fade w-[50vw]">
+        <h1 class="text-left text-7xl text-slateWhite font-bold font-montserrat">What are you waiting for? Sign up
+            today!</h1>
+        <p class="text-left text-lightSteel font-medium font-roboto text-4xl mt-2">Sign up so that we can keep track of
+            your vehicle
             service history for you! Access your service history from anywhere with Service Tracker.</p>
     </div>
-    <div class="w-3/6 opacity-0">
-        <h1 class="text-left text-white text-7xl font-serif">What are you waiting for? Sign up today!</h1>
-        <p class="text-left text-gray-400 text-4xl font-sans">Sign up so that we can keep track of your vehicle
-            service history for you! Access your service history from anywhere with Service Tracker.</p>
-    </div>
-    <div class="w-3/6 opacity-0">
-        <h1 class="text-left text-white text-7xl font-serif">What are you waiting for? Sign up today!</h1>
-        <p class="text-left text-gray-400 text-4xl font-sans">Sign up so that we can keep track of your vehicle
-            service history for you! Access your service history from anywhere with Service Tracker.</p>
-    </div>
-
 
 </div>
 
 <!-- LOGIN FORM MODAL !-->
-<div class="fixed flex items-center inset-0 overflow-y-auto h-full w-full backdrop-blur-md"
+<div class="fixed flex items-center justify-center inset-0 h-full w-full backdrop-blur-md"
      id="login-modal"
      style="display: none;">
 
     <!-- Modal Content -->
-    <div class="relative top-20 mx-auto p-5 border sm:w-screen lg:w-auto h-auto shadow-lg rounded-md bg-white sm:text-5xl lg:text-2xl">
+    <div class="relative mx-auto p-5 border border-lightSteel sm:w-screen lg:w-auto h-auto shadow-lg rounded-md bg-charcoal sm:text-5xl lg:text-2xl">
         <button onclick="toggleModal(0)"
-                class="absolute top-3 right-3 text-red bg-transparent hover:bg-gray-200 hover:text-red rounded-full sm:text-5xl flex items-center justify-center">
-            &times;
+                class="absolute top-3 right-3 flex items-center justify-center bg-transparent hover:bg-gray-200 rounded-full p-2">
+            <svg fill="#000000" width="20" height="20" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                 xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 460.77 460.77" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier"> <path
+                        d="M285.08,230.397L456.218,59.27c6.076-6.077,6.076-15.911,0-21.986L423.511,4.565c-2.913-2.911-6.866-4.55-10.992-4.55 c-4.127,0-8.08,1.639-10.993,4.55l-171.138,171.14L59.25,4.565c-2.913-2.911-6.866-4.55-10.993-4.55 c-4.126,0-8.08,1.639-10.992,4.55L4.558,37.284c-6.077,6.075-6.077,15.909,0,21.986l171.138,171.128L4.575,401.505 c-6.074,6.077-6.074,15.911,0,21.986l32.709,32.719c2.911,2.911,6.865,4.55,10.992,4.55c4.127,0,8.08-1.639,10.994-4.55 l171.117-171.12l171.118,171.12c2.913,2.911,6.866,4.55,10.993,4.55c4.128,0,8.081-1.639,10.992-4.55l32.709-32.719 c6.074-6.075,6.074-15.909,0-21.986L285.08,230.397z"></path> </g></svg>
         </button>
         <div class="mt-3 text-center">
             <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
@@ -149,9 +127,11 @@
                         </g>
                     </svg>
             </div>
-            <h3 class="lg:text-lg sm:text-3xl leading-6 font-medium text-gray-900">Login to Your Account</h3>
-            <!-- Login Form -->
-            <form class="mt-2 p-5 lg:space-y-0.5 sm:space-y-10" method="post" action="{{ url_for('main.index') }}">
+            <h3 class="lg:text-lg sm:text-3xl font-medium text-slateWhite mt-2">Login to Your Account</h3>
+
+            <form class="flex flex-col justify-center items-center mt-2 p-5 lg:space-y-3 sm:space-y-10 text-slateWhite"
+                  method="post"
+                  action="{{ url_for('main.index') }}">
                 {{ login_form.hidden_tag() }}
                 <div class="mt-5">
                     {{ login_form.email_username }}
@@ -185,13 +165,13 @@
                     {% endif %}
                 </div>
 
-                <div class="">
+                <div class="lg:w-[5vw] sm:w-[25vw] rounded-lg bg-goldenYellow text-darkerCharcoal font-medium font-roboto lg:p-1 sm:p-5 mt-20 hover:bg-opacity-70 duration-700">
                     {{ login_form.submit() }}
                 </div>
 
             </form>
             <button onclick="toggleModal(2)"
-                    class="underline mt-2 p-5 mx-auto flex items-center justify-center w-15 h-8 bg-transparent hover:bg-blue-200 ">
+                    class="flex items-center justify-center w-[10vw] h-[5vh] underline mt-2 p-5 mx-auto bg-transparent hover:text-electricBlue text-slateWhite">
                 Register
             </button>
 
@@ -206,15 +186,19 @@
 </div>
 
 <!-- REGISTER FORM MODAL !-->
-<div class="fixed flex items-center inset-0 overflow-y-auto h-full w-full backdrop-blur-md"
+<div class="fixed flex items-center justify-center inset-0 overflow-y-auto h-full w-full backdrop-blur-md"
      id="register-modal"
      style="display: none;">
 
     <!-- Modal Content -->
-    <div class="relative top-20 mx-auto p-5 border sm:w-screen lg:w-auto h-auto shadow-lg rounded-md bg-white sm:text-5xl lg:text-2xl">
+    <div class="relative mx-auto p-5 border border-lightSteel sm:w-screen lg:w-auto h-auto shadow-lg rounded-md bg-charcoal sm:text-5xl lg:text-2xl">
         <button onclick="toggleModal(0)"
-                class="absolute top-3 right-3 text-red bg-transparent hover:bg-gray-200 hover:text-red rounded-full lg:text-2xl w-fit h-fit flex items-center justify-center">
-            &times;
+                class="absolute top-3 right-3 flex items-center justify-center bg-transparent hover:bg-gray-200 rounded-full p-2">
+            <svg fill="#000000" width="20" height="20" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                 xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 460.77 460.77" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier"> <path
+                        d="M285.08,230.397L456.218,59.27c6.076-6.077,6.076-15.911,0-21.986L423.511,4.565c-2.913-2.911-6.866-4.55-10.992-4.55 c-4.127,0-8.08,1.639-10.993,4.55l-171.138,171.14L59.25,4.565c-2.913-2.911-6.866-4.55-10.993-4.55 c-4.126,0-8.08,1.639-10.992,4.55L4.558,37.284c-6.077,6.075-6.077,15.909,0,21.986l171.138,171.128L4.575,401.505 c-6.074,6.077-6.074,15.911,0,21.986l32.709,32.719c2.911,2.911,6.865,4.55,10.992,4.55c4.127,0,8.08-1.639,10.994-4.55 l171.117-171.12l171.118,171.12c2.913,2.911,6.866,4.55,10.993,4.55c4.128,0,8.081-1.639,10.992-4.55l32.709-32.719 c6.074-6.075,6.074-15.909,0-21.986L285.08,230.397z"></path> </g></svg>
         </button>
         <div class="mt-3 text-center">
             <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
@@ -237,15 +221,16 @@
 </g>
 </svg>
             </div>
-            <h3 class="lg:text-lg sm:text-3xl leading-6 font-medium text-gray-900">Register an Account</h3>
+            <h3 class="lg:text-lg sm:text-3xl font-medium text-slateWhite">Register an Account</h3>
             <!-- Login Form -->
-            <form class="mt-2 p-5 lg:space-y-0.5 sm:space-y-10" method="post" action="{{ url_for('main.index') }}">
+            <form class="flex flex-col justify-center items-center mt-2 p-5 lg:space-y-3 sm:space-y-10" method="post"
+                  action="{{ url_for('main.index') }}">
                 {{ registration_form.hidden_tag() }}
-                <div class="mt-5">
+                <div class="rounded-xl">
                     {{ registration_form.email }}
                     {% if registration_form.email.errors %}
                         {% for error in registration_form.email.errors %}
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 mt-2 rounded"
                                  role="alert">
                                 <strong class="font-bold">Oops!</strong>
                                 <span class="block sm:inline">{{ error }}</span>
@@ -253,7 +238,7 @@
                         {% endfor %}
                     {% endif %}
                 </div>
-                <div class="">
+                <div class="rounded-md">
                     {{ registration_form.username }}
                     {% if registration_form.username.errors %}
                         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
@@ -268,7 +253,7 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="">
+                <div class="rounded-md">
                     {{ registration_form.password }}
                     {% if registration_form.password.errors %}
                         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
@@ -283,16 +268,16 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="">
+                <div class="rounded-md">
                     {{ registration_form.confirm_password }}
                 </div>
-                <div class="">
+                <div class="lg:w-[5vw] sm:w-[25vw] rounded-lg bg-goldenYellow text-darkerCharcoal font-medium font-roboto lg:p-1 sm:p-5 hover:bg-opacity-70 duration-700">
                     {{ registration_form.submit() }}
                 </div>
 
             </form>
             <button onclick="toggleModal(1)"
-                    class="underline mt-2 p-5 mx-auto flex items-center justify-center w-15 h-8 bg-transparent hover:bg-blue-200 ">
+                    class="flex items-center justify-center w-[20vw] h-[5vh] underline p-5 mx-auto bg-transparent hover:text-electricBlue text-slateWhite">
                 Log In
             </button>
 
@@ -323,47 +308,145 @@
         }
     }
 
-
     document.addEventListener('DOMContentLoaded', function () {
+
+        // apply animate-flash to all elements with alert roles (flash messages)
+        const alertElements = document.querySelectorAll('[role="alert"]');
+        alertElements.forEach(alert => {
+            alert.classList.add("animate-flash");
+        });
+        // check if modal state is passed to frontend as param and toggle modal accordingly
         {% if modal_state %}
             toggleModal({{ modal_state }})
         {% endif %}
 
-        function fadeOnScroll() {
-            const elements = document.querySelectorAll('.scroll-fade');
-            const midWindowHeight = window.innerHeight / 2;
-            elements.forEach(el => {
-                const rect = el.getBoundingClientRect();
-                let opacityScale = Math.abs((rect.top + rect.height / 2) - midWindowHeight);
-                let opacity = 1 - (opacityScale * .005);
-                el.style.opacity = opacity;
+        // define all constants used in functions
+        const midWindowHeight = window.innerHeight / 2;
 
 
-            });
+        function setOpacity(el, value) {
+            el.style.transition = 'opacity 1s ease-in-out';
+            el.style.opacity = value;
+
+        }
+
+        // if the last element is above or at center change ui to show up arrow
+        // else show down arrow
+        function toggleArrowVis(mWH) {
+            const scrollDown = document.querySelector('.scroll-down');
+            const scrollUp = document.querySelector('.scroll-up');
             const lastScroll = document.querySelector('.last-scroll');
-            const lastScrollRect = lastScroll.getBoundingClientRect();
-            let scrollDown = document.querySelector('.scroll-down');
-            let scrollUp = document.querySelector('.scroll-up')
-            if (lastScrollRect.top <= midWindowHeight) {
-                scrollUp.classList.replace('fade', 'fade-in');
-                scrollDown.classList.replace('fade-in', 'fade');
+            let lastScrollRect = lastScroll.getBoundingClientRect();
 
-
+            if (lastScrollRect.top <= mWH) {
+                setOpacity(scrollUp, 1);
+                setOpacity(scrollDown, 0);
             } else {
-                scrollUp.classList.replace('fade-in', 'fade');
-                scrollDown.classList.replace('fade', 'fade-in');
+                setOpacity(scrollDown, 1);
+                setOpacity(scrollUp, 0);
 
             }
         }
 
-        document.addEventListener('scroll', fadeOnScroll);
+        // check each element for distance form center
+        // if it is closer than last closest reset closest and least distance
+        function retrieveClosest(mWH) {
+            const elements = document.querySelectorAll('.scroll-fade');
+            let closest = null;
+            let leastDistance = Infinity;
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                let distanceFromCenter = Math.abs((rect.top + rect.height / 2) - mWH);
+                if (distanceFromCenter < leastDistance) {
+                    leastDistance = distanceFromCenter;
+                    closest = el;
+                }
+            });
+            return closest;
+        }
 
+        // use direction to find the next element in the parent
+        function findNext(closest, direction) {
+            let next = null;
+            if (direction === "down") {
+                next = closest.nextElementSibling;
+            } else {
+                next = closest.previousElementSibling;
+            }
+            return next;
+        }
+
+        // scroll element into view smoothly to block center -> vertical center & inline center -> horizontal center
+        function centerElement(el) {
+            el.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'center',
+            })
+
+        }
+
+        // initialize vars
+        // canExecute is flag to prevent auto scroll from happening multiple times in scroll event
+        // timeout handles when canExecute is reset
+        // scrollDirection is used to determine which sibling to scroll too
+        // touchStartY grabs the first touch registered on screen and stores its y position
+        // touchEndY grabs the last registered touch and stores its y position
+        // used to calculate swipe direction just like scroll direction
+
+        let canExecute = true;
+        let timeout;
+        let scrollDirection = 'down';
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        function handleScroll(direction) {
+            toggleArrowVis(midWindowHeight); // first toggle ui arrows before possible early return
+            if (!canExecute) return; // if still waiting on timeout to reset flag early return
+            let el = retrieveClosest(midWindowHeight); // retrieve the center most element
+            el = findNext(el, direction) // find the next element to be scrolled into view based on direction of scroll
+            if (!el) return; // if there is no next element IE last element in parent with down scroll early return
+            setOpacity(el, 1); // set opacity of to be scrolled into view element to 1
+            // set all sibling to 0 opacity
+            [...el.parentElement.children] // spread operator to convert element collection into iterable array
+                .filter(sibling => sibling !== el) // only keep elements that are not the current center element
+                .forEach(s => setOpacity(s, 0)); // set all elements left to 0 opacity
+
+            centerElement(el); // move to be scrolled to center
+
+            canExecute = false; // reset flag
+            clearTimeout(timeout); // reset timeout if scroll within 10 ms of last scroll
+            timeout = setTimeout(() => { //after 10 ms reset flag
+                canExecute = true;
+            }, 10)
+        }
+
+
+        // event listeners to trigger auto scroll logic
+        // event listeners use preventDefault method and passive: false config to disable manual scrolling or swiping
+
+        document.addEventListener('touchstart', (event) => {
+            touchStartY = event.touches[0].clientY;
+        }, {passive: false});
+
+        document.addEventListener('touchmove', (event) => {
+            event.preventDefault(); // Prevent default scrolling
+        }, {passive: false});
+
+        document.addEventListener('touchend', (event) => {
+            touchEndY = event.changedTouches[0].clientY; // grabs the current position of the first touch registered when touch ends
+            scrollDirection = touchStartY > touchEndY ? 'down' : 'up'; // determines direction Y value at top = 0 Y at bottom is greatest
+            handleScroll(scrollDirection);                             // if the start y is greater than the end y finger swiped down
+        }, {passive: false});
+
+        document.addEventListener('wheel', (event) => {
+            event.preventDefault();
+            scrollDirection = event.deltaY > 0 ? 'down' : 'up'; // if change in y > 0 scroll was down
+            handleScroll(scrollDirection)
+
+        }, {passive: false});
 
     });
-
 </script>
 </body>
-<script>
-
-</script>
 </html>

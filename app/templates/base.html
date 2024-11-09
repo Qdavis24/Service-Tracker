@@ -3,22 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
-
     <link href="{{ url_for('static', filename='css/dist/output.css') }}" rel="stylesheet">
-
-    <style>
-        flash_message {
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-    </style>
     {% block style %}
     {% endblock %}
 </head>
 <body {% block bodystyle %}{% endblock %}>
 {% with messages = get_flashed_messages() %}
     {% if messages %}
-        <ul class="z-50 fixed flash-message bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4">
+        <ul role="alert" class="z-50 fixed flash-message bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4">
             {% for message in messages %}
                 <li>{{ message }}</li>
             {% endfor %}

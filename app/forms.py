@@ -17,17 +17,15 @@ class RegistrationForm(FlaskForm):
         'Email',
         validators=[DataRequired(), Email("Invalid email address")],
         render_kw={
-            'class': "mt-2 p-3 border rounded w-full",
-            'placeholder': 'Email'
-        }
+            'placeholder': 'Email',
+            "class": "p-2", }
     )
 
     username = StringField('Username',
                            validators=[DataRequired()],
                            render_kw={
-                               'class': "mt-2 p-3 border rounded w-full",
-                               'placeholder': 'Username'
-                           }
+                               'placeholder': 'Username',
+                               "class": "p-2", }
                            )
 
     password = PasswordField('Password',
@@ -36,24 +34,18 @@ class RegistrationForm(FlaskForm):
                                  Length(min=6, message="Password must be 6 characters long"),
                                  EqualTo('confirm_password', message="Passwords must match")
                              ],
-                             render_kw={
-                                 'class': "mt-2 p-3 border rounded w-full", 'placeholder': 'Password'
-                             }
-                             )
+                             render_kw={"placeholder": "Password",
+                                        "class": "p-2"})
 
     confirm_password = PasswordField('Confirm_Password',
                                      validators=[DataRequired()],
                                      render_kw={
-                                         'class': "mt-2 p-3 border rounded w-full",
-                                         'placeholder': 'Confirm Password'
+                                         'placeholder': 'Confirm Password',
+                                         "class": "p-2",
                                      }
                                      )
 
-    submit = SubmitField('Submit',
-                         render_kw={
-                             'class': 'mt-4 mb-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full'
-                         }
-                         )
+    submit = SubmitField('Submit')
 
     def validate_username(self, field):
         if Users.query.filter_by(username=field.data).first():
@@ -69,22 +61,18 @@ class LoginForm(FlaskForm):
     email_username = StringField('Email/Username',
                                  validators=[DataRequired()],
                                  render_kw={
-                                     'class': "mt-2 p-3 border rounded w-full",
-                                     'placeholder': 'Email/Username'
+                                     'placeholder': 'Email/Username',
+                                     "class": "p-2",
                                  }
                                  )
     password = PasswordField('Password',
                              validators=[DataRequired()],
                              render_kw={
-                                 'class': "mt-2 p-3 border rounded w-full",
-                                 'placeholder': 'Password'
+                                 'placeholder': 'Password',
+                                 "class": "p-2",
                              }
                              )
-    submit = SubmitField('Submit',
-                         render_kw={
-                             'class': 'mt-4 mb-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full'
-                         }
-                         )
+    submit = SubmitField('Submit')
 
     def validate_email_username(self, field):
         if not Users.query.filter(
