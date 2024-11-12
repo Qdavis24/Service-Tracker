@@ -588,6 +588,10 @@ video {
   }
 }
 
+.visible {
+  visibility: visible;
+}
+
 .static {
   position: static;
 }
@@ -642,10 +646,6 @@ video {
 
 .z-50 {
   z-index: 50;
-}
-
-.z-0 {
-  z-index: 0;
 }
 
 .z-\[-1\] {
@@ -710,6 +710,10 @@ video {
 
 .mt-5 {
   margin-top: 1.25rem;
+}
+
+.mb-\[25vh\] {
+  margin-bottom: 25vh;
 }
 
 .block {
@@ -945,6 +949,10 @@ video {
   overflow: hidden;
 }
 
+.overflow-scroll {
+  overflow: scroll;
+}
+
 .overflow-y-auto {
   overflow-y: auto;
 }
@@ -1099,26 +1107,6 @@ video {
   --tw-gradient-to: #2D2F33 var(--tw-gradient-to-position);
 }
 
-.bg-contain {
-  background-size: contain;
-}
-
-.bg-cover {
-  background-size: cover;
-}
-
-.bg-fixed {
-  background-attachment: fixed;
-}
-
-.bg-center {
-  background-position: center;
-}
-
-.bg-no-repeat {
-  background-repeat: no-repeat;
-}
-
 .object-contain {
   -o-object-fit: contain;
      object-fit: contain;
@@ -1127,11 +1115,6 @@ video {
 .object-cover {
   -o-object-fit: cover;
      object-fit: cover;
-}
-
-.object-center {
-  -o-object-position: center;
-     object-position: center;
 }
 
 .p-2 {
@@ -1144,6 +1127,10 @@ video {
 
 .p-5 {
   padding: 1.25rem;
+}
+
+.p-\[50vh\] {
+  padding: 50vh;
 }
 
 .px-4 {
@@ -1159,6 +1146,11 @@ video {
 .py-3 {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
+}
+
+.py-\[50vh\] {
+  padding-top: 50vh;
+  padding-bottom: 50vh;
 }
 
 .text-left {

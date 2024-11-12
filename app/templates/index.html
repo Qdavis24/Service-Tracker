@@ -5,7 +5,11 @@
     <title>Home</title>
 
     <link href="{{ url_for('static', filename='css/dist/output.css') }}" rel="stylesheet">
-
+    <style>
+        .visible {
+            opacity: 1;
+        }
+    </style>
 </head>
 <body class="w-screen h-screen">
 <picture class="fixed top-0 left-0 w-full h-full z-[-1]">
@@ -47,9 +51,9 @@
     </div>
 </div>
 
-<div class="flex flex-col justify-center items-center space-y-96 mb-[50vh]">
-    <div class="scroll-fade">
-        <h1 class="text-left text-slateWhite text-7xl font-bold font-montserrat">Service Tracker</h1>
+<div class="flex flex-col justify-center items-center space-y-96">
+    <div id="first" class="scroll-fade visible">
+        <h1 class="text-left text-slateWhite text-7xl font-bold font-montserrat first-scroll">Service Tracker</h1>
         <p class="font-medium font-roboto text-left text-lightSteel text-4xl mb-5">Log all services performed on your
             vehicles</p>
 
@@ -93,7 +97,9 @@
             your vehicle
             service history for you! Access your service history from anywhere with Service Tracker.</p>
     </div>
+    <div id="dummy">
 
+    </div>
 </div>
 
 <!-- LOGIN FORM MODAL !-->
@@ -313,7 +319,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-
         // apply animate-flash to all elements with alert roles (flash messages)
         const alertElements = document.querySelectorAll('[role="alert"]');
         alertElements.forEach(alert => {
@@ -405,11 +410,12 @@
         let touchEndY = 0;
 
         function handleScroll(direction) {
+            const last = document.getElementById('dummy');
             toggleArrowVis(midWindowHeight); // first toggle ui arrows before possible early return
             if (!canExecute) return; // if still waiting on timeout to reset flag early return
             let el = retrieveClosest(midWindowHeight); // retrieve the center most element
             el = findNext(el, direction) // find the next element to be scrolled into view based on direction of scroll
-            if (!el) return; // if there is no next element IE last element in parent with down scroll early return
+            if (!el || el === last) return; // if there is no next element IE last element in parent with down scroll early return
             setOpacity(el, 1); // set opacity of to be scrolled into view element to 1
             // set all sibling to 0 opacity
             [...el.parentElement.children] // spread operator to convert element collection into iterable array
@@ -425,7 +431,11 @@
             }, 10)
         }
 
-
+        // auto position first element
+        // by setting scroll events to passive IE no manual scrolling the DOC does not load as expected
+        // this fixes that
+        const first = document.getElementById('first');
+        centerElement(first)
         // event listeners to trigger auto scroll logic
         // event listeners use preventDefault method and passive: false config to disable manual scrolling or swiping
 
