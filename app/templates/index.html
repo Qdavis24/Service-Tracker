@@ -97,7 +97,7 @@
             your vehicle
             service history for you! Access your service history from anywhere with Service Tracker.</p>
     </div>
-    <div id="dummy">
+    <div id="dummy" class="h-[50vh]">
 
     </div>
 </div>
@@ -318,110 +318,84 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // apply animate-flash to all elements with alert roles (flash messages)
-        const alertElements = document.querySelectorAll('[role="alert"]');
-        alertElements.forEach(alert => {
-            alert.classList.add("animate-flash");
+    // sets a single element to a specified opacity
+    function setOpacity(el, value, time) {
+        el.style.transition = `opacity ${time}s ease-in-out`;
+        el.style.opacity = value;
+    }
+
+    // takes the element that should be visible and sets all siblings to invisible
+    function setOpacities(el, time) {
+        setOpacity(el, 1);
+        [...el.parentElement.children] // spread operator to convert element collection into iterable array
+            .filter(sibling => sibling !== el) // only keep elements that are not the current center element
+            .forEach(s => setOpacity(s, 0, time)); // set all elements left to 0 opacity
+    }
+
+    // if the last element is above or at center change ui to show up arrow
+    // else show down arrow
+    function toggleArrowVis(mWH) {
+        const scrollDown = document.querySelector('.scroll-down');
+        const scrollUp = document.querySelector('.scroll-up');
+        const lastScroll = document.querySelector('.last-scroll');
+        let lastScrollRect = lastScroll.getBoundingClientRect();
+
+        if (lastScrollRect.top <= mWH) {
+            setOpacity(scrollUp, 1);
+            setOpacity(scrollDown, 0);
+        } else {
+            setOpacity(scrollDown, 1);
+            setOpacity(scrollUp, 0);
+
+        }
+    }
+
+    // check each element for distance form center
+    // if it is closer than last closest reset closest and least distance
+    function retrieveClosest(mWH) {
+        const elements = document.querySelectorAll('.scroll-fade');
+        let closest = null;
+        let leastDistance = Infinity;
+        elements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            let distanceFromCenter = Math.abs((rect.top + rect.height / 2) - mWH);
+            if (distanceFromCenter < leastDistance) {
+                leastDistance = distanceFromCenter;
+                closest = el;
+            }
         });
-        // check if modal state is passed to frontend as param and toggle modal accordingly
-        {% if modal_state %}
-            toggleModal({{ modal_state }})
-        {% endif %}
+        return closest;
+    }
 
-        // define all constants used in functions
-        const midWindowHeight = window.innerHeight / 2;
-
-
-        function setOpacity(el, value) {
-            el.style.transition = 'opacity 1s ease-in-out';
-            el.style.opacity = value;
-
+    // use direction to find the next element in the parent
+    function findNext(closest, direction) {
+        let next = null;
+        if (direction === "down") {
+            next = closest.nextElementSibling;
+        } else {
+            next = closest.previousElementSibling;
         }
+        return next;
+    }
 
-        // if the last element is above or at center change ui to show up arrow
-        // else show down arrow
-        function toggleArrowVis(mWH) {
-            const scrollDown = document.querySelector('.scroll-down');
-            const scrollUp = document.querySelector('.scroll-up');
-            const lastScroll = document.querySelector('.last-scroll');
-            let lastScrollRect = lastScroll.getBoundingClientRect();
+    // scroll element into view smoothly to block center -> vertical center & inline center -> horizontal center
+    function centerElement(el) {
+        el.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center',
+        })
 
-            if (lastScrollRect.top <= mWH) {
-                setOpacity(scrollUp, 1);
-                setOpacity(scrollDown, 0);
-            } else {
-                setOpacity(scrollDown, 1);
-                setOpacity(scrollUp, 0);
+    }
 
-            }
-        }
-
-        // check each element for distance form center
-        // if it is closer than last closest reset closest and least distance
-        function retrieveClosest(mWH) {
-            const elements = document.querySelectorAll('.scroll-fade');
-            let closest = null;
-            let leastDistance = Infinity;
-            elements.forEach(el => {
-                const rect = el.getBoundingClientRect();
-                let distanceFromCenter = Math.abs((rect.top + rect.height / 2) - mWH);
-                if (distanceFromCenter < leastDistance) {
-                    leastDistance = distanceFromCenter;
-                    closest = el;
-                }
-            });
-            return closest;
-        }
-
-        // use direction to find the next element in the parent
-        function findNext(closest, direction) {
-            let next = null;
-            if (direction === "down") {
-                next = closest.nextElementSibling;
-            } else {
-                next = closest.previousElementSibling;
-            }
-            return next;
-        }
-
-        // scroll element into view smoothly to block center -> vertical center & inline center -> horizontal center
-        function centerElement(el) {
-            el.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-                inline: 'center',
-            })
-
-        }
-
-        // initialize vars
-        // canExecute is flag to prevent auto scroll from happening multiple times in scroll event
-        // timeout handles when canExecute is reset
-        // scrollDirection is used to determine which sibling to scroll too
-        // touchStartY grabs the first touch registered on screen and stores its y position
-        // touchEndY grabs the last registered touch and stores its y position
-        // used to calculate swipe direction just like scroll direction
-
-        let canExecute = true;
-        let timeout;
-        let scrollDirection = 'down';
-        let touchStartY = 0;
-        let touchEndY = 0;
-
-        function handleScroll(direction) {
+    function handleScroll(mWH, direction, timeout, canExecute) {
             const last = document.getElementById('dummy');
-            toggleArrowVis(midWindowHeight); // first toggle ui arrows before possible early return
+            toggleArrowVis(mWH); // first toggle ui arrows before possible early return
             if (!canExecute) return; // if still waiting on timeout to reset flag early return
-            let el = retrieveClosest(midWindowHeight); // retrieve the center most element
+            let el = retrieveClosest(mWH); // retrieve the center most element
             el = findNext(el, direction) // find the next element to be scrolled into view based on direction of scroll
             if (!el || el === last) return; // if there is no next element IE last element in parent with down scroll early return
-            setOpacity(el, 1); // set opacity of to be scrolled into view element to 1
-            // set all sibling to 0 opacity
-            [...el.parentElement.children] // spread operator to convert element collection into iterable array
-                .filter(sibling => sibling !== el) // only keep elements that are not the current center element
-                .forEach(s => setOpacity(s, 0)); // set all elements left to 0 opacity
-
+            setOpacities(el, .3);
             centerElement(el); // move to be scrolled to center
 
             canExecute = false; // reset flag
@@ -431,11 +405,39 @@
             }, 10)
         }
 
+    document.addEventListener('DOMContentLoaded', function () {
+        // initialize vars and define all constants used in functions
+        // canExecute is flag to prevent auto scroll from happening multiple times in scroll event
+        // timeout handles when canExecute is reset
+        // scrollDirection is used to determine which sibling to scroll too
+        // touchStartY grabs the first touch registered on screen and stores its y position
+        // touchEndY grabs the last registered touch and stores its y position
+        // used to calculate swipe direction just like scroll direction
+
+        const midWindowHeight = window.innerHeight / 2;
+        const alertElements = document.querySelectorAll('[role="alert"]');
+        const first = document.getElementById('first');
+        let canExecute = true;
+        let timeout;
+        let scrollDirection = 'down';
+        let touchStartY = 0;
+        let touchEndY = 0;
+        // apply animate-flash to all elements with alert roles (flash messages)
+        alertElements.forEach(alert => {
+            alert.classList.add("animate-flash");
+        });
+        // check if modal state is passed to frontend as param and toggle modal accordingly
+        {% if modal_state %}
+            toggleModal({{ modal_state }})
+        {% endif %}
+
         // auto position first element
         // by setting scroll events to passive IE no manual scrolling the DOC does not load as expected
         // this fixes that
-        const first = document.getElementById('first');
-        centerElement(first)
+        centerElement(first);
+        // set opacities
+        setOpacities(first, 0);
+
         // event listeners to trigger auto scroll logic
         // event listeners use preventDefault method and passive: false config to disable manual scrolling or swiping
 
@@ -450,13 +452,13 @@
         document.addEventListener('touchend', (event) => {
             touchEndY = event.changedTouches[0].clientY; // grabs the current position of the first touch registered when touch ends
             scrollDirection = touchStartY > touchEndY ? 'down' : 'up'; // determines direction Y value at top = 0 Y at bottom is greatest
-            handleScroll(scrollDirection);                             // if the start y is greater than the end y finger swiped down
+            handleScroll(midWindowHeight, scrollDirection, timeout, canExecute);                             // if the start y is greater than the end y finger swiped down
         }, {passive: false});
 
         document.addEventListener('wheel', (event) => {
             event.preventDefault();
             scrollDirection = event.deltaY > 0 ? 'down' : 'up'; // if change in y > 0 scroll was down
-            handleScroll(scrollDirection)
+            handleScroll(midWindowHeight, scrollDirection, timeout, canExecute)
 
         }, {passive: false});
 
