@@ -1,15 +1,14 @@
-function toggleModal(state) {
-        const loginModal = document.getElementById('login-modal');
-        const registerModal = document.getElementById('register-modal');
+function toggleModal(state, m1, m2) {
+
         if (state === 0) {
-            loginModal.style.display = 'none';
-            registerModal.style.display = 'none';
+            m1.style.display = 'none';
+            m2.style.display = 'none';
         } else if (state === 1) {
-            registerModal.style.display = 'none';
-            loginModal.style.display = 'flex';
+            m2.style.display = 'none';
+            m1.style.display = 'flex';
         } else if (state === 2) {
-            loginModal.style.display = 'none';
-            registerModal.style.display = 'flex';
+            m1.style.display = 'none';
+            m2.style.display = 'flex';
 
         }
     }

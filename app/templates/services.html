@@ -1,13 +1,8 @@
-{% extends "base.html" %}
+{% extends "partials/base.html" %}
 {% block title %}Services on {{ vehicle.model }}{% endblock %}
 {% block bodystyle %}class="bg-charcoal"{% endblock %}
 {% block style %}
     {{ ckeditor.load() }}
-    <style>
-        .scroll-fade {
-            transition: opacity .05s ease-in-out;
-        }
-    </style>
 {% endblock %}
 {% block nav_buttons %}
     <a href="{{ url_for('main.garage') }}"

@@ -1,12 +1,7 @@
-{% extends "base.html" %}
+{% extends "partials/base.html" %}
 {% block title %}Garage{% endblock %}
 {% block bodystyle %}class="bg-charcoal"{% endblock %}
 {% block style %}
-    <style>
-        .scroll-fade {
-            transition: opacity .05s ease-in-out;
-        }
-    </style>
 {% endblock %}
 {% block search_form %}
     <form action="{{ url_for('main.garage') }}" method="POST" class="sm:text-5xl">
