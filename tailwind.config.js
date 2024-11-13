@@ -3,6 +3,10 @@ module.exports = {
     content: ["./app/templates/**/*.{html, js}"],
     theme: {
         extend: {
+            fontFamily: {
+                montserrat: ['Montserrat', 'sans-serif'],
+                roboto: ['Roboto', 'sans-serif'],
+            },
             keyframes: {
                 flash: {
                     '0%': {opacity: '0'},

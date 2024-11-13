@@ -11,35 +11,34 @@
         }
     </style>
 </head>
-<body class="w-screen h-screen">
+<body>
 <picture class="fixed top-0 left-0 w-full h-full z-[-1]">
     <source media="(max-width: 767px)" srcset="../static/wrenches-iphone.jpg">
     <source media="(min-width: 768px)" srcset="../static/wrenches1.jpg">
-    <img src="../static/wrenches.jpg" alt="Wrenches" class="w-full h-full object-cover">
+    <img alt="Wrenches" class="w-full h-full object-cover">
 </picture>
 
 {% with messages = get_flashed_messages() %}
     {% if messages %}
-        <ul class="z-50 fixed flash-message bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4">
+        <ul>
             {% for message in messages %}
-                <li role="alert">{{ message }}</li>
+                <li role="alert" class="flash-message">{{ message }}</li>
             {% endfor %}
         </ul>
     {% endif %}
 {% endwith %}
-<div class="container h-screen flex justify-center items-center mx-auto">
-    <div class="fixed top-[20vh] text-center scroll-up" style="opacity:0;">
+<div class="h-screen flex justify-center items-center">
+    <div id="scroll-up" class="fixed top-[20vh] text-center" style="opacity:0;">
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
              class="bi bi-chevron-up mx-auto animate-bounce"
              viewBox="0 0 16 16">
             <path fill-rule="evenodd"
                   d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"/>
         </svg>
-        <br/>
 
 
     </div>
-    <div class="fixed bottom-[20vh] text-center scroll-down">
+    <div id="scroll-down" class="fixed bottom-[20vh] text-center">
         <p class="text-white text-2xl">scroll to see more</p>
         <br/>
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
@@ -53,47 +52,46 @@
 
 <div class="flex flex-col justify-center items-center space-y-96">
     <div id="first" class="scroll-fade visible">
-        <h1 class="text-left text-slateWhite text-7xl font-bold font-montserrat first-scroll">Service Tracker</h1>
-        <p class="font-medium font-roboto text-left text-lightSteel text-4xl mb-5">Log all services performed on your
+        <h1 class="heading-text">Service Tracker</h1>
+        <p class="secondary-text mb-7">Log all services performed on your
             vehicles</p>
 
         <button onclick="toggleModal(1)"
-                class="bg-goldenYellow hover:bg-opacity-70 duration-700 text-charcoal font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl sm:w-80 sm:h-40 lg:w-auto lg:h-auto">
+                class="large-button lg:w-[10vw] sm:w-[30vw]">
             Login
         </button>
 
         <button onclick="toggleModal(2)"
-                class="mx-2 bg-goldenYellow hover:bg-opacity-70 duration-700 text-charcoal font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl sm:w-80 sm:h-40 lg:w-auto lg:h-auto">
+                class="mx-2 large-button lg:w-[10vw] sm:w-[33vw]">
             Register
         </button>
 
     </div>
     <div class="scroll-fade w-[50vw]">
-        <h1 class="text-left text-7xl text-slateWhite font-bold font-montserrat">First add a vehicle.</h1>
-
-        <p class="text-left text-lightSteel font-medium font-roboto text-4xl mt-2">Add a vehicle to your garage, specify
+        <h1 class="heading-text">First add a vehicle.</h1>
+        <p class="secondary-text">Add a vehicle to your garage, specify
             the year, make, and
             model. Optionally add a picture of the vehicle!</p>
 
     </div>
     <div class="scroll-fade w-[50vw]">
-        <h1 class="text-left text-7xl text-slateWhite font-bold font-montserrat">Next add your completed service.</h1>
-        <p class="text-left text-lightSteel font-medium font-roboto text-4xl mt-2">Go to your garage and select the
+        <h1 class="heading-text">Next add your completed service.</h1>
+        <p class="secondary-text">Go to your garage and select the
             vehicle you have completed
             service on. Next click the add service button.</p>
     </div>
-    <div class="scroll-fade w-[50vw] last-scroll">
-        <h1 class="text-left text-7xl text-slateWhite font-bold font-montserrat">Finally, complete the service
+    <div id="last" class="scroll-fade w-[50vw]">
+        <h1 class="heading-text">Finally, complete the service
             form.</h1>
-        <p class="text-left text-lightSteel font-medium font-roboto text-4xl mt-2">Add the date, the name of the service
+        <p class="secondary-text">Add the date, the name of the service
             completed, a description
             or story of the service, and optionally a picture of the service being completed. NOTE, if the date
             is left blank it will automatically store today's date.</p>
     </div>
     <div class="scroll-fade w-[50vw]">
-        <h1 class="text-left text-7xl text-slateWhite font-bold font-montserrat">What are you waiting for? Sign up
+        <h1 class="heading-text">What are you waiting for? Sign up
             today!</h1>
-        <p class="text-left text-lightSteel font-medium font-roboto text-4xl mt-2">Sign up so that we can keep track of
+        <p class="secondary-text">Sign up so that we can keep track of
             your vehicle
             service history for you! Access your service history from anywhere with Service Tracker.</p>
     </div>
@@ -103,14 +101,14 @@
 </div>
 
 <!-- LOGIN FORM MODAL !-->
-<div class="fixed flex items-center justify-center inset-0 h-full w-full backdrop-blur-md"
+<div class="modal-base"
      id="login-modal"
      style="display: none;">
 
     <!-- Modal Content -->
-    <div class="relative mx-auto p-5 border border-lightSteel sm:w-screen lg:w-auto h-auto shadow-lg rounded-md bg-charcoal sm:text-5xl lg:text-2xl">
+    <div class="modal-content">
         <button onclick="toggleModal(0)"
-                class="absolute top-3 right-3 flex items-center justify-center bg-transparent hover:bg-gray-200 rounded-full p-2">
+                class="close-modal-button">
             <svg fill="#000000" width="20" height="20" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                  xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 460.77 460.77" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -118,9 +116,8 @@
                         d="M285.08,230.397L456.218,59.27c6.076-6.077,6.076-15.911,0-21.986L423.511,4.565c-2.913-2.911-6.866-4.55-10.992-4.55 c-4.127,0-8.08,1.639-10.993,4.55l-171.138,171.14L59.25,4.565c-2.913-2.911-6.866-4.55-10.993-4.55 c-4.126,0-8.08,1.639-10.992,4.55L4.558,37.284c-6.077,6.075-6.077,15.909,0,21.986l171.138,171.128L4.575,401.505 c-6.074,6.077-6.074,15.911,0,21.986l32.709,32.719c2.911,2.911,6.865,4.55,10.992,4.55c4.127,0,8.08-1.639,10.994-4.55 l171.117-171.12l171.118,171.12c2.913,2.911,6.866,4.55,10.993,4.55c4.128,0,8.081-1.639,10.992-4.55l32.709-32.719 c6.074-6.075,6.074-15.909,0-21.986L285.08,230.397z"></path> </g></svg>
         </button>
         <div class="mt-3 text-center">
-            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
-                     width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+            <div class="logo-svg">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 256 256" xml:space="preserve">
 
 
                         <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
@@ -137,9 +134,9 @@
                         </g>
                     </svg>
             </div>
-            <h3 class="lg:text-lg sm:text-3xl font-medium text-slateWhite mt-2">Login to Your Account</h3>
+            <h3 class="medium-text">Login to Your Account</h3>
 
-            <form class="flex flex-col justify-center items-center mt-2 p-5 lg:space-y-3 sm:space-y-10 text-slateWhite"
+            <form class="form text-slateWhite"
                   method="post"
                   action="{{ url_for('main.index') }}">
                 {{ login_form.hidden_tag() }}
@@ -181,11 +178,11 @@
 
             </form>
             <button onclick="toggleModal(2)"
-                    class="flex items-center justify-center w-[10vw] h-[5vh] underline mt-2 p-5 mx-auto bg-transparent hover:text-electricBlue text-slateWhite">
+                    class="w-[10vw] btn-link">
                 Register
             </button>
 
-            <p class="lg:mt-2 sm:mt-10 lg:text-sm sm:text-2xl text-gray-500">We will never share your information
+            <p class="small-text">We will never share your information
                 with anyone.</p>
 
         </div>
@@ -196,14 +193,14 @@
 </div>
 
 <!-- REGISTER FORM MODAL !-->
-<div class="fixed flex items-center justify-center inset-0 overflow-y-auto h-full w-full backdrop-blur-md"
+<div class="modal-base"
      id="register-modal"
      style="display: none;">
 
     <!-- Modal Content -->
-    <div class="relative mx-auto p-5 border border-lightSteel sm:w-screen lg:w-auto h-auto shadow-lg rounded-md bg-charcoal sm:text-5xl lg:text-2xl">
+    <div class="modal-content">
         <button onclick="toggleModal(0)"
-                class="absolute top-3 right-3 flex items-center justify-center bg-transparent hover:bg-gray-200 rounded-full p-2">
+                class="close-modal-button">
             <svg fill="#000000" width="20" height="20" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                  xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 460.77 460.77" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -211,9 +208,8 @@
                         d="M285.08,230.397L456.218,59.27c6.076-6.077,6.076-15.911,0-21.986L423.511,4.565c-2.913-2.911-6.866-4.55-10.992-4.55 c-4.127,0-8.08,1.639-10.993,4.55l-171.138,171.14L59.25,4.565c-2.913-2.911-6.866-4.55-10.993-4.55 c-4.126,0-8.08,1.639-10.992,4.55L4.558,37.284c-6.077,6.075-6.077,15.909,0,21.986l171.138,171.128L4.575,401.505 c-6.074,6.077-6.074,15.911,0,21.986l32.709,32.719c2.911,2.911,6.865,4.55,10.992,4.55c4.127,0,8.08-1.639,10.994-4.55 l171.117-171.12l171.118,171.12c2.913,2.911,6.866,4.55,10.993,4.55c4.128,0,8.081-1.639,10.992-4.55l32.709-32.719 c6.074-6.075,6.074-15.909,0-21.986L285.08,230.397z"></path> </g></svg>
         </button>
         <div class="mt-3 text-center">
-            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                     width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+            <div class="logo-svg">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 256 256" xml:space="preserve">
 
 <defs>
 </defs>
@@ -231,16 +227,16 @@
 </g>
 </svg>
             </div>
-            <h3 class="lg:text-lg sm:text-3xl font-medium text-slateWhite">Register an Account</h3>
+            <h3 class="medium-text">Register an Account</h3>
             <!-- Login Form -->
-            <form class="flex flex-col justify-center items-center mt-2 p-5 lg:space-y-3 sm:space-y-10" method="post"
+            <form class="form" method="post"
                   action="{{ url_for('main.index') }}">
                 {{ registration_form.hidden_tag() }}
                 <div class="rounded-xl">
                     {{ registration_form.email }}
                     {% if registration_form.email.errors %}
                         {% for error in registration_form.email.errors %}
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 mt-2 rounded"
+                            <div class="form-errors"
                                  role="alert">
                                 <strong class="font-bold">Oops!</strong>
                                 <span class="block sm:inline">{{ error }}</span>
@@ -251,7 +247,7 @@
                 <div class="rounded-md">
                     {{ registration_form.username }}
                     {% if registration_form.username.errors %}
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        <div class="form-errors"
                              role="alert">
                             <strong class="font-bold">Oops!</strong>
                             {% for error in registration_form.username.errors %}
@@ -266,7 +262,7 @@
                 <div class="rounded-md">
                     {{ registration_form.password }}
                     {% if registration_form.password.errors %}
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        <div class="form-errors"
                              role="alert">
                             <strong class="font-bold">Oops!</strong>
                             {% for error in registration_form.password.errors %}
@@ -287,11 +283,11 @@
 
             </form>
             <button onclick="toggleModal(1)"
-                    class="flex items-center justify-center w-[20vw] h-[5vh] underline p-5 mx-auto bg-transparent hover:text-electricBlue text-slateWhite">
+                    class="w-[20vw] btn-link">
                 Log In
             </button>
 
-            <p class="lg:mt-2 sm:mt-10 lg:text-sm sm:text-2xl text-gray-500">We will never share your information
+            <p class="small-text">We will never share your information
                 with anyone.</p>
 
         </div>
@@ -318,95 +314,19 @@
         }
     }
 
-    // sets a single element to a specified opacity
-    function setOpacity(el, value, time) {
-        el.style.transition = `opacity ${time}s ease-in-out`;
-        el.style.opacity = value;
-    }
-
-    // takes the element that should be visible and sets all siblings to invisible
-    function setOpacities(el, time) {
-        setOpacity(el, 1);
-        [...el.parentElement.children] // spread operator to convert element collection into iterable array
-            .filter(sibling => sibling !== el) // only keep elements that are not the current center element
-            .forEach(s => setOpacity(s, 0, time)); // set all elements left to 0 opacity
-    }
-
-    // if the last element is above or at center change ui to show up arrow
-    // else show down arrow
-    function toggleArrowVis(mWH) {
-        const scrollDown = document.querySelector('.scroll-down');
-        const scrollUp = document.querySelector('.scroll-up');
-        const lastScroll = document.querySelector('.last-scroll');
-        let lastScrollRect = lastScroll.getBoundingClientRect();
-
-        if (lastScrollRect.top <= mWH) {
-            setOpacity(scrollUp, 1);
-            setOpacity(scrollDown, 0);
-        } else {
-            setOpacity(scrollDown, 1);
-            setOpacity(scrollUp, 0);
-
-        }
-    }
-
-    // check each element for distance form center
-    // if it is closer than last closest reset closest and least distance
-    function retrieveClosest(mWH) {
-        const elements = document.querySelectorAll('.scroll-fade');
-        let closest = null;
-        let leastDistance = Infinity;
-        elements.forEach(el => {
-            const rect = el.getBoundingClientRect();
-            let distanceFromCenter = Math.abs((rect.top + rect.height / 2) - mWH);
-            if (distanceFromCenter < leastDistance) {
-                leastDistance = distanceFromCenter;
-                closest = el;
-            }
-        });
-        return closest;
-    }
-
-    // use direction to find the next element in the parent
-    function findNext(closest, direction) {
-        let next = null;
-        if (direction === "down") {
-            next = closest.nextElementSibling;
-        } else {
-            next = closest.previousElementSibling;
-        }
-        return next;
-    }
-
-    // scroll element into view smoothly to block center -> vertical center & inline center -> horizontal center
-    function centerElement(el) {
-        el.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-            inline: 'center',
-        })
-
-    }
-
-    function handleScroll(mWH, direction, timeout, canExecute) {
-            const last = document.getElementById('dummy');
-            toggleArrowVis(mWH); // first toggle ui arrows before possible early return
-            if (!canExecute) return; // if still waiting on timeout to reset flag early return
-            let el = retrieveClosest(mWH); // retrieve the center most element
-            el = findNext(el, direction) // find the next element to be scrolled into view based on direction of scroll
-            if (!el || el === last) return; // if there is no next element IE last element in parent with down scroll early return
-            setOpacities(el, .3);
-            centerElement(el); // move to be scrolled to center
-
-            canExecute = false; // reset flag
-            clearTimeout(timeout); // reset timeout if scroll within 10 ms of last scroll
-            timeout = setTimeout(() => { //after 10 ms reset flag
-                canExecute = true;
-            }, 10)
-        }
 
     document.addEventListener('DOMContentLoaded', function () {
-        // initialize vars and define all constants used in functions
+        // define all constants used in functions
+
+
+        const midWindowHeight = window.innerHeight / 2;
+        const alertElements = document.querySelectorAll('[role="alert"]');
+        const first = document.getElementById('first');
+        const last = document.getElementById('last');
+        const scrollDown = document.getElementById('scroll-down');
+        const scrollUp = document.getElementById('scroll-up');
+
+        // initialize vars
         // canExecute is flag to prevent auto scroll from happening multiple times in scroll event
         // timeout handles when canExecute is reset
         // scrollDirection is used to determine which sibling to scroll too
@@ -414,9 +334,6 @@
         // touchEndY grabs the last registered touch and stores its y position
         // used to calculate swipe direction just like scroll direction
 
-        const midWindowHeight = window.innerHeight / 2;
-        const alertElements = document.querySelectorAll('[role="alert"]');
-        const first = document.getElementById('first');
         let canExecute = true;
         let timeout;
         let scrollDirection = 'down';
@@ -451,14 +368,19 @@
 
         document.addEventListener('touchend', (event) => {
             touchEndY = event.changedTouches[0].clientY; // grabs the current position of the first touch registered when touch ends
-            scrollDirection = touchStartY > touchEndY ? 'down' : 'up'; // determines direction Y value at top = 0 Y at bottom is greatest
-            handleScroll(midWindowHeight, scrollDirection, timeout, canExecute);                             // if the start y is greater than the end y finger swiped down
+            // if the start y is greater than the end y finger swiped down
+            // determines direction Y value at top = 0 Y at bottom is greatest
+            scrollDirection = touchStartY > touchEndY ? 'down' : 'up';
+            handleScroll(midWindowHeight, scrollDirection, timeout, canExecute);
+            toggleArrowVis(midWindowHeight, scrollUp, scrollDown, last); // toggle ui arrows
+
         }, {passive: false});
 
         document.addEventListener('wheel', (event) => {
             event.preventDefault();
             scrollDirection = event.deltaY > 0 ? 'down' : 'up'; // if change in y > 0 scroll was down
-            handleScroll(midWindowHeight, scrollDirection, timeout, canExecute)
+            handleScroll(midWindowHeight, scrollDirection, timeout, canExecute);
+            toggleArrowVis(midWindowHeight, scrollUp, scrollDown, last); // toggle ui arrows
 
         }, {passive: false});
 
