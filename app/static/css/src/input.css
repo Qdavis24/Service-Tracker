@@ -24,7 +24,7 @@
     }
 
     .logo-svg {
-        @apply mx-auto h-12 w-12 rounded-full bg-green-100;
+        @apply mx-auto h-[10vh] rounded-full;
     }
 
     .form {
