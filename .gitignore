@@ -5,3 +5,6 @@ node_modules/
 app/config.py
 app/__pycache__
 *.pyc
+package-lock.json
+package.json
+tailwind.config.js
