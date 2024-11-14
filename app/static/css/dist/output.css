@@ -798,6 +798,24 @@ video {
   }
 }
 
+.nav-button-container {
+  margin-top: 1.25rem;
+  margin-left: 2.5rem;
+  display: flex;
+  width: auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-button-label {
+  text-align: center;
+  font-family: Roboto, sans-serif;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(224 225 221 / var(--tw-text-opacity));
+}
+
 .visible {
   visibility: visible;
 }
@@ -828,10 +846,6 @@ video {
 
 .left-0 {
   left: 0px;
-}
-
-.left-3 {
-  left: 0.75rem;
 }
 
 .right-3 {
@@ -1017,10 +1031,6 @@ video {
 
 .w-\[15vw\] {
   width: 15vw;
-}
-
-.w-\[20vh\] {
-  width: 20vh;
 }
 
 .w-\[20vw\] {

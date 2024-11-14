@@ -53,4 +53,10 @@
     .large-button {
         @apply bg-goldenYellow hover:bg-opacity-70 duration-700 text-charcoal font-bold py-2 px-4 rounded sm:text-7xl lg:text-2xl lg:h-[5vh] sm:h-[9vh];
     }
+    .nav-button-container {
+        @apply flex flex-col justify-center items-center mt-5 ml-10 w-auto;
+    }
+    .nav-button-label {
+        @apply font-medium font-roboto text-slateWhite text-center;
+    }
 }

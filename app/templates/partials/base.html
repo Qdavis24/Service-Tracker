@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% include 'partials/flash_messages.html' %}
+{% include 'partials/svg_sprites.html' %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,52 +15,41 @@
     <a href="{{ url_for('main.logout') }}"
        class="sm:mb-5 lg:mb-0 border-3 rounded-lg lg:p-2 sm:p-8 bg-gray-300 bg-opacity-70 hover:bg-opacity-100 duration-500 sm:text-5xl lg:text-xl">Logout</a>
 </div>
-<div id="header"
+<header id="header"
      class="min-w-full min-h-[25vh] bg-gradient-to-b from-darkerCharcoal to-charcoal border-2 border-steel shadow-2xl">
     <div>
         {% block search_form %}
         {% endblock %}
     </div>
     <div class="flex flex-row sm:text-5xl lg:text-2xl">
-        <div class="flex flex-col justify-center items-center mt-5 ml-5 w-[20vh]">
+        <div class="nav-button-container">
             <div>
-                <h1 class="font-medium font-roboto text-slateWhite text-center">{% block add %}{% endblock %}</h1>
+                <h1 class="nav-button-label">{% block add %}{% endblock %}</h1>
                 <hr/>
             </div>
 
             <button onclick="{% block add_button_function %}{% endblock %}"
                     class="mt-2 sm:p-6 lg:p-1 border-2 rounded-3xl bg-gray-300 bg-opacity-70 hover:bg-opacity-100  duration-500">
-                <svg class="w-[4vh] h-[4vh]"
-                     viewBox="0 0 50 50"
-                     xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
-                     xmlns:xlink="http://www.w3.org/1999/xlink"><rect fill="none" height="50" width="50"/>
-                    <line fill="none" stroke="#000000" stroke-miterlimit="10" stroke-width="4" x1="9" x2="41"
-                          y1="25"
-                          y2="25"/>
-                    <line fill="none" stroke="#000000" stroke-miterlimit="10" stroke-width="4" x1="25" x2="25"
-                          y1="9"
-                          y2="41"/></svg>
+                <svg class="w-[4vh] h-[4vh]">
+                    <use href="#add-button"></use>
+                </svg>
             </button>
         </div>
-        <div class="flex flex-col justify-center items-center mt-5 ml-5 w-auto]">
+        <div class="nav-button-container">
             <div>
-                <h1 class="font-medium font-roboto text-slateWhite text-center">See all</h1>
+                <h1 class="nav-button-label">See all</h1>
                 <hr/>
             </div>
 
             <a href="{% block see_all_url %}{% endblock %}"
                class="mt-2 sm:p-6 lg:p-1 border-2 rounded-3xl bg-gray-300 bg-opacity-70 hover:bg-opacity-100  duration-500">
-                <svg class="w-[4vh] h-[4vh]" fill="#000000" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                     xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier"> <g> <g> <path
-                            d="M256,0C114.842,0,0,114.842,0,256s114.842,256,256,256s256-114.842,256-256S397.158,0,256,0z M256,462.452 c-113.837,0-206.452-92.614-206.452-206.452S142.163,49.548,256,49.548S462.452,142.163,462.452,256S369.837,462.452,256,462.452z "></path> </g> </g>
-                        <g> <g> <polygon
-                                points="244.219,231.226 244.219,135.612 123.871,255.99 244.219,376.396 244.219,280.774 388.129,280.774 388.129,231.226 "></polygon> </g> </g> </g></svg>
+                <svg class="w-[4vh] h-[4vh]">
+                    <use href="#go-back"></use>
+                </svg>
             </a>
         </div>
     </div>
-</div>
+</header>
 <div id="body" class="max-h-[75vh] overflow-y-scroll" style="-ms-overflow-style: none; scrollbar-width: none;">
     {% block body_content %}
     {% endblock %}
