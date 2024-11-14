@@ -16,7 +16,7 @@
     }
 
     .modal-content {
-        @apply relative mx-auto p-5 border border-lightSteel sm:w-screen lg:w-auto h-auto shadow-lg rounded-md bg-charcoal sm:text-5xl lg:text-2xl;
+        @apply relative mx-auto p-14 border border-lightSteel sm:w-screen lg:w-auto h-auto shadow-lg rounded-md bg-charcoal sm:text-5xl lg:text-2xl;
     }
 
     .close-modal-button {
@@ -26,7 +26,6 @@
     .logo-svg {
         @apply mx-auto h-[10vh] rounded-full;
     }
-
     .form {
         @apply flex flex-col justify-center items-center mt-2 p-5 lg:space-y-3 sm:space-y-10;
     }
@@ -66,6 +65,9 @@
         @apply sm:mb-5 lg:mb-0 border-2 rounded-lg lg:p-2 sm:p-8 bg-gray-300 bg-opacity-70 hover:bg-opacity-100 duration-500 sm:text-5xl lg:text-xl;
     }
     .submit-button {
-        @apply flex items-baseline justify-center lg:w-[5vw] sm:w-[25vw] rounded-lg bg-goldenYellow text-darkerCharcoal font-medium font-roboto lg:p-1 sm:p-5 mt-20 hover:bg-opacity-70 duration-700;
+        @apply flex items-center justify-center lg:w-[5vw] sm:w-[25vw] rounded-lg bg-goldenYellow text-darkerCharcoal font-medium font-roboto lg:p-1 sm:p-5 hover:bg-opacity-70 duration-700;
+    }
+    .picture-submit {
+        @apply lg:w-[7.2vw] sm:w-[27vw] overflow-hidden;
     }
 }

@@ -113,9 +113,7 @@ class AddVehicleForm(FlaskForm):
                           )
     picture = FileField('Vehicle Picture',
                         render_kw={
-                            'class': "mt-2 p-3 border rounded w-full",
                             'placeholder': 'Picture',
-                            'id': 'add_picture',
                         }
                         )
     submit = SubmitField('Submit')
@@ -153,8 +151,7 @@ class EditVehicleForm(FlaskForm):
                           )
     picture = FileField('Vehicle Picture',
                         render_kw={
-                            'class': "mt-2 p-3 border rounded w-full",
-                            'placeholder': 'Picture'
+                            'placeholder': 'Picture',
                         }
                         )
     submit = SubmitField('Submit')

@@ -142,13 +142,9 @@
                         </div>
                     {% endif %}
                 </div>
-                <br/>
-                <div class="text-center">
-                    <sm>↓ Optional ↓</sm>
-                </div>
-                <br/>
 
-                <div class="">
+
+                <div>
                     {{ add_vehicle_form.mileage }}
                     {% if add_vehicle_form.mileage.errors %}
                         <div class="form-errors"
@@ -163,11 +159,10 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="text-center mt-4">
-                    <sm>Upload Picture</sm>
-                </div>
+                <sm class="text-center medium-text">↓ Add vehicle photo (optional) ↓</sm>
 
-                <div class="">
+
+                <div class="picture-submit">
                     {{ add_vehicle_form.picture }}
                     {% if add_vehicle_form.picture.errors %}
                         <div class="form-errors"
@@ -182,10 +177,12 @@
                         </div>
                     {% endif %}
                 </div>
-
-                <div class="submit-button">
-                    {{ add_vehicle_form.submit() }}
+                <div class="pt-10">
+                    <div class="submit-button">
+                        {{ add_vehicle_form.submit() }}
+                    </div>
                 </div>
+
 
             </form>
         </div>
@@ -259,11 +256,7 @@
                         </div>
                     {% endif %}
                 </div>
-                <br/>
-                <div class="text-center">
-                    <sm>↓ Optional ↓</sm>
-                </div>
-                <br/>
+
 
                 <div class="">
                     {{ edit_vehicle_form.mileage }}
@@ -280,11 +273,8 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="text-center mt-4">
-                    <sm>Change Picture</sm>
-                </div>
-
-                <div class="">
+                <sm class="text-center medium-text">↓ Update vehicle photo (optional) ↓</sm>
+                <div class="picture-submit">
                     {{ edit_vehicle_form.picture }}
                     {% if edit_vehicle_form.picture.errors %}
                         <div class="form-errors"
@@ -299,10 +289,12 @@
                         </div>
                     {% endif %}
                 </div>
-
-                <div class="submit-button">
-                    {{ edit_vehicle_form.submit() }}
+                <div class="pt-10">
+                    <div class="submit-button">
+                        {{ edit_vehicle_form.submit() }}
+                    </div>
                 </div>
+
 
             </form>
         </div>
