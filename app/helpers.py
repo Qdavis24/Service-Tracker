@@ -18,18 +18,18 @@ def wipe_services(services):
     db.session.commit()
 
 
-def validate_delete(user_id, delete_id, type):
+def validate_delete_request(user_id, delete_id, table):
     """Verifies delete comes from user who owns | Returns False for non user delete attempt & Returns db col to delete
     for validated user | args: user_id -> current user id & delete_id -> database col id to delete & type -> which table
     | if type is vehicle wipes services from database"""
-    if type == 'vehicle':
+    if table == 'vehicle':
         to_delete = db.session.execute(db.Select(Vehicles).where(Vehicles.id == delete_id)).scalar()
         if to_delete.owner_id == user_id:
             wipe_services(to_delete.services)
             return to_delete
         else:
             return False
-    elif type == 'service':
+    elif table == 'service':
         to_delete = db.session.execute(db.Select(Services).where(Services.id == delete_id)).scalar()
         if to_delete.owner_id == user_id:
             return to_delete
@@ -37,17 +37,17 @@ def validate_delete(user_id, delete_id, type):
             return False
 
 
-def validate_data_request(user_id, data_id, type):
+def validate_data_request(user_id, db_id, table):
     """Verifies data request comes from user who owns | Returns False for non user data request & database column
     for validated user | args: user_id -> current user id & data_id -> database col id to grab data & type -> which table"""
-    if type == 'vehicle':
-        data_grab = db.session.execute(db.Select(Vehicles).where(Vehicles.id == data_id)).scalar()
+    if table == 'vehicle':
+        data_grab = db.session.execute(db.Select(Vehicles).where(Vehicles.id == db_id)).scalar()
         if data_grab.owner_id == user_id:
             return data_grab
         else:
             return False
-    elif type == 'service':
-        data_grab = db.session.execute(db.Select(Services).where(Services.id == data_id)).scalar()
+    elif table == 'service':
+        data_grab = db.session.execute(db.Select(Services).where(Services.id == db_id)).scalar()
         if data_grab.owner_id == user_id:
             return data_grab
         else:

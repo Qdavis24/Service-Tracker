@@ -87,31 +87,36 @@ class AddVehicleForm(FlaskForm):
     year = StringField('Year', validators=[DataRequired()],
                        render_kw={
                            'class': "mt-2 p-3 border rounded w-full",
-                           'placeholder': 'Year'
+                           'placeholder': 'Year',
+                           'id': 'add_year',
                        }
                        )
     make = StringField('Make', validators=[DataRequired()],
                        render_kw={
                            'class': "mt-2 p-3 border rounded w-full",
-                           'placeholder': 'Make'
+                           'placeholder': 'Make',
+                           'id': 'add_make',
                        }
                        )
     model = StringField('Model', validators=[DataRequired()],
                         render_kw={
                             'class': "mt-2 p-3 border rounded w-full",
-                            'placeholder': 'Model'
+                            'placeholder': 'Model',
+                            'id': 'add_model',
                         }
                         )
     mileage = StringField('Mileage',
                           render_kw={
                               'class': "mt-2 p-3 border rounded w-full",
-                              'placeholder': 'Mileage'
+                              'placeholder': 'Mileage',
+                              'id': 'add_mileage',
                           }
                           )
     picture = FileField('Vehicle Picture',
                         render_kw={
                             'class': "mt-2 p-3 border rounded w-full",
-                            'placeholder': 'Picture'
+                            'placeholder': 'Picture',
+                            'id': 'add_picture',
                         }
                         )
     submit = SubmitField('Submit',
@@ -127,28 +132,28 @@ class EditVehicleForm(FlaskForm):
                        render_kw={
                            'class': "mt-2 p-3 border rounded w-full",
                            'placeholder': 'Year',
-                           'id': "y"
+                           'id': "year"
                        }
                        )
     make = StringField('Make', validators=[DataRequired()],
                        render_kw={
                            'class': "mt-2 p-3 border rounded w-full",
                            'placeholder': 'Make',
-                           'id': "mke"
+                           'id': "make"
                        }
                        )
     model = StringField('Model', validators=[DataRequired()],
                         render_kw={
                             'class': "mt-2 p-3 border rounded w-full",
                             'placeholder': 'Model',
-                            "id": "mdl"
+                            "id": "model"
                         }
                         )
     mileage = StringField('Mileage',
                           render_kw={
                               'class': "mt-2 p-3 border rounded w-full",
                               'placeholder': 'Mileage',
-                              'id': "mil"
+                              'id': "mileage"
                           }
                           )
     picture = FileField('Vehicle Picture',

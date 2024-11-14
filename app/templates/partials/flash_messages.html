@@ -1,0 +1,9 @@
+<ul id="flash-container" class="absolute top-3 w-screen">
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+            {% for message in messages %}
+                <li role="alert" class="flash-message w-full">{{ message }}</li>
+            {% endfor %}
+    {% endif %}
+{% endwith %}
+</ul>

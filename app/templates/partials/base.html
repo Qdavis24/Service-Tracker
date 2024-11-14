@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% include 'partials/flash_messages.html' %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,15 +9,6 @@
     {% endblock %}
 </head>
 <body {% block bodystyle %}{% endblock %}>
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul role="alert" class="z-50 fixed flash-message bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
 <div class="fixed flex sm:flex-col-reverse lg:flex-row sm:space-x-0 lg:space-x-5 top-5 right-5 z-50  sm:text-7xl lg:text-lg">
     {% block nav_buttons %}{% endblock %}
     <a href="{{ url_for('main.logout') }}"

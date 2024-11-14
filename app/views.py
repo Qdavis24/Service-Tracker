@@ -3,7 +3,7 @@ from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from io import BytesIO
 from .extensions import db, and_, or_, func
-from .helpers import validate_delete, validate_data_request, sanitize_html
+from .helpers import validate_delete_request, validate_data_request, sanitize_html
 from .models import Vehicles, Users, Services, Pictures
 from .forms import LoginForm, RegistrationForm, AddVehicleForm, EditVehicleForm, AddServiceForm
 
@@ -172,35 +172,49 @@ def get_image():
         return send_file("./static/placeholder_vehicle_image.png")
 
 
-@main_bp.route("/get-data")
+@login_required
+@main_bp.route("/get-data", methods=['POST'])
 def get_data():
-    """Retrieves data corresponding to a database table and column"""
-    # retrieve vehicle object, set required data, create dict with packaged data, send package
-    data_id = request.args.get("id")
-    type = request.args.get("type")
-    data = validate_data_request(current_user.id, data_id, type)
-    if data:
-        needed_data = ["year", "make", "model", "mileage", "id"]
+    """data retrieval API
+     request requirements:  BODY -> table: database table | id: database row primary key | columns: columns needed
+     response: 200: json bundled data from database | 401: unauthorized data retrieval attempt"""
+    req_body = request.get_json()
+    db_id = req_body['id']
+    table = req_body['table']
+    cols = req_body['columns']
+
+    # validates correct user attempting to access data then returns whole row as dictionary
+    db_data = validate_data_request(current_user.id, db_id, table)
+
+    if db_data:
+        # packages requested data only from row into dict then returns it as json
         packaged_data = {}
-        for col in needed_data:
-            packaged_data[col] = getattr(data, col)
-    return jsonify(packaged_data)
+        for col in cols:
+            packaged_data[col] = getattr(db_data, col)
+        return jsonify(packaged_data), 200
+    else:
+        # validation failed unauthorized access attempted
+        return jsonify({"error": "Not authorized"}), 401
 
 
 @login_required
-@main_bp.route("/delete")
+@main_bp.route("/delete", methods=['POST'])
 def delete():
-    """Deletes col from associated database table"""
-    # validate and retrieve delete object, use db object to delete from database, commit changes
-    delete_id = request.args.get("delete_id")
-    type = request.args.get("type")
-    to_delete = validate_delete(current_user.id, delete_id, type)
+    """Delete database row API
+    request requirements: BODY -> table: database table | id: database row primary key
+     response: 200: successful deletion | 401: unauthorized deletion attempt"""
+    req_body = request.get_json()
+    delete_id = req_body['id']
+    table = req_body['table']
+
+    to_delete = validate_delete_request(current_user.id, delete_id, table)
     if to_delete:
         db.session.delete(to_delete)
         db.session.commit()
+        return "", 200
     else:
-        flash("Naughty Naughty")
-    return redirect(url_for("main.garage"))
+        return jsonify({"error": 'Not authorized'}), 401
+
 
 
 @login_required

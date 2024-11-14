@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+{% include 'partials/svg_sprites.html' %}
+{%  include 'partials/flash_messages.html' %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,22 +14,15 @@
     </style>
 </head>
 <body>
-{% include 'partials/svg_sprites.html' %}
+
+
 <picture class="fixed top-0 left-0 w-full h-full z-[-1]">
     <source media="(max-width: 767px)" srcset="../static/wrenches-iphone.jpg">
     <source media="(min-width: 768px)" srcset="../static/wrenches1.jpg">
     <img alt="Wrenches" class="w-full h-full object-cover">
 </picture>
 
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li role="alert" class="flash-message">{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
+
 <div class="h-screen flex justify-center items-center">
     <div id="scroll-up" class="fixed top-[20vh] text-center" style="opacity:0;">
         <svg class="mx-auto animate-bounce" width="25" height="25" fill="white">
