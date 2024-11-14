@@ -1,13 +1,12 @@
 from flask_wtf import FlaskForm
-from sqlalchemy.testing.pickleable import User
 from wtforms import StringField, SubmitField, HiddenField, ValidationError, FileField
 from wtforms.fields.datetime import DateField
 from wtforms.fields.simple import PasswordField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
-from flask_ckeditor import CKEditor, CKEditorField
+from flask_ckeditor import CKEditorField
 
 # my modules
-from .extensions import db, func
+from .extensions import func
 from .models import Users
 
 
@@ -119,11 +118,7 @@ class AddVehicleForm(FlaskForm):
                             'id': 'add_picture',
                         }
                         )
-    submit = SubmitField('Submit',
-                         render_kw={
-                             'class': 'mt-4 mb-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full'
-                         }
-                         )
+    submit = SubmitField('Submit')
 
 
 class EditVehicleForm(FlaskForm):
@@ -162,11 +157,7 @@ class EditVehicleForm(FlaskForm):
                             'placeholder': 'Picture'
                         }
                         )
-    submit = SubmitField('Submit',
-                         render_kw={
-                             'class': 'mt-4 mb-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full'
-                         }
-                         )
+    submit = SubmitField('Submit')
 
 
 class AddServiceForm(FlaskForm):
@@ -183,7 +174,4 @@ class AddServiceForm(FlaskForm):
                             'placeholder': 'Picture'
                         }
                         )
-    submit = SubmitField('Submit', render_kw={
-        'class': 'mt-4 mb-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full'
-    }
-                         )
+    submit = SubmitField('Submit')

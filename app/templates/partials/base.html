@@ -13,7 +13,7 @@
 <div class="fixed flex sm:flex-col-reverse lg:flex-row sm:space-x-0 lg:space-x-5 top-5 right-5 z-50  sm:text-7xl lg:text-lg">
     {% block nav_buttons %}{% endblock %}
     <a href="{{ url_for('main.logout') }}"
-       class="sm:mb-5 lg:mb-0 border-3 rounded-lg lg:p-2 sm:p-8 bg-gray-300 bg-opacity-70 hover:bg-opacity-100 duration-500 sm:text-5xl lg:text-xl">Logout</a>
+       class="global-nav-button">Logout</a>
 </div>
 <header id="header"
      class="min-w-full min-h-[25vh] bg-gradient-to-b from-darkerCharcoal to-charcoal border-2 border-steel shadow-2xl">
@@ -29,7 +29,7 @@
             </div>
 
             <button onclick="{% block add_button_function %}{% endblock %}"
-                    class="mt-2 sm:p-6 lg:p-1 border-2 rounded-3xl bg-gray-300 bg-opacity-70 hover:bg-opacity-100  duration-500">
+                    class="nav-button">
                 <svg class="w-[4vh] h-[4vh]">
                     <use href="#add-button"></use>
                 </svg>
@@ -42,7 +42,7 @@
             </div>
 
             <a href="{% block see_all_url %}{% endblock %}"
-               class="mt-2 sm:p-6 lg:p-1 border-2 rounded-3xl bg-gray-300 bg-opacity-70 hover:bg-opacity-100  duration-500">
+               class="nav-button">
                 <svg class="w-[4vh] h-[4vh]">
                     <use href="#go-back"></use>
                 </svg>

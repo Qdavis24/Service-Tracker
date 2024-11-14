@@ -112,7 +112,7 @@ def garage():
                             setattr(vehicle, attr, request.form[attr])
 
                 db.session.commit()
-                flash(f"Successfully updated {vehicle.make}")
+                flash(f"Successfully edited {vehicle.model}")
                 return redirect(url_for("main.garage"))
     return render_template("garage.html", edit_vehicle_form=edit_vehicle_form, add_vehicle_form=add_vehicle_form,
                            vehicles=vehicles)

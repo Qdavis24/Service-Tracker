@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% include 'partials/svg_sprites.html' %}
-{%  include 'partials/flash_messages.html' %}
+{% include 'partials/flash_messages.html' %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -107,11 +107,11 @@
             </svg>
         </button>
         <div class="mt-3 text-center">
-            <div class="logo-svg">
-                <svg class="logo-svg">
-                    <use href="#logo"/>
-                </svg>
-            </div>
+
+            <svg class="logo-svg">
+                <use href="#logo"/>
+            </svg>
+
             <h3 class="medium-text">Login to Your Account</h3>
 
             <form class="form text-slateWhite"
@@ -121,7 +121,7 @@
                 <div class="mt-5">
                     {{ login_form.email_username }}
                     {% if login_form.email_username.errors %}
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        <div class="form-errors"
                              role="alert">
                             <strong class="font-bold">Oops!</strong>
                             {% for error in login_form.email_username.errors %}
@@ -137,7 +137,7 @@
                 <div>
                     {{ login_form.password }}
                     {% if login_form.password.errors %}
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        <div class="form-errors"
                              role="alert">
                             <strong class="font-bold">Oops!</strong>
                             {% for error in login_form.password.errors %}
@@ -150,7 +150,7 @@
                     {% endif %}
                 </div>
 
-                <div class="lg:w-[5vw] sm:w-[25vw] rounded-lg bg-goldenYellow text-darkerCharcoal font-medium font-roboto lg:p-1 sm:p-5 mt-20 hover:bg-opacity-70 duration-700">
+                <div class="submit-button">
                     {{ login_form.submit() }}
                 </div>
 
@@ -184,11 +184,11 @@
             </svg>
         </button>
         <div class="mt-3 text-center">
-            <div class="logo-svg">
-                <svg class="logo-svg">
-                    <use href="#logo"/>
-                </svg>
-            </div>
+
+            <svg class="logo-svg">
+                <use href="#logo"/>
+            </svg>
+
             <h3 class="medium-text">Register an Account</h3>
             <!-- Login Form -->
             <form class="form" method="post"
@@ -239,7 +239,7 @@
                 <div class="rounded-md">
                     {{ registration_form.confirm_password }}
                 </div>
-                <div class="lg:w-[5vw] sm:w-[25vw] rounded-lg bg-goldenYellow text-darkerCharcoal font-medium font-roboto lg:p-1 sm:p-5 hover:bg-opacity-70 duration-700">
+                <div class="submit-button">
                     {{ registration_form.submit() }}
                 </div>
 

@@ -6,7 +6,7 @@
 {% endblock %}
 {% block nav_buttons %}
     <a href="{{ url_for('main.garage') }}"
-       class="border-3 rounded-lg lg:p-2 sm:p-8 bg-gray-300 bg-opacity-70 hover:bg-opacity-100 duration-500 sm:text-5xl lg:text-xl">Garage</a>
+       class="global-nav-button">Garage</a>
 {% endblock %}
 {% block search_form %}
     <form action="{{ url_for('main.service_viewer', vehicle_model=vehicle.model ) }}" method="POST" class="sm:text-5xl">
