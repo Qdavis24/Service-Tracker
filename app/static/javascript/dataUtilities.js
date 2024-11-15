@@ -1,3 +1,4 @@
+
 async function retrieveData(table, dbId, cols) {
     try {
         const response = await fetch(`/get-data`, {

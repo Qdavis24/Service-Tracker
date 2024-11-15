@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, redirect, request, url_for, flash, send_file, jsonify
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from io import BytesIO
 from .extensions import db, and_, or_, func
-from .helpers import validate_delete_request, validate_data_request, sanitize_html
+from .helpers import validate_delete_request, validate_data_request, save_to_db, retrieve_from_db, update_record, \
+    is_empty_field, blob_to_file,file_to_blob, sanitize_html
 from .models import Vehicles, Users, Services, Pictures
 from .forms import LoginForm, RegistrationForm, AddVehicleForm, EditVehicleForm, AddServiceForm
 
@@ -28,45 +28,54 @@ Further future
 """
 
 
-@main_bp.route("/", methods=["GET", "POST"])
-def index():
+@main_bp.route("/", methods=["GET"])
+def index(registration_form=None, login_form=None, modal_state=0):
     if current_user.is_authenticated:
         return redirect(url_for("main.garage"))
-    login_form = LoginForm()
-    registration_form = RegistrationForm()
-    if request.method == "POST":
-        if 'login' in request.form:
-            if login_form.validate_on_submit():
-                user = Users.query.filter(
-                    (func.lower(Users.username) == func.lower(login_form.email_username.data)) |
-                    (func.lower(Users.email) == func.lower(login_form.email_username.data))
-                ).first()
-                if user and check_password_hash(user.password, login_form.password.data):
-                    login_user(user)
-                    return redirect(url_for("main.garage"))
-            else:
-                return render_template("index.html", login_form=login_form,
-                                       registration_form=registration_form, modal_state=1)
-        if 'register' in request.form:
-            if registration_form.validate_on_submit():
-                password = generate_password_hash(registration_form.password.data, method='pbkdf2:sha256',
-                                                  salt_length=8)
-                new_user = Users(email=registration_form.email.data, username=registration_form.username.data,
-                                 password=password)
-                db.session.add(new_user)
-                db.session.commit()
-                login_user(new_user)
-                return redirect(url_for("main.garage"))
-            else:
-                return render_template("index.html", login_form=login_form,
-                                       registration_form=registration_form, modal_state=2)
 
-    return render_template("index.html", login_form=login_form, registration_form=registration_form)
+    login_form = login_form or LoginForm()
+    registration_form = registration_form or RegistrationForm()
+
+    return render_template("index.html", login_form=login_form, registration_form=registration_form,
+                           modal_state=modal_state)
+
+
+@main_bp.route('/register', methods=['POST'])
+def register():
+    registration_form = RegistrationForm()
+    if not registration_form.validate_on_submit():
+        return index(registration_form=registration_form, modal_state=2)
+    form_data = request.form.to_dict()
+    new_user = save_to_db(Users, form_data)
+    if new_user:
+        login_user(new_user)
+        return redirect(url_for('main.garage'))
+    else:
+        return index(modal_state=2)
+
+
+@main_bp.route("/login", methods=['POST'])
+def login():
+    login_form = LoginForm()
+    if not login_form.validate_on_submit():
+        return index(login_form=login_form, modal_state=1)
+    identifier = login_form.email_username.data
+    password = login_form.password.data
+    user = db.session.execute(
+        db.Select(Users).where(or_(Users.username == identifier, Users.email == identifier))).scalar()
+    if not check_password_hash(user.password, password):
+        flash("Incorrect Password")
+        return index(modal_state=1)
+    login_user(user)
+    return redirect(url_for('main.garage'))
 
 
 @login_required
 @main_bp.route("/garage", methods=['GET', 'POST'])
-def garage():
+def garage(add_vehicle_form=None, edit_vehicle_form=None, modal_state=0):
+    add_vehicle_form = add_vehicle_form or AddVehicleForm()
+    edit_vehicle_form = edit_vehicle_form or EditVehicleForm()
+
     vehicles = current_user.vehicles
     vehicle_model = request.form.get("vehicle_model")
     if vehicle_model:
@@ -75,47 +84,46 @@ def garage():
             flash(f"No vehicle found under {vehicle_model}")
             vehicles = current_user.vehicles
 
+    return render_template("garage.html", edit_vehicle_form=edit_vehicle_form,
+                           add_vehicle_form=add_vehicle_form,
+                           vehicles=vehicles, modal_state=modal_state)
+
+
+@main_bp.route('/add-vehicle', methods=['POST'])
+def add_vehicle():
     add_vehicle_form = AddVehicleForm()
+    if not add_vehicle_form.validate_on_submit():
+        return garage(add_vehicle_form=add_vehicle_form)
+    form_data = request.form.to_dict()
+    form_data['picture'] = file_to_blob(add_vehicle_form.picture.data)
+    form_data['owner_id'] = current_user.id
+    vehicle = save_to_db(Vehicles, form_data)
+    if not vehicle:
+        flash("Vehicle failed to save")
+        return garage()
+    flash(f"{vehicle.model} successfully stored in garage")
+    return garage()
+
+
+@main_bp.route("/edit-vehicle", methods=['POST'])
+def edit_vehicle():
     edit_vehicle_form = EditVehicleForm()
-    if request.method == "POST":
-        if 'add' in request.form:
-            if add_vehicle_form.validate_on_submit():
-                picture = Pictures(picture=add_vehicle_form.picture.data.read())
-                db.session.add(picture)
-                db.session.commit()
-                new_vehicle = Vehicles(owner_id=current_user.id, year=add_vehicle_form.year.data,
-                                       make=add_vehicle_form.make.data,
-                                       model=add_vehicle_form.model.data, mileage=add_vehicle_form.mileage.data,
-                                       picture=picture.id)
-
-                db.session.add(new_vehicle)
-                db.session.commit()
-                flash("Your new vehicle has been added to the garage", "success")
-                return redirect(url_for("main.garage"))
-            else:
-                return redirect(url_for("main.garage", modal_state=1))
-        if 'edit' in request.form:
-            if edit_vehicle_form.validate_on_submit():
-                vehicle = db.session.execute(db.Select(Vehicles).where(
-                    Vehicles.id == int(request.form.get("vehicle_id")))).scalar()
-                vehicle_attrs = ['year', 'make', 'model', 'mileage', 'picture']
-                print(request.files)
-                for attr in vehicle_attrs:
-
-                    if attr in request.form or attr in request.files:
-                        if attr == 'picture':
-                            picture = db.session.execute(
-                                db.Select(Pictures).where(Pictures.id == vehicle.picture)).scalar()
-                            setattr(picture, attr, request.files[attr].read())
-
-                        else:
-                            setattr(vehicle, attr, request.form[attr])
-
-                db.session.commit()
-                flash(f"Successfully edited {vehicle.model}")
-                return redirect(url_for("main.garage"))
-    return render_template("garage.html", edit_vehicle_form=edit_vehicle_form, add_vehicle_form=add_vehicle_form,
-                           vehicles=vehicles)
+    if not edit_vehicle_form.validate_on_submit():
+        return garage(edit_vehicle_form=edit_vehicle_form, modal_state=2)
+    vehicle_id = request.form.get("vehicle_id")
+    vehicle = retrieve_from_db(Vehicles, vehicle_id)
+    if not vehicle:
+        flash("Failure to find vehicle in database")
+        return garage()
+    data = {col_name: col_value.data for col_name, col_value in edit_vehicle_form._fields.items() if
+            not is_empty_field(col_value)}
+    print(data)
+    if 'picture' in data:
+        data['picture'] = file_to_blob(data['picture'])
+    update = update_record(Vehicles, vehicle, data)
+    if not update:
+        flash('Failure to update vehicle data')
+    return garage()
 
 
 @login_required
@@ -163,11 +171,10 @@ def get_image():
     # use bytes_io tool to construct BytesIO object
     # send file
     picture_id = request.args.get("picture_id")
+    print(picture_id)
     blob = Pictures.query.filter(Pictures.id == picture_id).scalar()
-    if blob.picture:
-        bytes_io = BytesIO(blob.picture)
-        bytes_io.seek(0)
-        return send_file(bytes_io, mimetype="image/jpg")
+    if blob:
+        return send_file(blob_to_file(blob), mimetype="image/jpeg")
     else:
         return send_file("./static/placeholder_vehicle_image.png")
 
@@ -214,7 +221,6 @@ def delete():
         return "", 200
     else:
         return jsonify({"error": 'Not authorized'}), 401
-
 
 
 @login_required

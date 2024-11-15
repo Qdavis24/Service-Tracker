@@ -116,7 +116,7 @@
 
             <form class="form text-slateWhite"
                   method="post"
-                  action="{{ url_for('main.index') }}">
+                  action="{{ url_for('main.login') }}">
                 {{ login_form.hidden_tag() }}
                 <div class="mt-5">
                     {{ login_form.email_username }}
@@ -190,9 +190,10 @@
             </svg>
 
             <h3 class="medium-text">Register an Account</h3>
-            <!-- Login Form -->
+            <!-- Register Form -->
             <form class="form" method="post"
-                  action="{{ url_for('main.index') }}">
+                  action="{{ url_for('main.register') }}"
+            >
                 {{ registration_form.hidden_tag() }}
                 <div class="rounded-xl">
                     {{ registration_form.email }}
@@ -237,7 +238,20 @@
                     {% endif %}
                 </div>
                 <div class="rounded-md">
+
                     {{ registration_form.confirm_password }}
+                    {% if registration_form.confirm_password.errors %}
+                        <div class="form-errors"
+                             role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            {% for error in registration_form.confirm_password.errors %}
+
+
+                                <span class="block sm:inline">{{ error }}</span>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="submit-button">
                     {{ registration_form.submit() }}

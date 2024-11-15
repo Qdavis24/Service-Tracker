@@ -11,7 +11,6 @@ from .models import Users
 
 
 class RegistrationForm(FlaskForm):
-    register = HiddenField()
     email = StringField(
         'Email',
         validators=[DataRequired(), Email("Invalid email address")],
@@ -31,17 +30,17 @@ class RegistrationForm(FlaskForm):
                              validators=[
                                  DataRequired(),
                                  Length(min=6, message="Password must be 6 characters long"),
-                                 EqualTo('confirm_password', message="Passwords must match")
                              ],
                              render_kw={"placeholder": "Password",
                                         "class": "p-2"})
 
     confirm_password = PasswordField('Confirm_Password',
-                                     validators=[DataRequired()],
+                                     validators=[DataRequired(),
+                                                 EqualTo('password', message="Passwords must match")],
                                      render_kw={
                                          'placeholder': 'Confirm Password',
                                          "class": "p-2",
-                                     }
+                                     },
                                      )
 
     submit = SubmitField('Submit')
@@ -56,7 +55,6 @@ class RegistrationForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    login = HiddenField()
     email_username = StringField('Email/Username',
                                  validators=[DataRequired()],
                                  render_kw={
@@ -82,7 +80,6 @@ class LoginForm(FlaskForm):
 
 
 class AddVehicleForm(FlaskForm):
-    add = HiddenField()
     year = StringField('Year', validators=[DataRequired()],
                        render_kw={
                            'class': "mt-2 p-3 border rounded w-full",

@@ -1,6 +1,9 @@
+from wtforms import FileField
+import bleach
+from io import BytesIO
+from PIL import Image
 from .models import Vehicles, Services
 from .extensions import db
-import bleach
 
 
 def sanitize_html(html):
@@ -52,3 +55,73 @@ def validate_data_request(user_id, db_id, table):
             return data_grab
         else:
             return False
+
+
+def save_to_db(model: db.Model, data):
+    try:
+        required_columns = model.__table__.columns.keys()[1:]
+        print(required_columns)
+        packaged_data = {col_name: data[col_name] for col_name in required_columns}
+        new_row = model(**packaged_data)
+        db.session.add(new_row)
+    except Exception as e:
+        print(e)
+        return False
+    else:
+        print("Y")
+        db.session.commit()
+        return new_row
+
+
+def retrieve_from_db(model: db.Model, id):
+    row = db.session.execute(db.Select(model).where(model.id == id)).scalar()
+    if row:
+        return row
+    return False
+
+
+def update_record(model: db.Model, row, data):
+    try:
+        for col, value in data.items():
+            if col in model.__table__.columns.keys():
+                setattr(row, col, value)
+    except Exception as e:
+        print(f"FAILURE TO UPDATE RECORD {row} ERROR: {e}")
+        db.session.rollback()
+        return False
+    else:
+        db.session.commit()
+        return True
+
+
+def is_empty_field(field):
+    if isinstance(field, FileField):
+        print("Y")
+        if field.data.filename == "":
+            return True
+    if field.data == "":
+        return True
+    return False
+
+
+def blob_to_file(blob):
+    bytes_io = BytesIO(blob)
+    bytes_io.seek(0)
+    return bytes_io
+
+
+def file_to_blob(file):
+    binary_data = file.read()
+    img = Image.open(BytesIO(binary_data))
+    if img.mode in ('RGBA', 'LA'):
+        background = Image.new('RGB', img.size, 'white')
+        # Handle transparency by placing on white background
+        background.paste(img, mask=img.split()[-1])
+        img = background
+    elif img.mode != 'RGB':
+        # Convert any other modes to RGB
+        img = img.convert('RGB')
+    img.thumbnail(size=(200, 200))
+    thumb_io = BytesIO()
+    img.save(thumb_io, 'JPEG', quality=85)
+    return thumb_io.getvalue()

@@ -31,7 +31,7 @@
 
                 <div class="h-[15vh] w-full overflow-hidden">
                     <img class="object-contain w-full mx-auto"
-                         src="{{ url_for("main.get_image", picture_id=vehicle.picture) }}" alt="vehicle image"/>
+                         src="{{ url_for("main.get_image", picture_id=vehicle.picture.id) }}" alt="vehicle image"/>
                 </div>
 
                 <div class="h-[25vh] w-full text-slateWhite p-4">
@@ -94,7 +94,7 @@
 
 
             <form enctype="multipart/form-data" class="form" method="post"
-                  action="{{ url_for('main.garage') }}">
+                  action="{{ url_for('main.add_vehicle') }}">
                 {{ add_vehicle_form.hidden_tag() }}
                 <div class="mt-5">
                     {{ add_vehicle_form.year }}
@@ -207,9 +207,9 @@
 
 
             <form enctype="multipart/form-data" class="form" method="post"
-                  action="{{ url_for('main.garage') }}">
+                  action="{{ url_for('main.edit_vehicle') }}">
                 {{ edit_vehicle_form.hidden_tag() }}
-                <input type="hidden" id="id" name="vehicle_id">
+                <input type="hidden" id="vehicle_id" name="vehicle_id" >
                 <div class="mt-5">
                     {{ edit_vehicle_form.year }}
                     {% if edit_vehicle_form.year.errors %}
@@ -319,6 +319,8 @@
 
         function handleEditVehicle(dbId) {
             populateData('vehicle', dbId, vehicleCols);
+            const hiddenInputId = document.getElementById('vehicle_id');
+            hiddenInputId.value = dbId
             handleModal(2);
         }
 
