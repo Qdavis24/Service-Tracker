@@ -3,7 +3,7 @@ from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db, and_, or_, func
 from .helpers import validate_delete_request, validate_data_request, save_to_db, retrieve_from_db, update_record, \
-    is_empty_field, blob_to_file,file_to_blob, sanitize_html
+    is_empty_field, blob_to_file, file_to_blob, sanitize_html
 from .models import Vehicles, Users, Services, Pictures
 from .forms import LoginForm, RegistrationForm, AddVehicleForm, EditVehicleForm, AddServiceForm
 
@@ -45,8 +45,12 @@ def register():
     registration_form = RegistrationForm()
     if not registration_form.validate_on_submit():
         return index(registration_form=registration_form, modal_state=2)
-    form_data = request.form.to_dict()
-    new_user = save_to_db(Users, form_data)
+    registration_data = {
+        'email': registration_form.email.data,
+        'username': registration_form.username.data,
+        'password': generate_password_hash(registration_form.password.data, 'pbkdf2:sha256', salt_length=16)
+    }
+    new_user = save_to_db(Users, registration_data)
     if new_user:
         login_user(new_user)
         return redirect(url_for('main.garage'))
@@ -71,33 +75,44 @@ def login():
 
 
 @login_required
-@main_bp.route("/garage", methods=['GET', 'POST'])
-def garage(add_vehicle_form=None, edit_vehicle_form=None, modal_state=0):
+@main_bp.route("/garage", methods=['GET'])
+def garage(add_vehicle_form=None, edit_vehicle_form=None, vehicles=None, modal_state=0):
     add_vehicle_form = add_vehicle_form or AddVehicleForm()
     edit_vehicle_form = edit_vehicle_form or EditVehicleForm()
-
-    vehicles = current_user.vehicles
-    vehicle_model = request.form.get("vehicle_model")
-    if vehicle_model:
-        vehicles = [vehicle for vehicle in current_user.vehicles if vehicle.model == vehicle_model]
-        if len(vehicles) < 1:
-            flash(f"No vehicle found under {vehicle_model}")
-            vehicles = current_user.vehicles
+    vehicles = vehicles or current_user.vehicles
 
     return render_template("garage.html", edit_vehicle_form=edit_vehicle_form,
                            add_vehicle_form=add_vehicle_form,
                            vehicles=vehicles, modal_state=modal_state)
 
 
+@main_bp.route("/garage/search", methods=['POST'])
+def vehicle_search():
+    vehicle_model = request.form.get("vehicle_model")
+    vehicles = [vehicle for vehicle in current_user.vehicles if vehicle.model == vehicle_model]
+    if len(vehicles) < 1:
+        flash(f"No vehicle found under {vehicle_model}")
+        return garage()
+    return garage(vehicles=vehicles)
+
+
+@login_required
 @main_bp.route('/add-vehicle', methods=['POST'])
 def add_vehicle():
     add_vehicle_form = AddVehicleForm()
     if not add_vehicle_form.validate_on_submit():
         return garage(add_vehicle_form=add_vehicle_form)
-    form_data = request.form.to_dict()
-    form_data['picture'] = file_to_blob(add_vehicle_form.picture.data)
-    form_data['owner_id'] = current_user.id
-    vehicle = save_to_db(Vehicles, form_data)
+    picture_file = add_vehicle_form.picture.data
+    picture_id = None
+    if picture_file:
+        picture_blob = file_to_blob(picture_file)
+        add_picture_data = {'picture': picture_blob}
+        picture = save_to_db(Pictures, add_picture_data)
+        picture_id = picture.id
+    add_vehicle_data = {'year': add_vehicle_form.year.data, 'make': add_vehicle_form.make.data,
+                        'model': add_vehicle_form.model.data, 'mileage': add_vehicle_form.mileage.data,
+                        'picture_id': picture_id, 'owner_id': current_user.id}
+    vehicle = save_to_db(Vehicles, add_vehicle_data)
     if not vehicle:
         flash("Vehicle failed to save")
         return garage()
@@ -105,6 +120,7 @@ def add_vehicle():
     return garage()
 
 
+@login_required
 @main_bp.route("/edit-vehicle", methods=['POST'])
 def edit_vehicle():
     edit_vehicle_form = EditVehicleForm()
@@ -115,12 +131,13 @@ def edit_vehicle():
     if not vehicle:
         flash("Failure to find vehicle in database")
         return garage()
-    data = {col_name: col_value.data for col_name, col_value in edit_vehicle_form._fields.items() if
+    vehicle_data = {col_name: col_value.data for col_name, col_value in edit_vehicle_form._fields.items() if
             not is_empty_field(col_value)}
-    print(data)
-    if 'picture' in data:
-        data['picture'] = file_to_blob(data['picture'])
-    update = update_record(Vehicles, vehicle, data)
+    if 'picture' in vehicle_data:
+        new_picture = file_to_blob(vehicle_data['picture'])
+        picture_data = {'picture': new_picture}
+        update_record(Pictures, vehicle.picture, picture_data)
+    update = update_record(Vehicles, vehicle, vehicle_data)
     if not update:
         flash('Failure to update vehicle data')
     return garage()
@@ -171,10 +188,9 @@ def get_image():
     # use bytes_io tool to construct BytesIO object
     # send file
     picture_id = request.args.get("picture_id")
-    print(picture_id)
     blob = Pictures.query.filter(Pictures.id == picture_id).scalar()
     if blob:
-        return send_file(blob_to_file(blob), mimetype="image/jpeg")
+        return send_file(blob_to_file(blob.picture), mimetype="image/jpeg")
     else:
         return send_file("./static/placeholder_vehicle_image.png")
 

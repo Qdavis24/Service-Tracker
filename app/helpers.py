@@ -14,35 +14,29 @@ def sanitize_html(html):
     return clean_html
 
 
-def wipe_services(services):
-    """delete all service for a vehicle NO VALIDATION ON USER"""
-    for service in services:
-        db.session.delete(service)
-    db.session.commit()
+def validate_delete_request(user_id: int, delete_id: int, table: str):
+    """retrieves row from database to delete, verifies row belongs to request source, deletes all children connected to
+     'to delete', returns to delete row |
+    ARGS: user_id -> current user id & delete_id -> database col id to delete & table -> which table
+    RETURNS: requested deletion row for success & False for failure"""
 
-
-def validate_delete_request(user_id, delete_id, table):
-    """Verifies delete comes from user who owns | Returns False for non user delete attempt & Returns db col to delete
-    for validated user | args: user_id -> current user id & delete_id -> database col id to delete & type -> which table
-    | if type is vehicle wipes services from database"""
     if table == 'vehicle':
-        to_delete = db.session.execute(db.Select(Vehicles).where(Vehicles.id == delete_id)).scalar()
-        if to_delete.owner_id == user_id:
-            wipe_services(to_delete.services)
-            return to_delete
-        else:
+        to_delete_vehicle = db.session.execute(db.Select(Vehicles).where(Vehicles.id == delete_id)).scalar()
+        if not to_delete_vehicle.owner_id == user_id:
             return False
+        return to_delete_vehicle
+
     elif table == 'service':
-        to_delete = db.session.execute(db.Select(Services).where(Services.id == delete_id)).scalar()
-        if to_delete.owner_id == user_id:
-            return to_delete
-        else:
+        to_delete_service = db.session.execute(db.Select(Services).where(Services.id == delete_id)).scalar()
+        if not to_delete_service.owner_id == user_id:
             return False
+        return to_delete_service
 
 
-def validate_data_request(user_id, db_id, table):
-    """Verifies data request comes from user who owns | Returns False for non user data request & database column
-    for validated user | args: user_id -> current user id & data_id -> database col id to grab data & type -> which table"""
+def validate_data_request(user_id: int, db_id: int, table: db.Model):
+    """
+    ARGS: user_id -> current user id & data_id -> target database col id & table -> which table
+    RETURNS: requested data for success & False for failure"""
     if table == 'vehicle':
         data_grab = db.session.execute(db.Select(Vehicles).where(Vehicles.id == db_id)).scalar()
         if data_grab.owner_id == user_id:
@@ -57,12 +51,12 @@ def validate_data_request(user_id, db_id, table):
             return False
 
 
-def save_to_db(model: db.Model, data):
+def save_to_db(table: db.Model, data: dict):
     try:
-        required_columns = model.__table__.columns.keys()[1:]
+        required_columns = table.__table__.columns.keys()[1:]
         print(required_columns)
         packaged_data = {col_name: data[col_name] for col_name in required_columns}
-        new_row = model(**packaged_data)
+        new_row = table(**packaged_data)
         db.session.add(new_row)
     except Exception as e:
         print(e)
@@ -73,17 +67,17 @@ def save_to_db(model: db.Model, data):
         return new_row
 
 
-def retrieve_from_db(model: db.Model, id):
-    row = db.session.execute(db.Select(model).where(model.id == id)).scalar()
+def retrieve_from_db(table: db.Model, id: int):
+    row = db.session.execute(db.Select(table).where(table.id == id)).scalar()
     if row:
         return row
     return False
 
 
-def update_record(model: db.Model, row, data):
+def update_record(table: db.Model, row, data):
     try:
         for col, value in data.items():
-            if col in model.__table__.columns.keys():
+            if col in table.__table__.columns.keys():
                 setattr(row, col, value)
     except Exception as e:
         print(f"FAILURE TO UPDATE RECORD {row} ERROR: {e}")
@@ -111,6 +105,9 @@ def blob_to_file(blob):
 
 
 def file_to_blob(file):
+    if not file:
+        print("early exit file to blob")
+        return file
     binary_data = file.read()
     img = Image.open(BytesIO(binary_data))
     if img.mode in ('RGBA', 'LA'):

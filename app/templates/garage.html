@@ -4,7 +4,7 @@
 {% block style %}
 {% endblock %}
 {% block search_form %}
-    <form action="{{ url_for('main.garage') }}" method="POST" class="sm:text-5xl">
+    <form action="{{ url_for('main.vehicle_search') }}" method="POST" class="sm:text-5xl">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input placeholder="Search..." name="vehicle_model"
                class="lg:text-xl ml-5 mt-5 p-2 rounded-lg w-[25vh] sm:h-[6vh] lg:h-[4vh]">
@@ -28,10 +28,9 @@
                 <div class="h-[10vh] w-full flex items-center justify-center">
                     <h1 class="font-bold font-montserrat text-electricBlue sm:text-6xl lg:text-4xl">{{ vehicle.model }}</h1>
                 </div>
-
                 <div class="h-[15vh] w-full overflow-hidden">
                     <img class="object-contain w-full mx-auto"
-                         src="{{ url_for("main.get_image", picture_id=vehicle.picture.id) }}" alt="vehicle image"/>
+                         src="{{ url_for("main.get_image", picture_id=vehicle.picture_id) }}" alt="vehicle image"/>
                 </div>
 
                 <div class="h-[25vh] w-full text-slateWhite p-4">

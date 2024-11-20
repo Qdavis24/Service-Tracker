@@ -9,8 +9,8 @@ class Users(db.Model, UserMixin):
     email = db.Column(db.String, unique=True, nullable=False)
     username = db.Column(db.String, unique=False, nullable=False)
     password = db.Column(db.String, unique=False, nullable=False)
-    vehicles = db.relationship("Vehicles", backref="owner", lazy=True)
-    services = db.relationship("Services", backref="owner", lazy=True)
+    vehicles = db.relationship("Vehicles", backref="owner", lazy=True, cascade="all, delete-orphan")
+    services = db.relationship("Services", backref="owner", lazy=True, cascade="all, delete-orphan")
 
 
 class Vehicles(db.Model):
@@ -19,9 +19,10 @@ class Vehicles(db.Model):
     year = db.Column(db.String, unique=False, nullable=False)
     make = db.Column(db.String, unique=False, nullable=False)
     model = db.Column(db.String, unique=False, nullable=False)
-    picture = db.Column(db.ForeignKey('pictures.id'), nullable=True, unique=True)
+    picture_id = db.Column(db.ForeignKey('pictures.id'), nullable=True, unique=True)
+    picture = db.relationship("Pictures", foreign_keys=[picture_id], cascade="all, delete-orphan", single_parent=True)
     mileage = db.Column(db.Integer, unique=False, nullable=True)
-    services = db.relationship("Services", backref="vehicle", lazy=True)
+    services = db.relationship("Services", backref="vehicle", lazy=True, cascade="all, delete-orphan")
 
 
 class Services(db.Model):
@@ -32,7 +33,8 @@ class Services(db.Model):
     mileage = db.Column(db.Integer, nullable=True, unique=False)
     service = db.Column(db.String, nullable=False, unique=False)
     story = db.Column(db.String, nullable=False, unique=False)
-    picture = db.Column(db.ForeignKey('pictures.id'), nullable=True, unique=True)
+    picture_id = db.Column(db.ForeignKey('pictures.id'), nullable=True, unique=True)
+    picture = db.relationship("Pictures", foreign_keys=[picture_id], cascade="all, delete-orphan", single_parent=True)
 
 
 class Pictures(db.Model):
