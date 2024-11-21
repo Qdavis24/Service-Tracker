@@ -1,7 +1,7 @@
 from flask import Flask
 from .models import Users
 from flask_wtf.csrf import CSRFProtect
-from flask_ckeditor import CKEditor, CKEditorField
+from flask_ckeditor import CKEditor
 from .extensions import db, login_manager, migrate
 from .config import Config
 # blueprints

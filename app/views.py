@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, request, url_for, flash, send_file, jsonify
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from .extensions import db, and_, or_, func
+from .extensions import db, and_, or_
 from .helpers import validate_delete_request, validate_data_request, save_to_db, retrieve_from_db, update_record, \
     is_empty_field, blob_to_file, file_to_blob, sanitize_html
 from .models import Vehicles, Users, Services, Pictures
@@ -92,7 +92,7 @@ def vehicle_search():
     vehicles = [vehicle for vehicle in current_user.vehicles if vehicle.model == vehicle_model]
     if len(vehicles) < 1:
         flash(f"No vehicle found under {vehicle_model}")
-        return garage()
+        return redirect(url_for('main.garage'))
     return garage(vehicles=vehicles)
 
 
@@ -117,7 +117,7 @@ def add_vehicle():
         flash("Vehicle failed to save")
         return garage()
     flash(f"{vehicle.model} successfully stored in garage")
-    return garage()
+    return redirect(url_for('main_bp.garage'))
 
 
 @login_required
@@ -130,17 +130,16 @@ def edit_vehicle():
     vehicle = retrieve_from_db(Vehicles, vehicle_id)
     if not vehicle:
         flash("Failure to find vehicle in database")
-        return garage()
+        return redirect(url_for('main_bp.garage'))
     vehicle_data = {col_name: col_value.data for col_name, col_value in edit_vehicle_form._fields.items() if
             not is_empty_field(col_value)}
     if 'picture' in vehicle_data:
         new_picture = file_to_blob(vehicle_data['picture'])
         picture_data = {'picture': new_picture}
         update_record(Pictures, vehicle.picture, picture_data)
-    update = update_record(Vehicles, vehicle, vehicle_data)
-    if not update:
-        flash('Failure to update vehicle data')
-    return garage()
+    update_record(Vehicles, vehicle, vehicle_data)
+    flash(f"{vehicle.model} successfully updated")
+    return redirect(url_for('main_bp.garage'))
 
 
 @login_required
