@@ -5,13 +5,14 @@ from flask_ckeditor import CKEditor
 from .extensions import db, login_manager, migrate
 from .config import Config
 # blueprints
-from .views import main_bp
+from .views import main_bp, api_bp
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     app.register_blueprint(main_bp)
+    app.register_blueprint(api_bp)
     db.init_app(app)
     app.config['CKEDITOR_SERVE_LOCAL'] = True
     app.config['CKEDITOR_PKG_TYPE'] = 'standard'

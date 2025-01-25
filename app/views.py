@@ -8,24 +8,7 @@ from .models import Vehicles, Users, Services, Pictures
 from .forms import LoginForm, RegistrationForm, AddVehicleForm, EditVehicleForm, AddServiceForm
 
 main_bp = Blueprint("main", __name__, template_folder="../templates")
-
-""" TODOS
-
-Immediate future 
-
-1) make the date automatically input todays date when adding service if none is added
-2) add label for date in add service form
-3) allow users to input mileage in any form, IE with , or adding miles/ hours at end?
-4) fix margin hack to get services and vehicles to display correctly and look nicely on mobile
-
-Further future
-1) add tag system to services to label as oil change , regular maintenance ect.. and also add pictures for each tag
-2) search through vehicles and services feature
-3) api for manufactures specified services to display service recommendations
-4) add next recommended oil change date at top of services and on vehicle card
-5) email user periodically recommending services for their vehicles
-
-"""
+api_bp = Blueprint("api", __name__, template_folder="../templates")
 
 
 @main_bp.route("/", methods=["GET"])
@@ -46,8 +29,8 @@ def register():
     if not registration_form.validate_on_submit():
         return index(registration_form=registration_form, modal_state=2)
     registration_data = {
-        'email': registration_form.email.data,
-        'username': registration_form.username.data,
+        'email': registration_form.email.data.lower(),
+        'username': registration_form.username.data.lower(),
         'password': generate_password_hash(registration_form.password.data, 'pbkdf2:sha256', salt_length=16)
     }
     new_user = save_to_db(Users, registration_data)
@@ -63,7 +46,7 @@ def login():
     login_form = LoginForm()
     if not login_form.validate_on_submit():
         return index(login_form=login_form, modal_state=1)
-    identifier = login_form.email_username.data
+    identifier = login_form.email_username.data.lower()
     password = login_form.password.data
     user = db.session.execute(
         db.Select(Users).where(or_(Users.username == identifier, Users.email == identifier))).scalar()
@@ -117,7 +100,7 @@ def add_vehicle():
         flash("Vehicle failed to save")
         return garage()
     flash(f"{vehicle.model} successfully stored in garage")
-    return redirect(url_for('main_bp.garage'))
+    return redirect(url_for('main.garage'))
 
 
 @login_required
@@ -130,7 +113,7 @@ def edit_vehicle():
     vehicle = retrieve_from_db(Vehicles, vehicle_id)
     if not vehicle:
         flash("Failure to find vehicle in database")
-        return redirect(url_for('main_bp.garage'))
+        return redirect(url_for('main.garage'))
     vehicle_data = {col_name: col_value.data for col_name, col_value in edit_vehicle_form._fields.items() if
             not is_empty_field(col_value)}
     if 'picture' in vehicle_data:
@@ -139,7 +122,7 @@ def edit_vehicle():
         update_record(Pictures, vehicle.picture, picture_data)
     update_record(Vehicles, vehicle, vehicle_data)
     flash(f"{vehicle.model} successfully updated")
-    return redirect(url_for('main_bp.garage'))
+    return redirect(url_for('main.garage'))
 
 
 @login_required
@@ -178,8 +161,15 @@ def service_viewer(vehicle_model):
                 return redirect(url_for("main.service_viewer", vehicle_model=vehicle.model, vehicle=vehicle))
     return render_template("services.html", vehicle=vehicle, services=prior_services, add_service_form=add_service_form)
 
+@login_required
+@main_bp.route("/logout")
+def logout():
+    logout_user()
+    flash("You have been logged out")
+    return redirect(url_for("main.index"))
 
-@main_bp.route("/get-image/")
+"""------------------------------------ RESTful api endpoints below--------------------------------------------------"""
+@api_bp.route("/get-image/")
 def get_image():
     """Fetches picture from database associated with id | Returns picture or placeholder picture if non existent"""
     # get picture id from url, retrieve picture object
@@ -195,7 +185,7 @@ def get_image():
 
 
 @login_required
-@main_bp.route("/get-data", methods=['POST'])
+@api_bp.route("/get-data", methods=['POST'])
 def get_data():
     """data retrieval API
      request requirements:  BODY -> table: database table | id: database row primary key | columns: columns needed
@@ -220,7 +210,7 @@ def get_data():
 
 
 @login_required
-@main_bp.route("/delete", methods=['POST'])
+@api_bp.route("/delete", methods=['POST'])
 def delete():
     """Delete database row API
     request requirements: BODY -> table: database table | id: database row primary key
@@ -237,10 +227,3 @@ def delete():
     else:
         return jsonify({"error": 'Not authorized'}), 401
 
-
-@login_required
-@main_bp.route("/logout")
-def logout():
-    logout_user()
-    flash("You have been logged out")
-    return redirect(url_for("main.index"))
