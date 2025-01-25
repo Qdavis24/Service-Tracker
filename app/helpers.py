@@ -54,7 +54,6 @@ def validate_data_request(user_id: int, db_id: int, table: db.Model):
 def save_to_db(table: db.Model, data: dict):
     try:
         required_columns = table.__table__.columns.keys()[1:]
-        print(required_columns)
         packaged_data = {col_name: data[col_name] for col_name in required_columns}
         new_row = table(**packaged_data)
         db.session.add(new_row)
@@ -62,7 +61,6 @@ def save_to_db(table: db.Model, data: dict):
         print(e)
         return False
     else:
-        print("Y")
         db.session.commit()
         return new_row
 

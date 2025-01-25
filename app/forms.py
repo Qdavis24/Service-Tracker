@@ -82,28 +82,28 @@ class LoginForm(FlaskForm):
 class AddVehicleForm(FlaskForm):
     year = StringField('Year', validators=[DataRequired()],
                        render_kw={
-                           'class': "mt-2 p-3 border rounded w-full",
+
                            'placeholder': 'Year',
                            'id': 'add_year',
                        }
                        )
     make = StringField('Make', validators=[DataRequired()],
                        render_kw={
-                           'class': "mt-2 p-3 border rounded w-full",
+
                            'placeholder': 'Make',
                            'id': 'add_make',
                        }
                        )
     model = StringField('Model', validators=[DataRequired()],
                         render_kw={
-                            'class': "mt-2 p-3 border rounded w-full",
+
                             'placeholder': 'Model',
                             'id': 'add_model',
                         }
                         )
     mileage = StringField('Mileage',
                           render_kw={
-                              'class': "mt-2 p-3 border rounded w-full",
+
                               'placeholder': 'Mileage',
                               'id': 'add_mileage',
                           }
@@ -117,31 +117,26 @@ class AddVehicleForm(FlaskForm):
 
 
 class EditVehicleForm(FlaskForm):
-    edit = HiddenField()
     year = StringField('Year', validators=[DataRequired()],
                        render_kw={
-                           'class': "mt-2 p-3 border rounded w-full",
                            'placeholder': 'Year',
                            'id': "year"
                        }
                        )
     make = StringField('Make', validators=[DataRequired()],
                        render_kw={
-                           'class': "mt-2 p-3 border rounded w-full",
                            'placeholder': 'Make',
                            'id': "make"
                        }
                        )
     model = StringField('Model', validators=[DataRequired()],
                         render_kw={
-                            'class': "mt-2 p-3 border rounded w-full",
                             'placeholder': 'Model',
                             "id": "model"
                         }
                         )
     mileage = StringField('Mileage',
                           render_kw={
-                              'class': "mt-2 p-3 border rounded w-full",
                               'placeholder': 'Mileage',
                               'id': "mileage"
                           }
@@ -155,17 +150,54 @@ class EditVehicleForm(FlaskForm):
 
 
 class AddServiceForm(FlaskForm):
-    add = HiddenField()
-    date = DateField('Date of Service',
-                     render_kw={"class": "mt-2 p-3 border rounded w-full", "placeholder": "Date of Service"})
-    mileage = StringField('Mileage', render_kw={"class": "mt-2 p-3 border rounded w-full", "placeholder": "Mileage"})
-    title = StringField('Service Preformed',
-                        render_kw={"class": "mt-2 p-3 border rounded w-full", "placeholder": "Service"})
-    story = CKEditorField('Service Description', render_kw={"placeholder": "Service Description"})
-    picture = FileField('Vehicle Picture',
-                        render_kw={
-                            'class': "mt-2 p-3 border rounded w-full",
-                            'placeholder': 'Picture'
-                        }
-                        )
+    date = DateField('Date of Service', validators=[DataRequired()],
+                     render_kw={
+                         'id': "date"
+                     }
+                     )
+    mileage = StringField('Mileage', validators=[DataRequired()],
+                          render_kw={
+                              'placeholder': 'Mileage',
+                              'id': "mileage"
+                          }
+                          )
+    service = StringField('Service Preformed', validators=[DataRequired()],
+                          render_kw={
+                              'placeholder': 'Title of service',
+                              'id': "service"
+                          }
+                          )
+    story = CKEditorField('Service Description', validators=[DataRequired()],
+                          render_kw={
+                              'id': "story"
+                          }
+                          )
+    picture = FileField('Vehicle Picture')
     submit = SubmitField('Submit')
+
+    class EditServiceForm(FlaskForm):
+        date = DateField('Date of Service', validators=[DataRequired()],
+                         render_kw={
+                             'id': "date"
+                         }
+                         )
+        mileage = StringField('Mileage', validators=[DataRequired()],
+                              render_kw={
+                                  'placeholder': 'Mileage',
+                                  'id': "mileage"
+                              }
+                              )
+        service = StringField('Service Preformed', validators=[DataRequired()],
+                              render_kw={
+                                  'placeholder': 'Title of service',
+                                  'id': "service"
+                              }
+                              )
+        story = CKEditorField('Service Description', validators=[DataRequired()],
+                              render_kw={
+                                  'id': "story"
+                              }
+                              )
+        picture = FileField('Vehicle Picture')
+        submit = SubmitField('Submit')
+

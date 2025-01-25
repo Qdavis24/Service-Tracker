@@ -97,7 +97,7 @@ def add_vehicle():
                         'picture_id': picture_id, 'owner_id': current_user.id}
     vehicle = save_to_db(Vehicles, add_vehicle_data)
     if not vehicle:
-        flash("Vehicle failed to save")
+        flash("Vehicle failed to save", "error")
         return garage()
     flash(f"{vehicle.model} successfully stored in garage")
     return redirect(url_for('main.garage'))
@@ -115,7 +115,7 @@ def edit_vehicle():
         flash("Failure to find vehicle in database")
         return redirect(url_for('main.garage'))
     vehicle_data = {col_name: col_value.data for col_name, col_value in edit_vehicle_form._fields.items() if
-            not is_empty_field(col_value)}
+                    not is_empty_field(col_value)}
     if 'picture' in vehicle_data:
         new_picture = file_to_blob(vehicle_data['picture'])
         picture_data = {'picture': new_picture}
@@ -126,40 +126,56 @@ def edit_vehicle():
 
 
 @login_required
-@main_bp.route("/services/<vehicle_model>", methods=["GET", "POST"])
-def service_viewer(vehicle_model):
+@main_bp.route("/services/<vehicle_id>", methods=["GET"])
+def service_viewer(vehicle_id, add_service_form=None, modal_state=0):
     vehicle = db.session.execute(db.Select(Vehicles).where(
         and_(
             Vehicles.owner_id == current_user.id,
-            Vehicles.model == vehicle_model)
+            Vehicles.id == vehicle_id)
     )).scalar()
-
-    prior_services = db.session.execute(db.Select(Services).where(
+    if not vehicle:
+        flash("You are not authorized to view this vehicle's records", "error")
+        return redirect(url_for('main.garage'))
+    services = db.session.execute(db.Select(Services).where(
         and_(Services.owner_id == current_user.id,
              Services.vehicle_id == vehicle.id)
     )).scalars()
-    add_service_form = AddServiceForm()
-    if request.method == "POST":
-        if 'add' in request.form:
-            if add_service_form.validate_on_submit():
-                if add_service_form.picture:
-                    picture = Pictures(picture=add_service_form.picture.data.read())
-                    db.session.add(picture)
-                story = sanitize_html(add_service_form.story.data)
-                service = Services(vehicle_id=vehicle.id, owner_id=current_user.id, date=add_service_form.date.data,
-                                   mileage=add_service_form.mileage.data,
-                                   service=add_service_form.title.data, story=story)
-                if picture:
-                    service.picture = picture.id
-                db.session.add(service)
-                db.session.commit()
 
-                return redirect(url_for("main.service_viewer", vehicle_model=vehicle.model, vehicle=vehicle))
-            else:
-                for error in add_service_form.errors.values():
-                    flash(error)
-                return redirect(url_for("main.service_viewer", vehicle_model=vehicle.model, vehicle=vehicle))
-    return render_template("services.html", vehicle=vehicle, services=prior_services, add_service_form=add_service_form)
+    add_service_form = add_service_form or AddServiceForm()
+
+    return render_template("services.html", vehicle=vehicle, services=services, add_service_form=add_service_form,
+                           modal_state=modal_state)
+
+
+@main_bp.route("/add-service", methods=["POST"])
+def add_service():
+    add_service_form = AddServiceForm()
+    vehicle_id = request.form.get('vehicle-id')
+    if not add_service_form.validate_on_submit():
+        return service_viewer(vehicle_id=vehicle_id, add_service_form=add_service_form, modal_state=1)
+
+    picture_file = add_service_form.picture.data
+    picture_id = None
+    if picture_file:
+        picture_blob = file_to_blob(picture_file)
+        add_picture_data = {'picture': picture_blob}
+        picture = save_to_db(Pictures, add_picture_data)
+        picture_id = picture.id
+
+    story = sanitize_html(add_service_form.story.data)
+    add_service_data = {"owner_id": current_user.id, "vehicle_id": vehicle_id,
+                        "date": add_service_form.date.data, "mileage": add_service_form.mileage.data,
+                        "service": add_service_form.service.data, "story": story,
+                        "picture_id": picture_id}
+    service = save_to_db(Services, add_service_data)
+
+    if not service:
+        flash("Service failed to save", "error")
+        return service_viewer(add_service_form=add_service_form, vehicle_id=vehicle_id)
+
+    flash(f"{service.service} successfully stored in services")
+    return redirect(url_for("main.service_viewer", vehicle_id=vehicle_id))
+
 
 @login_required
 @main_bp.route("/logout")
@@ -168,7 +184,10 @@ def logout():
     flash("You have been logged out")
     return redirect(url_for("main.index"))
 
+
 """------------------------------------ RESTful api endpoints below--------------------------------------------------"""
+
+
 @api_bp.route("/get-image/")
 def get_image():
     """Fetches picture from database associated with id | Returns picture or placeholder picture if non existent"""
@@ -226,4 +245,3 @@ def delete():
         return "", 200
     else:
         return jsonify({"error": 'Not authorized'}), 401
-

@@ -44,7 +44,7 @@
                             <button class="flex justify-center items-center w-[10vh] sm:h-[4vh] lg:h-[3vh] sm:text-3xl lg:text-xl bg-goldenYellow rounded-2xl hover:bg-yellow-600 duration-200 p-2"
                                     onclick=handleEditVehicle({{ vehicle.id }})><p>Edit</p>
                             </button>
-                            <a href="{{ url_for('main.service_viewer', vehicle_model=vehicle.model) }}"
+                            <a href="{{ url_for('main.service_viewer', vehicle_id=vehicle.id) }}"
                                class="flex justify-center items-center w-[10vh] sm:h-[4vh] lg:h-[3vh]  sm:text-3xl lg:text-xl bg-goldenYellow rounded-2xl hover:bg-yellow-600 duration-200 p-2">
                                 <p>Services</p>
                             </a>
@@ -349,21 +349,6 @@
                 handleModal({{ modal_state }})
             {% endif %}
 
-            function fadeOnScroll() {
-                const elements = document.querySelectorAll('.scroll-fade');
-                const midWindowHeight = window.innerHeight / 2;
-                elements.forEach(el => {
-                    const rect = el.getBoundingClientRect();
-                    let opacityScale = Math.abs((rect.top + rect.height / 2) - midWindowHeight);
-                    let opacity = 1 - (opacityScale * .002);
-                    el.style.opacity = opacity;
-
-
-                });
-
-            }
-
-            document.addEventListener('scroll', fadeOnScroll);
         });
 
 
