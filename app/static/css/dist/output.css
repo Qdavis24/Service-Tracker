@@ -916,6 +916,22 @@ video {
   }
 }
 
+.delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(239 68 68 / var(--tw-bg-opacity));
+  padding: 0.5rem;
+  transition-duration: 500ms;
+}
+
+.delete-btn:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(252 165 165 / var(--tw-bg-opacity));
+}
+
 .visible {
   visibility: visible;
 }
@@ -974,6 +990,10 @@ video {
 
 .z-\[-1\] {
   z-index: -1;
+}
+
+.m-2 {
+  margin: 0.5rem;
 }
 
 .mx-2 {
@@ -1056,10 +1076,6 @@ video {
   height: 50vh;
 }
 
-.h-\[5vh\] {
-  height: 5vh;
-}
-
 .h-full {
   height: 100%;
 }
@@ -1116,8 +1132,9 @@ video {
   width: 56vw;
 }
 
-.w-\[5vw\] {
-  width: 5vw;
+.w-fit {
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 .w-full {
@@ -1126,6 +1143,10 @@ video {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-\[5vh\] {
+  width: 5vh;
 }
 
 .min-w-full {
@@ -1216,6 +1237,12 @@ video {
   margin-bottom: calc(24rem * var(--tw-space-y-reverse));
 }
 
+.space-x-10 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(2.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(2.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -1226,10 +1253,6 @@ video {
 
 .rounded-2xl {
   border-radius: 1rem;
-}
-
-.rounded-full {
-  border-radius: 9999px;
 }
 
 .rounded-lg {
@@ -1272,6 +1295,11 @@ video {
   background-color: rgb(45 47 51 / var(--tw-bg-opacity));
 }
 
+.bg-darkerCharcoal {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 30 30 / var(--tw-bg-opacity));
+}
+
 .bg-goldenYellow {
   --tw-bg-opacity: 1;
   background-color: rgb(255 209 102 / var(--tw-bg-opacity));
@@ -1280,11 +1308,6 @@ video {
 .bg-lightSteel {
   --tw-bg-opacity: 1;
   background-color: rgb(156 163 175 / var(--tw-bg-opacity));
-}
-
-.bg-red-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(239 68 68 / var(--tw-bg-opacity));
 }
 
 .bg-steel {
@@ -1324,8 +1347,21 @@ video {
   padding: 1rem;
 }
 
+.p-5 {
+  padding: 1.25rem;
+}
+
+.px-5 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
 .pt-10 {
   padding-top: 2.5rem;
+}
+
+.text-left {
+  text-align: left;
 }
 
 .text-center {
@@ -1348,11 +1384,6 @@ video {
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
-}
-
-.text-lg {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
 }
 
 .text-sm {
@@ -1411,15 +1442,6 @@ video {
   transition-duration: 200ms;
 }
 
-.duration-500 {
-  transition-duration: 500ms;
-}
-
-.hover\:bg-red-300:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(252 165 165 / var(--tw-bg-opacity));
-}
-
 .hover\:bg-yellow-600:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(202 138 4 / var(--tw-bg-opacity));
@@ -1432,6 +1454,10 @@ video {
 @media (min-width: 640px) {
   .sm\:inline {
     display: inline;
+  }
+
+  .sm\:h-\[10vh\] {
+    height: 10vh;
   }
 
   .sm\:h-\[4vh\] {
@@ -1464,8 +1490,26 @@ video {
     margin-left: calc(0px * calc(1 - var(--tw-space-x-reverse)));
   }
 
+  .sm\:space-x-10 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(2.5rem * var(--tw-space-x-reverse));
+    margin-left: calc(2.5rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
   .sm\:p-4 {
     padding: 1rem;
+  }
+
+  .sm\:p-2 {
+    padding: 0.5rem;
+  }
+
+  .sm\:p-5 {
+    padding: 1.25rem;
+  }
+
+  .sm\:p-8 {
+    padding: 2rem;
   }
 
   .sm\:text-2xl {
@@ -1508,6 +1552,10 @@ video {
     height: 4vh;
   }
 
+  .lg\:h-\[5vh\] {
+    height: 5vh;
+  }
+
   .lg\:w-\[10vw\] {
     width: 10vw;
   }
@@ -1530,8 +1578,28 @@ video {
     margin-left: calc(1.25rem * calc(1 - var(--tw-space-x-reverse)));
   }
 
+  .lg\:space-x-4 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(1rem * var(--tw-space-x-reverse));
+    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  .lg\:space-x-2 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
   .lg\:p-1 {
     padding: 0.25rem;
+  }
+
+  .lg\:p-5 {
+    padding: 1.25rem;
+  }
+
+  .lg\:p-2 {
+    padding: 0.5rem;
   }
 
   .lg\:text-2xl {

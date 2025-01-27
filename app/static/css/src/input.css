@@ -70,4 +70,7 @@
     .picture-submit {
         @apply lg:w-[7.2vw] sm:w-[27vw] overflow-hidden;
     }
+    .delete-btn {
+        @apply flex items-center justify-center p-2 bg-red-500 hover:bg-red-300 duration-500 rounded-full;
+    }
 }

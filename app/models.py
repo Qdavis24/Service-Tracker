@@ -21,7 +21,7 @@ class Vehicles(db.Model):
     model = db.Column(db.String, unique=False, nullable=False)
     picture_id = db.Column(db.ForeignKey('pictures.id'), nullable=True, unique=True)
     picture = db.relationship("Pictures", foreign_keys=[picture_id], cascade="all, delete-orphan", single_parent=True)
-    mileage = db.Column(db.Integer, unique=False, nullable=True)
+    mileage = db.Column(db.Integer, unique=False, nullable=False)
     services = db.relationship("Services", backref="vehicle", lazy=True, cascade="all, delete-orphan")
 
 
@@ -30,7 +30,7 @@ class Services(db.Model):
     owner_id = db.Column(db.ForeignKey('users.id'), nullable=False, unique=False)
     vehicle_id = db.Column(db.ForeignKey("vehicles.id"), nullable=False, unique=False)
     date = db.Column(TIMESTAMP, nullable=False, unique=False)
-    mileage = db.Column(db.Integer, nullable=True, unique=False)
+    mileage = db.Column(db.Integer, nullable=False, unique=False)
     service = db.Column(db.String, nullable=False, unique=False)
     story = db.Column(db.String, nullable=False, unique=False)
     picture_id = db.Column(db.ForeignKey('pictures.id'), nullable=True, unique=True)

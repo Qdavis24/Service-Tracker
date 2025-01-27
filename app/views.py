@@ -3,9 +3,9 @@ from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db, and_, or_
 from .helpers import validate_delete_request, validate_data_request, save_to_db, retrieve_from_db, update_record, \
-    is_empty_field, blob_to_file, file_to_blob, sanitize_html
+    is_empty_field, blob_to_file, file_to_blob, sanitize_html, clean_numbers
 from .models import Vehicles, Users, Services, Pictures
-from .forms import LoginForm, RegistrationForm, AddVehicleForm, EditVehicleForm, AddServiceForm
+from .forms import LoginForm, RegistrationForm, AddVehicleForm, EditVehicleForm, AddServiceForm, EditServiceForm
 
 main_bp = Blueprint("main", __name__, template_folder="../templates")
 api_bp = Blueprint("api", __name__, template_folder="../templates")
@@ -57,6 +57,7 @@ def login():
     return redirect(url_for('main.garage'))
 
 
+# --------------------------------------------- login protected routes below --------------------------------------------
 @login_required
 @main_bp.route("/garage", methods=['GET'])
 def garage(add_vehicle_form=None, edit_vehicle_form=None, vehicles=None, modal_state=0):
@@ -69,11 +70,12 @@ def garage(add_vehicle_form=None, edit_vehicle_form=None, vehicles=None, modal_s
                            vehicles=vehicles, modal_state=modal_state)
 
 
+@login_required
 @main_bp.route("/garage/search", methods=['POST'])
 def vehicle_search():
-    vehicle_model = request.form.get("vehicle_model")
+    vehicle_model = request.form.get("vehicle-model")
     vehicles = [vehicle for vehicle in current_user.vehicles if vehicle.model == vehicle_model]
-    if len(vehicles) < 1:
+    if not vehicles:
         flash(f"No vehicle found under {vehicle_model}")
         return redirect(url_for('main.garage'))
     return garage(vehicles=vehicles)
@@ -93,7 +95,7 @@ def add_vehicle():
         picture = save_to_db(Pictures, add_picture_data)
         picture_id = picture.id
     add_vehicle_data = {'year': add_vehicle_form.year.data, 'make': add_vehicle_form.make.data,
-                        'model': add_vehicle_form.model.data, 'mileage': add_vehicle_form.mileage.data,
+                        'model': add_vehicle_form.model.data, 'mileage': clean_numbers(add_vehicle_form.mileage.data),
                         'picture_id': picture_id, 'owner_id': current_user.id}
     vehicle = save_to_db(Vehicles, add_vehicle_data)
     if not vehicle:
@@ -109,11 +111,12 @@ def edit_vehicle():
     edit_vehicle_form = EditVehicleForm()
     if not edit_vehicle_form.validate_on_submit():
         return garage(edit_vehicle_form=edit_vehicle_form, modal_state=2)
-    vehicle_id = request.form.get("vehicle_id")
+    vehicle_id = request.form.get("vehicle-id")
     vehicle = retrieve_from_db(Vehicles, vehicle_id)
     if not vehicle:
         flash("Failure to find vehicle in database")
         return redirect(url_for('main.garage'))
+    edit_vehicle_form.mileage.data = clean_numbers(edit_vehicle_form.mileage.data)
     vehicle_data = {col_name: col_value.data for col_name, col_value in edit_vehicle_form._fields.items() if
                     not is_empty_field(col_value)}
     if 'picture' in vehicle_data:
@@ -127,7 +130,7 @@ def edit_vehicle():
 
 @login_required
 @main_bp.route("/services/<vehicle_id>", methods=["GET"])
-def service_viewer(vehicle_id, add_service_form=None, modal_state=0):
+def service_viewer(vehicle_id, services=None, add_service_form=None, edit_service_form=None, modal_state=0):
     vehicle = db.session.execute(db.Select(Vehicles).where(
         and_(
             Vehicles.owner_id == current_user.id,
@@ -136,17 +139,31 @@ def service_viewer(vehicle_id, add_service_form=None, modal_state=0):
     if not vehicle:
         flash("You are not authorized to view this vehicle's records", "error")
         return redirect(url_for('main.garage'))
-    services = db.session.execute(db.Select(Services).where(
+    services = services or db.session.execute(db.Select(Services).where(
         and_(Services.owner_id == current_user.id,
              Services.vehicle_id == vehicle.id)
     )).scalars()
 
     add_service_form = add_service_form or AddServiceForm()
+    edit_service_form = edit_service_form or EditServiceForm()
 
     return render_template("services.html", vehicle=vehicle, services=services, add_service_form=add_service_form,
-                           modal_state=modal_state)
+                           edit_service_form=edit_service_form, modal_state=modal_state)
 
 
+@main_bp.route("/services/search", methods=["POST"])
+def service_search():
+    service_title = request.form.get("service-title")
+    vehicle_id = request.form.get("vehicle-id")
+    services = [service for service in Vehicles.query.get(vehicle_id).services if service.service == service_title]
+
+    if not services:
+        flash(f"No services found under title {service_title}")
+        return service_viewer(vehicle_id=vehicle_id)
+    return service_viewer(vehicle_id=vehicle_id, services=services)
+
+
+@login_required
 @main_bp.route("/add-service", methods=["POST"])
 def add_service():
     add_service_form = AddServiceForm()
@@ -164,7 +181,7 @@ def add_service():
 
     story = sanitize_html(add_service_form.story.data)
     add_service_data = {"owner_id": current_user.id, "vehicle_id": vehicle_id,
-                        "date": add_service_form.date.data, "mileage": add_service_form.mileage.data,
+                        "date": add_service_form.date.data, "mileage": clean_numbers(add_service_form.mileage.data),
                         "service": add_service_form.service.data, "story": story,
                         "picture_id": picture_id}
     service = save_to_db(Services, add_service_data)
@@ -178,14 +195,35 @@ def add_service():
 
 
 @login_required
-@main_bp.route("/logout")
+@main_bp.route("/edit-service", methods=["POST"])
+def edit_service():
+    edit_service_form = EditServiceForm()
+    vehicle_id = request.form.get("vehicle-id")
+    if not edit_service_form.validate_on_submit():
+        return service_viewer(vehicle_id=vehicle_id, edit_service_form=edit_service_form, modal_state=2)
+    service_id = request.form.get("service-id")
+    service = retrieve_from_db(Services, service_id)
+    edit_service_form.mileage.data = clean_numbers(edit_service_form.mileage.data)
+    service_data = {col_name: col_value.data for col_name, col_value in edit_service_form._fields.items() if
+                    not is_empty_field(col_value)}
+    if 'picture' in service_data:
+        new_picture = file_to_blob(service_data['picture'])
+        picture_data = {'picture': new_picture}
+        update_record(Pictures, service.picture, picture_data)
+    update_record(Services, service, service_data)
+    flash(f"{service.service} successfully updated")
+    return redirect(url_for('main.service_viewer', vehicle_id=vehicle_id))
+
+
+@login_required
+@main_bp.route("/logout", methods=["GET"])
 def logout():
     logout_user()
     flash("You have been logged out")
     return redirect(url_for("main.index"))
 
 
-"""------------------------------------ RESTful api endpoints below--------------------------------------------------"""
+# ------------------------------------ RESTful api endpoints below-------------------------------------------------------
 
 
 @api_bp.route("/get-image/")
@@ -196,7 +234,9 @@ def get_image():
     # use bytes_io tool to construct BytesIO object
     # send file
     picture_id = request.args.get("picture_id")
+    print(picture_id)
     blob = Pictures.query.filter(Pictures.id == picture_id).scalar()
+    print(blob)
     if blob:
         return send_file(blob_to_file(blob.picture), mimetype="image/jpeg")
     else:
@@ -221,7 +261,7 @@ def get_data():
         # packages requested data only from row into dict then returns it as json
         packaged_data = {}
         for col in cols:
-            packaged_data[col] = getattr(db_data, col)
+            packaged_data[col] = getattr(db_data, col) if col != "date" else getattr(db_data, col).strftime("%Y-%m-%d")
         return jsonify(packaged_data), 200
     else:
         # validation failed unauthorized access attempted

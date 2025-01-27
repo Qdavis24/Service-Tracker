@@ -2,11 +2,12 @@
 {% block title %}Garage{% endblock %}
 {% block bodystyle %}class="bg-charcoal"{% endblock %}
 {% block style %}
+    {{ ckeditor.load() }}
 {% endblock %}
 {% block search_form %}
     <form action="{{ url_for('main.vehicle_search') }}" method="POST" class="sm:text-5xl">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <input placeholder="Search..." name="vehicle_model"
+        <input placeholder="Search via model..." name="vehicle-model"
                class="lg:text-xl ml-5 mt-5 p-2 rounded-lg w-[25vh] sm:h-[6vh] lg:h-[4vh]">
         <input type="submit" placeholder="submit"
                class="sm:h-[6vh] lg:h-[4vh] lg:text-xl ml-2 bg-goldenYellow sm:p-4 lg:p-1 rounded-lg hover:bg-opacity-70 duration-200">
@@ -20,8 +21,8 @@
             <div id="{{ loop.index }}"
                  class="relative flex flex-col sm:w-[35vh] lg:w-[30vh] h-[50vh] bg-steel mx-auto my-10 border-2 border-lightSteel rounded-lg shadow-2xl">
                 <button onclick="handleDelete('{{ vehicle.model }}', {{ vehicle.id }}, {{ loop.index }})"
-                        class="flex items-center justify-center absolute top-3 right-3 w-[4vh] h-[4vh] p-2 bg-red-500 hover:bg-red-300 duration-500 rounded-full">
-                    <svg class="w-[5vw] h-[5vh]">
+                        class="absolute top-3 right-3 w-[4vh] h-[4vh] delete-btn">
+                    <svg>
                         <use href="#delete"></use>
                     </svg>
                 </button>
@@ -208,7 +209,7 @@
             <form enctype="multipart/form-data" class="form" method="post"
                   action="{{ url_for('main.edit_vehicle') }}">
                 {{ edit_vehicle_form.hidden_tag() }}
-                <input type="hidden" id="vehicle_id" name="vehicle_id" >
+                <input type="hidden" id="vehicle-id" name="vehicle-id" >
                 <div class="mt-5">
                     {{ edit_vehicle_form.year }}
                     {% if edit_vehicle_form.year.errors %}
@@ -310,7 +311,7 @@
     <script>
         const editVehicleModal = document.getElementById('edit-vehicle-modal');
         const registerVehicleModal = document.getElementById('add-vehicle-modal');
-        const vehicleCols = ['make', 'model', 'year', 'mileage', 'id'];
+        const vehicleCols = ['make', 'model', 'year', 'mileage'];
 
         function handleModal(state) {
             toggleModal(state, registerVehicleModal, editVehicleModal);
@@ -318,7 +319,7 @@
 
         function handleEditVehicle(dbId) {
             populateData('vehicle', dbId, vehicleCols);
-            const hiddenInputId = document.getElementById('vehicle_id');
+            const hiddenInputId = document.getElementById('vehicle-id');
             hiddenInputId.value = dbId
             handleModal(2);
         }

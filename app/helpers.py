@@ -6,6 +6,12 @@ from .models import Vehicles, Services
 from .extensions import db
 
 
+def clean_numbers(numb):
+    numb = str(numb)
+    numb = numb.replace(",", "")
+    return int(numb)
+
+
 def sanitize_html(html):
     """Sanitizes html from CKEDITOR field to protect from script injection"""
     allowed_tags = ['p', 'br', 'strong', 'em', 'u', 'ol', 'ul', 'li', 'a', 'h1', 'h2', 'h3']
@@ -88,7 +94,6 @@ def update_record(table: db.Model, row, data):
 
 def is_empty_field(field):
     if isinstance(field, FileField):
-        print("Y")
         if field.data.filename == "":
             return True
     if field.data == "":
@@ -104,7 +109,6 @@ def blob_to_file(blob):
 
 def file_to_blob(file):
     if not file:
-        print("early exit file to blob")
         return file
     binary_data = file.read()
     img = Image.open(BytesIO(binary_data))

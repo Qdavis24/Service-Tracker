@@ -9,9 +9,10 @@
        class="global-nav-button">Garage</a>
 {% endblock %}
 {% block search_form %}
-    <form action="{{ url_for('main.service_viewer', vehicle_id=vehicle.id ) }}" method="POST" class="sm:text-5xl">
+    <form action="{{ url_for('main.service_search') }}" method="POST" class="sm:text-5xl">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <input placeholder="Search..." name="service"
+        <input type="hidden" name="vehicle-id" value="{{ vehicle.id }}"/>
+        <input placeholder="Search via title..." name="service-title"
                class="lg:text-xl ml-5 mt-5 p-2 rounded-lg w-[25vh] sm:h-[6vh] lg:h-[4vh]">
         <input type="submit" placeholder="submit"
                class="sm:h-[6vh] lg:h-[4vh] lg:text-xl ml-2 bg-goldenYellow sm:p-4 lg:p-1 rounded-lg hover:bg-opacity-70 duration-200">
@@ -23,22 +24,37 @@
 {% block body_content %}
     <div class="flex flex-col space-y-2 mt-5">
         {% for service in services %}
-            <div class="flex flex-row w-full h-[5vh] {% if loop.index0 % 2 == 0 %}bg-steel{% else %}bg-lightSteel{% endif %} border border-3 border-darkerCharcoal p-2">
-                <div class="ml-2 w-[3vw] h-full">
-                    <img src="{{ url_for('api.get_image',  picture_id=service.picture) }}"/>
+            <div class="flex flex-row w-full sm:h-[10vh] lg:h-[5vh] medium-text {% if loop.index0 % 2 == 0 %}bg-steel{% else %}bg-lightSteel{% endif %}
+             lg:space-x-2 sm:space-x-10 border border-3 border-darkerCharcoal"
+            id="{{ loop.index }}">
+                <div class="flex items-center justify-center ml-2 w-[3vw] h-full">
+                    <img src="{{ url_for('api.get_image',  picture_id=service.picture_id) }}"/>
                 </div>
-                <div class="flex items-center justify-center w-[15vw] h-full font-semibold text-lg text-electricBlue">
+                <div class="flex items-center justify-center w-[15vw] h-full font-semibold text-electricBlue">
                     {{ service.service }}
                 </div>
-                <div class="flex items-center justify-center w-[13vw] h-full font-medium text-base text-slateWhite">
-                    {{ service.date.strftime('%Y-%m-%d') }}
+                <div class="flex items-center justify-center w-[13vw] h-full font-medium text-slateWhite">
+                    {{ service.date.strftime('%m/%d/%Y') }}
                 </div>
-                <div class="flex items-center justify-center w-[13vw] h-full font-medium text-base text-slateWhite">
-                    {{ service.mileage }}
+                <div class="flex items-center justify-center w-[13vw] h-full font-medium text-slateWhite">
+                    {{ "{:,}".format(service.mileage) }}
                 </div>
-                <div class="flex items-center justify-center w-[56vw] h-full font-medium text-base text-slateWhite">
-                    {{ service.story[0:25] | safe }}{% if service.story|length > 25 %}...{% endif %}
+                <div class="flex items-center w-[56vw] h-full font-medium text-slateWhite text-left">
+                    {{ service.story[:70] | safe }}{% if service.story|length > 70 %}...{% endif %}
                 </div>
+                <div class="flex justify-center items-center w-fit h-full">
+                    <button class="m-2 sm:p-8 lg:p-2 bg-darkerCharcoal" onclick="handleEditService({{ service.id }})">
+                        <p class="text-slateWhite">Edit</p>
+                    </button>
+                </div>
+                <div class="flex justify-center items-center w-fit h-full">
+                    <button class="m-2 delete-btn w-[4vh] h-[4vh]" onclick="handleDelete('{{ service.service }}', {{ service.id }}, {{ loop.index }})">
+                        <svg>
+                            <use href="#delete"></use>
+                        </svg>
+                    </button>
+                </div>
+
             </div>
         {% endfor %}
     </div>
@@ -49,7 +65,7 @@
          id="add-service-modal"
          style="display:none;">
 
-        <div class="modal-content">
+        <div class="modal-content z-50">
             <button onclick="handleModal(0)"
                     class="close-modal-button">
                 <svg width="20" height="20">
@@ -160,7 +176,7 @@
     </div>
 
     <!-- EDIT SERVICE FORM MODAL -->
-    <div class="modal-base"
+    <div class="modal-base z-50"
          id="edit-service-modal"
          style="display:none;">
 
@@ -179,15 +195,17 @@
 
 
             <form enctype="multipart/form-data" class="form" method="post"
-                  action="{{ url_for('main.add_vehicle') }}">
+                  action="{{ url_for('main.edit_service') }}">
                 {{ add_service_form.hidden_tag() }}
+                <input type="hidden" name="service-id" id="service-id"/>
+                <input type="hidden" name="vehicle-id" value="{{ vehicle.id }}"/>
                 <div class="mt-5">
-                    {{ add_service_form.date }}
-                    {% if add_service_form.date.errors %}
+                    {{ edit_service_form.date }}
+                    {% if edit_service_form.date.errors %}
                         <div class="form-errors"
                              role="alert">
                             <strong class="font-bold">Oops!</strong>
-                            {% for error in add_service_form.date.errors %}
+                            {% for error in edit_service_form.date.errors %}
 
 
                                 <span class="block sm:inline">{{ error }}</span>
@@ -198,12 +216,12 @@
                     {% endif %}
                 </div>
                 <div class="">
-                    {{ add_service_form.mileage }}
-                    {% if add_service_form.mileage.errors %}
+                    {{ edit_service_form.mileage }}
+                    {% if edit_service_form.mileage.errors %}
                         <div class="form-errors"
                              role="alert">
                             <strong class="font-bold">Oops!</strong>
-                            {% for error in add_service_form.mileage.errors %}
+                            {% for error in edit_service_form.mileage.errors %}
 
 
                                 <span class="block sm:inline">{{ error }}</span>
@@ -213,12 +231,12 @@
                     {% endif %}
                 </div>
                 <div class="">
-                    {{ add_service_form.service }}
-                    {% if add_service_form.service.errors %}
+                    {{ edit_service_form.service }}
+                    {% if edit_service_form.service.errors %}
                         <div class="form-errors"
                              role="alert">
                             <strong class="font-bold">Oops!</strong>
-                            {% for error in add_service_form.service.errors %}
+                            {% for error in edit_service_form.service.errors %}
 
 
                                 <span class="block sm:inline">{{ error }}</span>
@@ -230,12 +248,12 @@
 
 
                 <div>
-                    {{ add_service_form.story }}
-                    {% if add_service_form.story.errors %}
+                    {{ edit_service_form.story }}
+                    {% if edit_service_form.story.errors %}
                         <div class="form-errors"
                              role="alert">
                             <strong class="font-bold">Oops!</strong>
-                            {% for error in add_service_form.story.errors %}
+                            {% for error in edit_service_form.story.errors %}
 
 
                                 <span class="block sm:inline">{{ error }}</span>
@@ -248,12 +266,12 @@
 
 
                 <div class="picture-submit">
-                    {{ add_service_form.picture }}
-                    {% if add_service_form.picture.errors %}
+                    {{ edit_service_form.picture }}
+                    {% if edit_service_form.picture.errors %}
                         <div class="form-errors"
                              role="alert">
                             <strong class="font-bold">Oops!</strong>
-                            {% for error in add_service_form.picture.errors %}
+                            {% for error in edit_service_form.picture.errors %}
 
 
                                 <span class="block sm:inline">{{ error }}</span>
@@ -264,7 +282,7 @@
                 </div>
                 <div class="pt-10">
                     <div class="submit-button">
-                        {{ add_service_form.submit() }}
+                        {{ edit_service_form.submit() }}
                     </div>
                 </div>
 
@@ -272,6 +290,10 @@
             </form>
         </div>
     </div>
+    <script>
+        // Set global CSRF token that modules can access for POST requests
+        window.CSRF_TOKEN = '{{ csrf_token() }}';
+    </script>
     <script src="{{ url_for('static', filename='javascript/components.js') }}"></script>
     <script src="{{ url_for('static', filename='javascript/modal.js') }}"></script>
     <script src="{{ url_for('static', filename='javascript/dataUtilities.js') }}"></script>
@@ -282,11 +304,35 @@
 
         const editServiceModal = document.getElementById('edit-service-modal');
         const registerServiceModal = document.getElementById('add-service-modal');
+        const serviceCols = ['date', 'mileage', 'service', 'story'];
 
         function handleModal(state) {
             toggleModal(state, registerServiceModal, editServiceModal);
         }
 
+        function handleEditService(dbId) {
+            populateData('service', dbId, serviceCols);
+            const hiddenInputId = document.getElementById('service-id');
+            hiddenInputId.value = dbId;
+            handleModal(2);
+        }
+
+        async function handleDelete(service, dbId, elId) {
+            const confirmation = window.confirm(`are you sure you want to delete ${service}`);
+            if (confirmation) {
+                try {
+                    await deleteData('service', dbId);
+                    const element = document.getElementById(elId);
+                    element.remove();
+                    addFlashMessage(`Successfully deleted ${model}`)
+                } catch (error) {
+                    console.error(`Failure to delete: ${error}`)
+                }
+            } else {
+                return null;
+            }
+
+        }
         document.addEventListener('DOMContentLoaded', function () {
             const alertElements = document.querySelectorAll('[role="alert"]');
             alertElements.forEach(alert => {

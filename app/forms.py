@@ -152,6 +152,33 @@ class EditVehicleForm(FlaskForm):
 class AddServiceForm(FlaskForm):
     date = DateField('Date of Service', validators=[DataRequired()],
                      render_kw={
+                         'id': "add_date"
+                     }
+                     )
+    mileage = StringField('Mileage', validators=[DataRequired()],
+                          render_kw={
+                              'placeholder': 'Mileage',
+                              'id': "add_mileage"
+                          }
+                          )
+    service = StringField('Service Preformed', validators=[DataRequired()],
+                          render_kw={
+                              'placeholder': 'Title of service',
+                              'id': "add_service"
+                          }
+                          )
+    story = CKEditorField('Service Description', validators=[DataRequired()],
+                          render_kw={
+                              'id': "add_story"
+                          }
+                          )
+    picture = FileField('Vehicle Picture')
+    submit = SubmitField('Submit')
+
+
+class EditServiceForm(FlaskForm):
+    date = DateField('Date of Service', validators=[DataRequired()],
+                     render_kw={
                          'id': "date"
                      }
                      )
@@ -174,30 +201,3 @@ class AddServiceForm(FlaskForm):
                           )
     picture = FileField('Vehicle Picture')
     submit = SubmitField('Submit')
-
-    class EditServiceForm(FlaskForm):
-        date = DateField('Date of Service', validators=[DataRequired()],
-                         render_kw={
-                             'id': "date"
-                         }
-                         )
-        mileage = StringField('Mileage', validators=[DataRequired()],
-                              render_kw={
-                                  'placeholder': 'Mileage',
-                                  'id': "mileage"
-                              }
-                              )
-        service = StringField('Service Preformed', validators=[DataRequired()],
-                              render_kw={
-                                  'placeholder': 'Title of service',
-                                  'id': "service"
-                              }
-                              )
-        story = CKEditorField('Service Description', validators=[DataRequired()],
-                              render_kw={
-                                  'id': "story"
-                              }
-                              )
-        picture = FileField('Vehicle Picture')
-        submit = SubmitField('Submit')
-

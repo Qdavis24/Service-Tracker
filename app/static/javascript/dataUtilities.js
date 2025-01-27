@@ -59,7 +59,14 @@ async function populateData(table, dbId, cols) {
         cols.forEach(col => {
             const element = document.getElementById(col);
             if (element) {
-                element.value = data[col];
+
+                if (CKEDITOR.instances[col]) {
+                    CKEDITOR.instances[col].setData(data[col]);
+                }else {
+                    element.value = data[col];
+                }
+                
+
             } else {
                 console.warn(`Element with ID "${col}" not found`)
             }
