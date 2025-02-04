@@ -10,19 +10,19 @@ Users can store information about their vehicles and track associated service re
 First a user must navigate to the index page and then register an account.
 
 Large screens -
-![Index Page](readme-assets/index.png)
+![Index Page](./readme-assets/index-large.png)
 
 Small screens -
-![Index Page](readme-assets/index-small.png)
+![Index Page](./readme-assets/index-small.png)
 
 
 ### 2. Registration / Login
 
 Large screens -
-![Registration Modal](readme-assets/index-loginmodal-large.png)
+![Registration Modal](./readme-assets/index-loginmodal-large.png)
 
 Small screens - 
-![Registration Modal](readme-assets/index-loginmodal-small.png)
+![Registration Modal](./readme-assets/index-loginmodal-small.png)
 
 ### 3. Garage Page
 After login, users can:
@@ -31,17 +31,17 @@ After login, users can:
 - Access vehicle service records
 
 Large screens -
-![Garage Page](readme-assets/garage-large.png)
+![Garage Page](./readme-assets/garage-large.png)
 
 Small screens -
-![Garage Page](readme-assets/garage-small.png)
+![Garage Page](./readme-assets/garage-small.png)
 
 ### 4. Edit vehicle
 
 Large screens -
-
+![Edit Vehicle](./readme-assets/garage-editmodal-large.png)
 Small screens - 
-![Edit Vehicle](readme-assets/garage-editmodal-small.png)
+![Edit Vehicle](./readme-assets/garage-editmodal-small.png)
 
 ### 5. Services Page
 Users can manage service records:
@@ -49,17 +49,17 @@ Users can manage service records:
 - Search by service title
 
 Large screens - 
-![Services Page](readme-assets/services-large.png)
+![Services Page](./readme-assets/services-large.png)
 
 Small screens - 
-![Services Page](readme-assets/services-small.png)
+![Services Page](./readme-assets/services-small.png)
 
 ### 6. Edit Service
 
 Large screens - 
-
+![Edit service](./readme-assets/services-editmodal-large.png)
 Small screens -
-![Edit service](readme-assets/services-editmodal-small.png)
+![Edit service](./readme-assets/services-editmodal-small.png)
 
 ## Features
 - Dynamic form population using RESTful API endpoints - edit forms auto-fill with database records, enabling seamless updates without page reloads
