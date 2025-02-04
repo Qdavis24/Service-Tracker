@@ -10,7 +10,7 @@ Users can store information about their vehicles and track associated service re
 First a user must navigate to the index page and then register an account.
 
 Large screens -
-![Index Page](./readme-assets/index-large.png)
+![Index Page](readme-assets/index-large.PNG)
 
 Small screens -
 ![Index Page](./readme-assets/index-small.png)
