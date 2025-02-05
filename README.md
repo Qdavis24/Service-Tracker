@@ -9,20 +9,27 @@ Users can store information about their vehicles and track associated service re
 ### 1. Landing Page
 First a user must navigate to the index page and then register an account.
 
-Large screens -
+<details>
+<summary>View Screenshots</summary>
+
+**Desktop View**  
 ![Index Page](./readme-assets/index-large.PNG)
 
-Small screens -
+**Mobile View**  
 ![Index Page](./readme-assets/index-small.PNG)
-
+</details>
 
 ### 2. Registration / Login
 
-Large screens -
+<details>
+<summary>View Screenshots</summary>
+
+**Desktop View**  
 ![Registration Modal](./readme-assets/index-loginmodal-large.PNG)
 
-Small screens - 
+**Mobile View**  
 ![Registration Modal](./readme-assets/index-loginmodal-small.PNG)
+</details>
 
 ### 3. Garage Page
 After login, users can:
@@ -30,36 +37,54 @@ After login, users can:
 - Search by model
 - Access vehicle service records
 
-Large screens -
+<details>
+<summary>View Screenshots</summary>
+
+**Desktop View**  
 ![Garage Page](./readme-assets/garage-large.PNG)
 
-Small screens -
+**Mobile View**  
 ![Garage Page](./readme-assets/garage-small.PNG)
+</details>
 
-### 4. Edit vehicle
+### 4. Edit Vehicle
 
-Large screens -
+<details>
+<summary>View Screenshots</summary>
+
+**Desktop View**  
 ![Edit Vehicle](./readme-assets/garage-editmodal-large.PNG)
-Small screens - 
+
+**Mobile View**  
 ![Edit Vehicle](./readme-assets/garage-editmodal-small.PNG)
+</details>
 
 ### 5. Services Page
 Users can manage service records:
 - Add/delete/edit services
 - Search by service title
 
-Large screens - 
+<details>
+<summary>View Screenshots</summary>
+
+**Desktop View**  
 ![Services Page](./readme-assets/services-large.PNG)
 
-Small screens - 
+**Mobile View**  
 ![Services Page](./readme-assets/services-small.PNG)
+</details>
 
 ### 6. Edit Service
 
-Large screens - 
+<details>
+<summary>View Screenshots</summary>
+
+**Desktop View**  
 ![Edit service](./readme-assets/services-editmodal-large.PNG)
-Small screens -
+
+**Mobile View**  
 ![Edit service](./readme-assets/services-editmodal-small.PNG)
+</details>
 
 ## Features
 - Dynamic form population using RESTful API endpoints - edit forms auto-fill with database records, enabling seamless updates without page reloads
@@ -82,7 +107,7 @@ Small screens -
 - Hybrid Routing: Combination of server-side template rendering and RESTful API endpoints for dynamic updates
 
 ### Database Schema
-![Database ERD](readme-assets/AST-database-erd.PNG)
+![Database ERD](readme-assets/AST-database-erd.png)
 
 ### Application Structure
 ```
