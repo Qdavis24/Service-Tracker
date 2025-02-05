@@ -31,38 +31,36 @@ As a former automotive technician, I intimately understood a common problem: the
 * Making purposeful design decisions for team-friendly code
 
 #### API Development
-* Designing RESTful endpoints for seamless form population
-* Managing CRUD operations across multiple models
+* Designing RESTful endpoints for seamless form population and image loading
+* Managing CRUD operations across multiple tables
 * Maintaining effective state management between frontend and backend
 
 ### Technical Challenges Overcome
 
 #### Image Processing & Storage
-* Implemented image handling using the PILLOW library to convert files to binary data (BLOB) for database storage
+* Implemented image handling using the PILLOW library to convert files to thumbnails to binary data (BLOB) for database storage
 * Developed thumbnail generation system to optimize storage space and improve retrieval performance
 * Created robust error handling for various image formats and sizes
 
 #### Database Migration Management
 * Configured Flask-migrate to handle database schema changes while preserving existing data
 * Established reliable build commands for production server deployments
-* Implemented version control for database migrations to ensure data integrity
 
 #### State Management
 * Designed multiple specialized endpoints (edit, add, display vehicles) to maintain separation of concerns
 * Built persistent state management system for form data and modal status across different views
-* Implemented efficient data transfer to preserve query results between endpoint transitions
+* Efficient data transfer to preserve query results between endpoints
 
 ### Key Design Decisions
 
 #### Image Storage Strategy
-* Selected BLOB storage with thumbnail optimization for initial implementation
-* Prioritized database consistency and data integrity over storage optimization
-* Planned future iterations to implement dedicated image storage solution for better scalability
+* Selected BLOB storage with conversion to thumbnail for initial implementation
+* Focused on simple and consistent data storage solution over optimization
 
 #### Application Architecture
-* Adopted the Application Factory pattern to enhance code organization and maintainability
-* Implemented clear separation of concerns for better code readability
-* Created modular structure to facilitate future feature additions and testing
+* Used Application Factory pattern to enhance code organization and maintainability
+* Clear separation of concerns for better code readability
+* Created modular structure to simplify adding features
 
 ## End Result & Reflections
 
