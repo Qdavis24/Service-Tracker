@@ -64,20 +64,20 @@ As a former automotive technician, I intimately understood a common problem: the
 * Implemented clear separation of concerns for better code readability
 * Created modular structure to facilitate future feature additions and testing
 
-### End Result & Reflections
+## End Result & Reflections
 
-#### Project Achievements
+### Project Achievements
 * Successfully designed and implemented a full-stack web application independently, integrating multiple new technologies
 * Created a practical solution for vehicle maintenance tracking that demonstrates significant technical growth
 * Developed a scalable architecture that supports future enhancements and feature additions
 
-#### Key Learnings
+### Key Learnings
 * Prioritize simplicity over complexity in both design and implementation
 * Create modular, reusable components and processes from the start
 * Plan systematically for both frontend styling and backend logic to maximize code reuse
 * Consider scalability and maintainability in early architectural decisions
 
-#### Future Development
+### Future Development
 * Identified opportunities for optimization in image storage and retrieval
 * Planned enhancements for user experience and feature set
 * Established clear patterns for consistent future development
