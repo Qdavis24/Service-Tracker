@@ -19,7 +19,7 @@ First a user must navigate to the index page and then register an account.
 ![Index Page](./readme-assets/index-small.PNG)
 </details>
 
-### 2. Registration / Login
+### 1.a Registration / Login
 
 <details>
 <summary>View Screenshots</summary>
@@ -31,7 +31,7 @@ First a user must navigate to the index page and then register an account.
 ![Registration Modal](./readme-assets/index-loginmodal-small.PNG)
 </details>
 
-### 3. Garage Page
+### 2. Garage Page
 After login, users can:
 - Add/delete/edit vehicles
 - Search by model
@@ -47,7 +47,7 @@ After login, users can:
 ![Garage Page](./readme-assets/garage-small.PNG)
 </details>
 
-### 4. Edit Vehicle
+### 2.a Edit Vehicle
 
 <details>
 <summary>View Screenshots</summary>
@@ -59,7 +59,7 @@ After login, users can:
 ![Edit Vehicle](./readme-assets/garage-editmodal-small.PNG)
 </details>
 
-### 5. Services Page
+### 3. Services Page
 Users can manage service records:
 - Add/delete/edit services
 - Search by service title
@@ -74,7 +74,7 @@ Users can manage service records:
 ![Services Page](./readme-assets/services-small.PNG)
 </details>
 
-### 6. Edit Service
+### 3.a Edit Service
 
 <details>
 <summary>View Screenshots</summary>
@@ -95,7 +95,7 @@ Users can manage service records:
 
 ## Technologies Used
 - Frontend: JavaScript, TailwindCSS, Jinja 2 HTML templates
-- Backend: Python (Flask, SQLAlchemy, Flask-Login)
+- Backend: Python (Flask, SQLAlchemy, Flask-Login, Flask-migrate)
 - Database: SQLite (dev), PostgreSQL (prod) 
 - Additional: Pillow for image processing
 
