@@ -1,5 +1,5 @@
-
 Service Tracker
+
 A web application that helps users maintain a digital record of their vehicle maintenance history.
 Users can store information about their vehicles and track associated service records, providing a centralized solution for managing vehicle maintenance documentation.
 
@@ -13,16 +13,16 @@ Large screens -
 ![Index Page](./readme-assets/index-large.PNG)
 
 Small screens -
-![Index Page](./readme-assets/index-small.png)
+![Index Page](./readme-assets/index-small.PNG)
 
 
 ### 2. Registration / Login
 
 Large screens -
-![Registration Modal](./readme-assets/index-loginmodal-large.png)
+![Registration Modal](./readme-assets/index-loginmodal-large.PNG)
 
 Small screens - 
-![Registration Modal](./readme-assets/index-loginmodal-small.png)
+![Registration Modal](./readme-assets/index-loginmodal-small.PNG)
 
 ### 3. Garage Page
 After login, users can:
@@ -31,17 +31,17 @@ After login, users can:
 - Access vehicle service records
 
 Large screens -
-![Garage Page](./readme-assets/garage-large.png)
+![Garage Page](./readme-assets/garage-large.PNG)
 
 Small screens -
-![Garage Page](./readme-assets/garage-small.png)
+![Garage Page](./readme-assets/garage-small.PNG)
 
 ### 4. Edit vehicle
 
 Large screens -
-![Edit Vehicle](./readme-assets/garage-editmodal-large.png)
+![Edit Vehicle](./readme-assets/garage-editmodal-large.PNG)
 Small screens - 
-![Edit Vehicle](./readme-assets/garage-editmodal-small.png)
+![Edit Vehicle](./readme-assets/garage-editmodal-small.PNG)
 
 ### 5. Services Page
 Users can manage service records:
@@ -49,17 +49,17 @@ Users can manage service records:
 - Search by service title
 
 Large screens - 
-![Services Page](./readme-assets/services-large.png)
+![Services Page](./readme-assets/services-large.PNG)
 
 Small screens - 
-![Services Page](./readme-assets/services-small.png)
+![Services Page](./readme-assets/services-small.PNG)
 
 ### 6. Edit Service
 
 Large screens - 
-![Edit service](./readme-assets/services-editmodal-large.png)
+![Edit service](./readme-assets/services-editmodal-large.PNG)
 Small screens -
-![Edit service](./readme-assets/services-editmodal-small.png)
+![Edit service](./readme-assets/services-editmodal-small.PNG)
 
 ## Features
 - Dynamic form population using RESTful API endpoints - edit forms auto-fill with database records, enabling seamless updates without page reloads
@@ -82,10 +82,10 @@ Small screens -
 - Hybrid Routing: Combination of server-side template rendering and RESTful API endpoints for dynamic updates
 
 ### Database Schema
-![Database ERD](readme-assets/AST database erd.png)
+![Database ERD](readme-assets/AST-database-erd.PNG)
 
 ### Application Structure
-
+```
 service-tracker/
 ├── app/
 │   ├── static/           # Static assets (CSS, JS, images)
@@ -103,7 +103,7 @@ service-tracker/
 ├── README.txt
 ├── requirements.txt    # Project dependencies
 └── run.py             # Application entry point
-
+```
 
 ## Installation
 ```bash
@@ -121,3 +121,4 @@ pip install -r requirements.txt
 
 # Run application
 python run.py
+```
