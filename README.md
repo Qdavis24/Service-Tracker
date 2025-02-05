@@ -25,7 +25,7 @@ First a user must navigate to the index page and then register an account.
 <summary>View Screenshots</summary>
 
 **Desktop View**  
-![Registration Modal](./readme-assets/index-loginmodal-large.PNG)
+![Registration Modal](./readme-assets/index-editmodal-large.PNG)
 
 **Mobile View**  
 ![Registration Modal](./readme-assets/index-loginmodal-small.PNG)
