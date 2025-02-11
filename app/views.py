@@ -153,7 +153,7 @@ def service_viewer(vehicle_id, services=None, add_service_form=None, edit_servic
 
 @main_bp.route("/services/search", methods=["POST"])
 def service_search():
-    service_title = request.form.get("service-title")
+    service_title = request.form.get("service-title").lower()
     vehicle_id = request.form.get("vehicle-id")
     services = [service for service in Vehicles.query.get(vehicle_id).services if service.service == service_title]
 

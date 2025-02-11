@@ -66,18 +66,13 @@ function centerElement(el) {
 
 }
 
-function handleScroll(mWH, direction, timeout, canExecute) {
+function handleScroll(mWH, direction) {
     const last = document.getElementById('dummy');
-    if (!canExecute) return; // if still waiting on timeout to reset flag early return
     let el = retrieveClosest(mWH); // retrieve the center most element
     el = findNext(el, direction) // find the next element to be scrolled into view based on direction of scroll
     if (!el || el === last) return; // if there is no next element IE last element in parent with down scroll early return
     setOpacities(el, .3);
     centerElement(el); // move to be scrolled to center
 
-    canExecute = false; // reset flag
-    clearTimeout(timeout); // reset timeout if scroll within 10 ms of last scroll
-    timeout = setTimeout(() => { //after 10 ms reset flag
-        canExecute = true;
-    }, 17)
+
 }

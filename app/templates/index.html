@@ -302,7 +302,6 @@
         // used to calculate swipe direction just like scroll direction
 
         let canExecute = true;
-        let timeout;
         let scrollDirection = 'down';
         let touchStartY = 0;
         let touchEndY = 0;
@@ -334,20 +333,32 @@
         }, {passive: false});
 
         document.addEventListener('touchend', (event) => {
-            touchEndY = event.changedTouches[0].clientY; // grabs the current position of the first touch registered when touch ends
-            // if the start y is greater than the end y finger swiped down
+
+            if (canExecute) {
+                touchEndY = event.changedTouches[0].clientY; // grabs the current position of the first touch registered when touch ends
+                scrollDirection = touchStartY > touchEndY ? 'down' : 'up'; // if the start y is greater than the end y finger swiped down
             // determines direction Y value at top = 0 Y at bottom is greatest
-            scrollDirection = touchStartY > touchEndY ? 'down' : 'up';
-            handleScroll(midWindowHeight, scrollDirection, timeout, canExecute);
+                handleScroll(midWindowHeight, scrollDirection)
+                canExecute = false; // reset flag
+                setTimeout(() => { //after 25 ms reset flag
+                    canExecute = true;
+                }, 25)
+            }
             toggleArrowVis(midWindowHeight, scrollUp, scrollDown, last); // toggle ui arrows
 
         }, {passive: false});
 
         document.addEventListener('wheel', (event) => {
             event.preventDefault();
-            scrollDirection = event.deltaY > 0 ? 'down' : 'up'; // if change in y > 0 scroll was down
-            handleScroll(midWindowHeight, scrollDirection, timeout, canExecute);
-            toggleArrowVis(midWindowHeight, scrollUp, scrollDown, last); // toggle ui arrows
+            console.log(event.deltaY);
+            if (canExecute) {
+                scrollDirection = event.deltaY > 0 ? 'down' : 'up';
+                handleScroll(midWindowHeight, scrollDirection)
+                canExecute = false; // reset flag
+                setTimeout(() => { //after 500 ms reset flag
+                    canExecute = true;
+                }, 500)
+            }
 
         }, {passive: false});
 
