@@ -79,5 +79,5 @@ function handleScroll(mWH, direction, timeout, canExecute) {
     clearTimeout(timeout); // reset timeout if scroll within 10 ms of last scroll
     timeout = setTimeout(() => { //after 10 ms reset flag
         canExecute = true;
-    }, 10)
+    }, 17)
 }
