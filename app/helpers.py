@@ -78,11 +78,12 @@ def retrieve_from_db(table: db.Model, id: int):
     return False
 
 
-def update_record(table: db.Model, row, data):
+def update_record(row, data):
     try:
         for col, value in data.items():
-            if col in table.__table__.columns.keys():
-                setattr(row, col, value)
+            if col in {"make", "model", "service"}:
+                value = value.lower()
+            setattr(row, col, value)
     except Exception as e:
         print(f"FAILURE TO UPDATE RECORD {row} ERROR: {e}")
         db.session.rollback()

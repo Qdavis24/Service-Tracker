@@ -122,8 +122,8 @@ def edit_vehicle():
     if 'picture' in vehicle_data:
         new_picture = file_to_blob(vehicle_data['picture'])
         picture_data = {'picture': new_picture}
-        update_record(Pictures, vehicle.picture, picture_data)
-    update_record(Vehicles, vehicle, vehicle_data)
+        update_record(vehicle.picture, picture_data)
+    update_record(vehicle, vehicle_data)
     flash(f"{vehicle.model} successfully updated")
     return redirect(url_for('main.garage'))
 
@@ -209,8 +209,8 @@ def edit_service():
     if 'picture' in service_data:
         new_picture = file_to_blob(service_data['picture'])
         picture_data = {'picture': new_picture}
-        update_record(Pictures, service.picture, picture_data)
-    update_record(Services, service, service_data)
+        update_record(service.picture, picture_data)
+    update_record(service, service_data)
     flash(f"{service.service} successfully updated")
     return redirect(url_for('main.service_viewer', vehicle_id=vehicle_id))
 
