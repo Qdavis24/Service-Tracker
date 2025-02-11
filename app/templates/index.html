@@ -338,7 +338,7 @@
                 touchEndY = event.changedTouches[0].clientY; // grabs the current position of the first touch registered when touch ends
                 scrollDirection = touchStartY > touchEndY ? 'down' : 'up'; // if the start y is greater than the end y finger swiped down
             // determines direction Y value at top = 0 Y at bottom is greatest
-                handleScroll(midWindowHeight, scrollDirection)
+                handleScroll(midWindowHeight, scrollDirection);
                 canExecute = false; // reset flag
                 setTimeout(() => { //after 25 ms reset flag
                     canExecute = true;
@@ -350,10 +350,9 @@
 
         document.addEventListener('wheel', (event) => {
             event.preventDefault();
-            console.log(event.deltaY);
             if (canExecute) {
                 scrollDirection = event.deltaY > 0 ? 'down' : 'up';
-                handleScroll(midWindowHeight, scrollDirection)
+                handleScroll(midWindowHeight, scrollDirection);
                 canExecute = false; // reset flag
                 setTimeout(() => { //after 500 ms reset flag
                     canExecute = true;
